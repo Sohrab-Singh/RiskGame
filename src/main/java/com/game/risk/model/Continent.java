@@ -1,80 +1,101 @@
 package com.game.risk.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * Continent object for populating the data related to continent.
- * 
- * @author sohrab_singh
  *
+ * @author sohrab_singh
  */
 public class Continent {
 
-	/** Continent Name. */
-	String continentName;
+    /**
+     * Continent Name.
+     */
+    String continentName;
 
-	/** List of countries inside the continent. */
-	List<Country> countries;
+    /**
+     * List of countries inside the continent.
+     */
+    List<Country> countries;
 
-	/** Control value of continent. */
-	int controlValue;
+    /**
+     * Control value of continent.
+     */
+    int controlValue;
 
-	/**
-	 * Get the continent name.
-	 * 
-	 * @return the continentName
-	 */
-	public String getContinentName() {
-		return continentName;
-	}
+    /**
+     * @param continentName
+     * @param controlValue
+     */
+    public Continent(String continentName, int controlValue) {
+        this.continentName = continentName;
+        this.controlValue = controlValue;
+        countries = new ArrayList<Country>();
+    }
 
-	/**
-	 * Set the continent name.
-	 * 
-	 * @param continentName
-	 *            the continentName to set
-	 */
-	public void setContinentName(String continentName) {
-		this.continentName = continentName;
-	}
+    /**
+     * Get the continent name.
+     *
+     * @return the continentName
+     */
+    public String getContinentName() {
+        return continentName;
+    }
 
-	/**
-	 * Get the list of countries inside the continent.
-	 * 
-	 * @return the countries
-	 */
-	public List<Country> getCountries() {
-		return countries;
-	}
+    /**
+     * Set the continent name.
+     *
+     * @param continentName the continentName to set
+     */
+    public void setContinentName(String continentName) {
+        this.continentName = continentName;
+    }
 
-	/**
-	 * Set the list of countries inside the continent.
-	 * 
-	 * @param countries
-	 *            the countries to set
-	 */
-	public void setCountries(List<Country> countries) {
-		this.countries = countries;
-	}
+    /**
+     * Get the list of countries inside the continent.
+     *
+     * @return the countries
+     */
+    public List<Country> getCountries() {
+        return countries;
+    }
 
-	/**
-	 * Get the control value of continent.
-	 * 
-	 * @return the controlValue
-	 */
-	public int getControlValue() {
-		return controlValue;
-	}
+    /**
+     * Set the list of countries inside the continent.
+     *
+     * @param countries the countries to set
+     */
+    public void setCountries(List<Country> countries) {
+        this.countries = countries;
+    }
 
-	/**
-	 * Set the control value of continent.
-	 * 
-	 * @param controlValue
-	 *            the controlValue to set
-	 */
-	public void setControlValue(int controlValue) {
-		this.controlValue = controlValue;
-	}
+    /**
+     * Get the control value of continent.
+     *
+     * @return the controlValue
+     */
+    public int getControlValue() {
+        return controlValue;
+    }
+
+    /**
+     * Set the control value of continent.
+     *
+     * @param controlValue the controlValue to set
+     */
+    public void setControlValue(int controlValue) {
+        this.controlValue = controlValue;
+    }
+
+    /**
+     * Add a country to the countries ArrayList
+     *
+     * @param country
+     */
+    public void addCountry(Country country) {
+        countries.add(country);
+    }
 
 }
