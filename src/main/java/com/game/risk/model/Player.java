@@ -6,13 +6,13 @@ import com.game.risk.cardenum.CardEnum;
 
 public class Player {
 
-	String playerName;
+	private String playerName;
 	
-	List<Country> countriesOwned;
+	private List<Country> countriesOwned;
 	
-	List<CardEnum> cardList;
+	private List<CardEnum> cardList;
 	
-	int numberOfArmies;
+	private int numberOfArmies;
 
 	/**
 	 * @return the playerName

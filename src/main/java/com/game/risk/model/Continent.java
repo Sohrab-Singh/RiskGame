@@ -13,17 +13,17 @@ public class Continent {
     /**
      * Continent Name.
      */
-    String continentName;
+    private String continentName;
 
     /**
      * List of countries inside the continent.
      */
-    List<Country> countries;
+    private List<Country> countries;
 
     /**
      * Control value of continent.
      */
-    int controlValue;
+    private int controlValue;
 
     /**
      * @param continentName
@@ -98,4 +98,12 @@ public class Continent {
         countries.add(country);
     }
 
+    /**
+     * Remove a country from the countries ArrayList
+     *
+     * @param country
+     */
+    public void removeCountry(Country country) {
+        countries.remove(country);
+    }
 }

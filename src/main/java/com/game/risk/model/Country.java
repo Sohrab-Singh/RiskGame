@@ -13,17 +13,22 @@ public class Country {
     /**
      * Country Name.
      */
-    String countryName;
+    private String countryName;
 
     /**
      * List of adjacent countries with the countries.
      */
-    List<Country> adjacentCountries;
+    private List<Country> adjacentCountries;
 
     /**
      * Current number of armies in the country.
      */
-    int currentNumberOfArmies;
+    private int currentNumberOfArmies;
+
+    /**
+     * Name of the continent it belongs to
+     */
+    private String continentName;
 
     /**
      * @param countryName
@@ -96,4 +101,30 @@ public class Country {
         adjacentCountries.add(country);
     }
 
+    /**
+     * Remove a country from the adjacentCountries ArrayList
+     *
+     * @param country
+     */
+    public void removeAdjacentCountry(Country country) {
+        adjacentCountries.remove(country);
+    }
+
+    /**
+     * Get the Continent Name it belongs to
+     *
+     * @return continentName
+     */
+    public String getContinentName() {
+        return continentName;
+    }
+
+    /**
+     * Set the Continent Name
+     *
+     * @param continentName
+     */
+    public void setContinentName(String continentName) {
+        this.continentName = continentName;
+    }
 }

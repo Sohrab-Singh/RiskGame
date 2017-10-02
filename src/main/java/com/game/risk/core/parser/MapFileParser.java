@@ -1,5 +1,6 @@
 package com.game.risk.core.parser;
 
+import com.game.risk.core.Graph;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
@@ -24,7 +25,7 @@ public class MapFileParser {
     /**
      * HashMap to store searched countries through the map file
      */
-    private HashMap<String, Country> hashMap;
+    private HashMap<String, Country> countriesHashMap;
 
     /**
      * HashMap to store searched continents through the map file
@@ -39,18 +40,19 @@ public class MapFileParser {
      */
     public MapFileParser(String filename) throws FileNotFoundException {
         fileReader = new FileReader(filename);
-        hashMap = new HashMap<String, Country>();
+        countriesHashMap = new HashMap<String, Country>();
         continentHashMap = new HashMap<String, Continent>();
     }
 
     /**
      * Method to read and store data into the model classes from map file
      *
-     * @return
+     * @return the country HashMap
      * @throws IOException
      */
-    public long readFile() throws IOException {
+    public HashMap<String, Country> readFile() throws IOException {
         BufferedReader reader = new BufferedReader(fileReader);
+        Graph graph = new Graph(this);
         String line;
         while (true) {
             line = reader.readLine();
@@ -75,26 +77,39 @@ public class MapFileParser {
                         String[] splits = line.split(",");
 
                         //Condition if country is not present in HashMap
-                        if (!hashMap.containsKey(splits[0])) {
+                        if (!countriesHashMap.containsKey(splits[0])) {
                             Country country = new Country(splits[0]);
+                            country.setContinentName(splits[3]);
                             continentHashMap.get(splits[3]).addCountry(country);
-                            hashMap.put(country.getCountryName(), country);
+                            countriesHashMap.put(country.getCountryName(), country);
+                            graph.addCountry(country);
                         }
 
                         // Check whether adjacent country is already created and present in HashMap
                         for (int i = 4; i < splits.length; i++) {
-                            if (hashMap.containsKey(splits[i])) {
-                                hashMap.get(splits[0]).addAdjacentCountry(hashMap.get(splits[0]));
+                            if (countriesHashMap.containsKey(splits[i])) {
+                                countriesHashMap.get(splits[0]).addAdjacentCountry(countriesHashMap.get(splits[i]));
+                                graph.addEdge(countriesHashMap.get(splits[0]), countriesHashMap.get(splits[i]));
                             } else {
                                 Country adjCountry = new Country(splits[i]);
-                                hashMap.get(splits[0]).addAdjacentCountry(adjCountry);
-                                hashMap.put(splits[i], adjCountry);
+                                adjCountry.setContinentName(splits[3]);
+                                countriesHashMap.get(splits[0]).addAdjacentCountry(adjCountry);
+                                countriesHashMap.put(splits[i], adjCountry);
+                                graph.addEdge(countriesHashMap.get(splits[0]), adjCountry);
                             }
                         }
                     }
                 }
             }
         }
-        return hashMap.size();
+        return countriesHashMap;
+    }
+
+    public HashMap<String, Continent> getContinentHashMap() {
+        return continentHashMap;
+    }
+
+    public HashMap<String, Country> getCountriesHashMap() {
+        return countriesHashMap;
     }
 }
