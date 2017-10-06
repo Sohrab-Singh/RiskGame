@@ -1,8 +1,5 @@
 package com.game.risk.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Country object for populating the data related to country.
  *
@@ -10,121 +7,117 @@ import java.util.List;
  */
 public class Country {
 
-    /**
-     * Country Name.
-     */
-    private String countryName;
+	/**
+	 * Country Name.
+	 */
+	private String countryName;
 
-    /**
-     * List of adjacent countries with the countries.
-     */
-    private List<Country> adjacentCountries;
+	/** X coordinate */
+	private String xCoordinate;
 
-    /**
-     * Current number of armies in the country.
-     */
-    private int currentNumberOfArmies;
+	/** Y coordinate */
+	private String yCoordinate;
 
-    /**
-     * Name of the continent it belongs to
-     */
-    private String continentName;
+	/**
+	 * Current number of armies in the country.
+	 */
+	private int currentNumberOfArmies;
 
-    /**
-     * @param countryName
-     */
-    public Country(String countryName) {
-        this.countryName = countryName;
-        adjacentCountries = new ArrayList<Country>();
-    }
+	/**
+	 * Name of the continent it belongs to
+	 */
+	private String continentName;
 
-    /**
-     * Get the country name.
-     *
-     * @return the countryName
-     */
-    public String getCountryName() {
-        return countryName;
-    }
+	/**
+	 * @param countryName
+	 */
+	public Country(String countryName) {
+		this.countryName = countryName;
+	}
 
-    /**
-     * Set the country name.
-     *
-     * @param countryName the countryName to set
-     */
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
-    }
+	/**
+	 * Get the country name.
+	 *
+	 * @return the countryName
+	 */
+	public String getCountryName() {
+		return countryName;
+	}
 
-    /**
-     * Get the list of adjacent countries.
-     *
-     * @return the adjacentCountries
-     */
-    public List<Country> getAdjacentCountries() {
-        return adjacentCountries;
-    }
+	/**
+	 * Set the country name.
+	 *
+	 * @param countryName
+	 *            the countryName to set
+	 */
+	public void setCountryName(String countryName) {
+		this.countryName = countryName;
+	}
 
-    /**
-     * Set the list of adjacent countries.
-     *
-     * @param adjacentCountries the adjacentCountries to set
-     */
-    public void setAdjacentCountries(List<Country> adjacentCountries) {
-        this.adjacentCountries = adjacentCountries;
-    }
+	/**
+	 * Get the current number of armies.
+	 *
+	 * @return the currentNumberOfArmies
+	 */
+	public int getCurrentNumberOfArmies() {
+		return currentNumberOfArmies;
+	}
 
-    /**
-     * Get the current number of armies.
-     *
-     * @return the currentNumberOfArmies
-     */
-    public int getCurrentNumberOfArmies() {
-        return currentNumberOfArmies;
-    }
+	/**
+	 * Set the current number of armies.
+	 *
+	 * @param currentNumberOfArmies
+	 *            the currentNumberOfArmies to set
+	 */
+	public void setCurrentNumberOfArmies(int currentNumberOfArmies) {
+		this.currentNumberOfArmies = currentNumberOfArmies;
+	}
 
-    /**
-     * Set the current number of armies.
-     *
-     * @param currentNumberOfArmies the currentNumberOfArmies to set
-     */
-    public void setCurrentNumberOfArmies(int currentNumberOfArmies) {
-        this.currentNumberOfArmies = currentNumberOfArmies;
-    }
+	/**
+	 * Get the Continent Name it belongs to
+	 *
+	 * @return continentName
+	 */
+	public String getContinentName() {
+		return continentName;
+	}
 
-    /**
-     * Add Adjacent Country to the adjacentCountries ArrayList
-     *
-     * @param country
-     */
-    public void addAdjacentCountry(Country country) {
-        adjacentCountries.add(country);
-    }
+	/**
+	 * Set the Continent Name
+	 *
+	 * @param continentName
+	 */
+	public void setContinentName(String continentName) {
+		this.continentName = continentName;
+	}
 
-    /**
-     * Remove a country from the adjacentCountries ArrayList
-     *
-     * @param country
-     */
-    public void removeAdjacentCountry(Country country) {
-        adjacentCountries.remove(country);
-    }
+	/**
+	 * @return the xCoordinate
+	 */
+	public String getxCoordinate() {
+		return xCoordinate;
+	}
 
-    /**
-     * Get the Continent Name it belongs to
-     *
-     * @return continentName
-     */
-    public String getContinentName() {
-        return continentName;
-    }
+	/**
+	 * @param xCoordinate
+	 *            the xCoordinate to set
+	 */
+	public void setxCoordinate(String xCoordinate) {
+		this.xCoordinate = xCoordinate;
+	}
 
-    /**
-     * Set the Continent Name
-     *
-     * @param continentName
-     */
-    public void setContinentName(String continentName) {
-        this.continentName = continentName;
-    }
+	/**
+	 * @return the yCoordinate
+	 */
+	public String getyCoordinate() {
+		return yCoordinate;
+	}
+
+	/**
+	 * @param yCoordinate
+	 *            the yCoordinate to set
+	 */
+	public void setyCoordinate(String yCoordinate) {
+		this.yCoordinate = yCoordinate;
+	}
 }

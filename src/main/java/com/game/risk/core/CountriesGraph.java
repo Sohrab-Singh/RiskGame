@@ -9,10 +9,17 @@ import java.util.LinkedList;
 /**
  * @author Sarthak
  */
-public class Graph {
+public class CountriesGraph {
 
     /**
-     * Vertices count for the Graph
+	 * @return the adjListHashMap
+	 */
+	public HashMap<Country, LinkedList<Country>> getAdjListHashMap() {
+		return adjListHashMap;
+	}
+
+	/**
+     * Vertices count for the CountriesGraph
      */
     private int countriesCount;
 
@@ -29,7 +36,7 @@ public class Graph {
     /**
      * @param fileParser
      */
-    public Graph(MapFileParser fileParser) {
+    public CountriesGraph(MapFileParser fileParser) {
         this.mapFileParser = fileParser;
         adjListHashMap = new HashMap<Country, LinkedList<Country>>();
     }
@@ -59,22 +66,14 @@ public class Graph {
      * @param endCountry
      */
     public void addEdge(Country startCountry, Country endCountry) {
-        if (adjListHashMap.containsKey(startCountry)) adjListHashMap.get(startCountry).add(endCountry);
+        if (adjListHashMap.containsKey(startCountry)) {
+        		adjListHashMap.get(startCountry).add(endCountry);
+        }
         else {
             LinkedList<Country> linkedList = new LinkedList<Country>();
             linkedList.add(endCountry);
             adjListHashMap.put(startCountry, linkedList);
         }
-
-        if (adjListHashMap.containsKey(endCountry)) adjListHashMap.get(endCountry).add(startCountry);
-        else {
-            LinkedList<Country> linkedList = new LinkedList<Country>();
-            linkedList.add(startCountry);
-            adjListHashMap.put(endCountry, linkedList);
-        }
-        // Update the adjacent country to the country model
-        mapFileParser.getCountriesHashMap().get(startCountry.getCountryName()).addAdjacentCountry(endCountry);
-        mapFileParser.getCountriesHashMap().get(endCountry.getCountryName()).addAdjacentCountry(startCountry);
     }
 
     /**
@@ -86,9 +85,6 @@ public class Graph {
     public void removeEdge(Country startCountry, Country endCountry) {
         adjListHashMap.get(startCountry).remove(endCountry);
         adjListHashMap.get(endCountry).remove(startCountry);
-        // Removing the adjacent Country from the country model
-        mapFileParser.getCountriesHashMap().get(startCountry.getCountryName()).removeAdjacentCountry(endCountry);
-        mapFileParser.getCountriesHashMap().get(endCountry.getCountryName()).removeAdjacentCountry(startCountry);
     }
 
     /**
@@ -102,7 +98,6 @@ public class Graph {
             LinkedList<Country> adjCountries = adjListHashMap.get(country);
             for (int i = 0; i < adjCountries.size(); i++) {
                 Country adjCountry = adjCountries.get(i);
-                mapFileParser.getCountriesHashMap().get(adjCountry.getCountryName()).removeAdjacentCountry(country);
                 adjListHashMap.get(adjCountry).remove(country);
             }
             adjListHashMap.remove(country);
@@ -121,8 +116,5 @@ public class Graph {
      */
     public void addCountry(Country country) {
         adjListHashMap.put(country, new LinkedList<Country>());
-        mapFileParser.getCountriesHashMap().put(country.getCountryName(), country);
-        mapFileParser.getContinentHashMap().get(country.getContinentName()).addCountry(country);
     }
-
 }
