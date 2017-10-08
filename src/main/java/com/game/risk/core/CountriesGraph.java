@@ -1,24 +1,23 @@
 package com.game.risk.core;
 
 import com.game.risk.core.parser.MapFileParser;
+import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.IntStream;
 
 /**
+ * Graph class to hold the countries and its adjacent countries
+ *
  * @author Sarthak
  */
 public class CountriesGraph {
 
     /**
-	 * @return the adjListHashMap
-	 */
-	public HashMap<Country, LinkedList<Country>> getAdjListHashMap() {
-		return adjListHashMap;
-	}
-
-	/**
      * Vertices count for the CountriesGraph
      */
     private int countriesCount;
@@ -29,7 +28,12 @@ public class CountriesGraph {
     private MapFileParser mapFileParser;
 
     /**
-     * Store a HashMap of Countries having adjacent countries stored in LinkedList
+     * List to store continents
+     */
+    private HashMap<String, Continent> continentHashMap;
+
+    /**
+     * Store a HashMap of Countries having adjacent countries stored in LinkedList, representing adjacency list for graph
      */
     private HashMap<Country, LinkedList<Country>> adjListHashMap;
 
@@ -39,6 +43,7 @@ public class CountriesGraph {
     public CountriesGraph(MapFileParser fileParser) {
         this.mapFileParser = fileParser;
         adjListHashMap = new HashMap<Country, LinkedList<Country>>();
+        continentHashMap = new HashMap<String, Continent>();
     }
 
     /**
@@ -60,6 +65,17 @@ public class CountriesGraph {
     }
 
     /**
+     * @return the adjListHashMap
+     */
+    public HashMap<Country, LinkedList<Country>> getAdjListHashMap() {
+        return adjListHashMap;
+    }
+    
+    /**
+     * Get Continent 
+     */
+
+    /**
      * Add a connectivity as adjacent countries between two countries
      *
      * @param startCountry
@@ -67,9 +83,8 @@ public class CountriesGraph {
      */
     public void addEdge(Country startCountry, Country endCountry) {
         if (adjListHashMap.containsKey(startCountry)) {
-        		adjListHashMap.get(startCountry).add(endCountry);
-        }
-        else {
+            adjListHashMap.get(startCountry).add(endCountry);
+        } else {
             LinkedList<Country> linkedList = new LinkedList<Country>();
             linkedList.add(endCountry);
             adjListHashMap.put(startCountry, linkedList);
@@ -110,11 +125,42 @@ public class CountriesGraph {
     }
 
     /**
-     * Add a country to the graph and model classes
+     * Add a country to the graph
      *
      * @param country
      */
     public void addCountry(Country country) {
         adjListHashMap.put(country, new LinkedList<Country>());
+    }
+
+    /**
+     * Add a continent to the graph
+     *
+     * @param continent
+     */
+    public void addContinent(Continent continent) {
+        continentHashMap.put(continent.getContinentName(), continent);
+    }
+
+    /**
+     * Remove a continent from the graph
+     *
+     * @param continent
+     * @return
+     */
+    public boolean removeContinent(Continent continent) {
+        if (continentHashMap.containsValue(continent)) {
+            continentHashMap.remove(continent.getContinentName());
+            for (Country country : adjListHashMap.keySet()) {
+                if (country.getContinentName().equals(continent.getContinentName())) {
+                    // Returns the adjacent countries to the removing country
+                    LinkedList<Country> adjCountries = adjListHashMap.remove(country);
+                    // Removing the country from the adjacent countries, represented in the adjacency linked list for the adjacent country
+                    IntStream.range(0, adjCountries.size()).forEach(i -> adjListHashMap.get(adjCountries.get(i)).remove(country));
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

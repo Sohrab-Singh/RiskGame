@@ -3,6 +3,8 @@ package com.game.risk.core.parser;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -19,8 +21,12 @@ public class MapFileParserTest {
     }
 
     @Test
-    public void readFile() throws Exception {
-        assertEquals(47, mapFileParser.readFile());
+    public void readFileTest() throws IOException {
+        assertNotNull(mapFileParser.readFile());
     }
 
+    @Test
+    public void readFileTest2() {
+
+    }
 }

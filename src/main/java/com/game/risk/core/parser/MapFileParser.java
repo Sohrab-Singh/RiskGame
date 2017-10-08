@@ -19,162 +19,163 @@ import java.util.List;
  */
 public class MapFileParser {
 
-	/**
-	 * FileReader class variable
-	 */
-	private FileReader fileReader;
+    /**
+     * FileReader class variable
+     */
+    private FileReader fileReader;
 
-	/**
-	 * HashMap to store searched countries through the map file
-	 */
-	private HashMap<String, Country> countriesHashMap;
+    /**
+     * HashMap to store searched countries through the map file
+     */
+    private HashMap<String, Country> countriesHashMap;
 
-	/**
-	 * HashMap to store searched continents through the map file
-	 */
-	private HashMap<String, Continent> continentHashMap;
+    /**
+     * HashMap to store searched continents through the map file
+     */
+    private HashMap<String, Continent> continentHashMap;
 
-	/**
-	 * Countries Graph to store adjacent countries
-	 */
-	private CountriesGraph countriesGraph;
+    /**
+     * Countries Graph to store adjacent countries
+     */
+    private CountriesGraph countriesGraph;
 
-	/**
-	 * Map file writer
-	 */
-	private MapFileWriter mapFileWriter;
+    /**
+     * Map file writer
+     */
+    private MapFileWriter mapFileWriter;
 
-	/**
-	 * Map meta deta
-	 */
-	private List<String> mapMetaData = new ArrayList<>();
+    /**
+     * Map meta deta
+     */
+    private List<String> mapMetaData = new ArrayList<>();
 
-	/**
-	 * Constructor
-	 *
-	 * @param filename
-	 * @throws FileNotFoundException
-	 */
-	public MapFileParser(String filename) throws FileNotFoundException {
-		fileReader = new FileReader(filename);
-		countriesHashMap = new HashMap<String, Country>();
-		continentHashMap = new HashMap<String, Continent>();
-		countriesGraph = new CountriesGraph(this);
-		mapFileWriter = new MapFileWriter(filename, this);
-	}
+    /**
+     * Constructor
+     *
+     * @param filename
+     * @throws FileNotFoundException
+     */
+    public MapFileParser(String filename) throws FileNotFoundException {
+        fileReader = new FileReader("");
+        countriesHashMap = new HashMap<String, Country>();
+        continentHashMap = new HashMap<String, Continent>();
+        countriesGraph = new CountriesGraph(this);
+        mapFileWriter = new MapFileWriter(filename, this);
+    }
 
-	/**
-	 * Method to read and store data into the model classes from map file
-	 *
-	 * @return the country HashMap
-	 * @throws IOException
-	 */
-	public MapFileParser readFile() throws IOException {
-		BufferedReader reader = new BufferedReader(fileReader);
-		String line;
-		while (true) {
-			line = reader.readLine();
-			if (line == null) {
-				break;
-			}
+    /**
+     * Method to read and store data into the model classes from map file
+     *
+     * @return the country HashMap
+     * @throws IOException
+     */
+    public MapFileParser readFile() throws IOException {
 
-			if (line.startsWith("[Map]")) {
-				mapMetaData.add(line);
-				while (!(line = reader.readLine()).isEmpty()) {
-					mapMetaData.add(line);
-				}
-				line = reader.readLine();
-			}
+        BufferedReader reader = new BufferedReader(fileReader);
+        String line;
+        while (true) {
+            line = reader.readLine();
+            if (line == null) {
+                break;
+            }
 
-			if (line.startsWith("[Continents]")) {
-				while (!(line = reader.readLine()).startsWith("[")) {
-					if (!line.isEmpty()) {
-						String[] splitLine = line.split("=");
-						Continent continent = new Continent(splitLine[0], Integer.parseInt(splitLine[1]));
-						continentHashMap.put(splitLine[0], continent);
-					}
-				}
-			}
+            if (line.startsWith("[Map]")) {
+                mapMetaData.add(line);
+                while (!(line = reader.readLine()).isEmpty()) {
+                    mapMetaData.add(line);
+                }
+                line = reader.readLine();
+            }
 
-			if (line.startsWith("[Territories]")) {
-				while ((line = reader.readLine()) != null) {
+            if (line.startsWith("[Continents]")) {
+                while (!(line = reader.readLine()).startsWith("[")) {
+                    if (!line.isEmpty()) {
+                        String[] splitLine = line.split("=");
+                        Continent continent = new Continent(splitLine[0], Integer.parseInt(splitLine[1]));
+                        continentHashMap.put(splitLine[0], continent);
+                    }
+                }
+            }
 
-					if (!line.isEmpty()) {
-						String[] splits = line.split(",");
+            if (line.startsWith("[Territories]")) {
+                while ((line = reader.readLine()) != null) {
 
-						// Condition if country is not present in HashMap
-						if (!countriesHashMap.containsKey(splits[0])) {
-							Country country = new Country(splits[0]);
-							country.setxCoordinate(splits[1]);
-							country.setyCoordinate(splits[2]);
-							country.setContinentName(splits[3]);
-							countriesGraph.addCountry(country);
-							countriesHashMap.put(country.getCountryName(), country);
-							continentHashMap.get(country.getContinentName()).addCountry(country);
-						} else if (countriesHashMap.get(splits[0]).getContinentName() == null) {
-							countriesHashMap.get(splits[0]).setxCoordinate(splits[1]);
-							countriesHashMap.get(splits[0]).setyCoordinate(splits[2]);
-							countriesHashMap.get(splits[0]).setContinentName(splits[3]);
-							continentHashMap.get(splits[3]).addCountry(countriesHashMap.get(splits[0]));
-						}
+                    if (!line.isEmpty()) {
+                        String[] splits = line.split(",");
 
-						// Check whether adjacent country is already created and present in HashMap
-						for (int i = 4; i < splits.length; i++) {
-							if (!countriesHashMap.containsKey(splits[i])) {
-								Country adjCountry = new Country(splits[i]);
-								countriesHashMap.put(splits[i], adjCountry);
-							}
-							countriesGraph.addEdge(countriesHashMap.get(splits[0]), countriesHashMap.get(splits[i]));
-						}
-					}
-				}
-			}
-		}
+                        // Condition if country is not present in HashMap
+                        if (!countriesHashMap.containsKey(splits[0])) {
+                            Country country = new Country(splits[0]);
+                            country.setxCoordinate(splits[1]);
+                            country.setyCoordinate(splits[2]);
+                            country.setContinentName(splits[3]);
+                            countriesGraph.addCountry(country);
+                            countriesHashMap.put(country.getCountryName(), country);
+                            continentHashMap.get(country.getContinentName()).addCountry(country);
+                        } else if (countriesHashMap.get(splits[0]).getContinentName() == null) {
+                            countriesHashMap.get(splits[0]).setxCoordinate(splits[1]);
+                            countriesHashMap.get(splits[0]).setyCoordinate(splits[2]);
+                            countriesHashMap.get(splits[0]).setContinentName(splits[3]);
+                            continentHashMap.get(splits[3]).addCountry(countriesHashMap.get(splits[0]));
+                        }
 
-		reader.close();
-		return this;
-	}
+                        // Check whether adjacent country is already created and present in HashMap
+                        for (int i = 4; i < splits.length; i++) {
+                            if (!countriesHashMap.containsKey(splits[i])) {
+                                Country adjCountry = new Country(splits[i]);
+                                countriesHashMap.put(splits[i], adjCountry);
+                            }
+                            countriesGraph.addEdge(countriesHashMap.get(splits[0]), countriesHashMap.get(splits[i]));
+                        }
+                    }
+                }
+            }
+        }
 
-	/**
-	 * @return the mapMetaData
-	 */
-	public List<String> getMapMetaData() {
-		return mapMetaData;
-	}
+        reader.close();
+        return this;
+    }
 
-	/**
-	 * Get the continent HashMap
-	 * 
-	 * @return Continent hashmap
-	 */
-	public HashMap<String, Continent> getContinentHashMap() {
-		return continentHashMap;
-	}
+    /**
+     * @return the mapMetaData
+     */
+    public List<String> getMapMetaData() {
+        return mapMetaData;
+    }
 
-	/**
-	 * Get the countries HashMap
-	 * 
-	 * @return Countries hashmap
-	 */
-	public HashMap<String, Country> getCountriesHashMap() {
-		return countriesHashMap;
-	}
+    /**
+     * Get the continent HashMap
+     *
+     * @return Continent hashmap
+     */
+    public HashMap<String, Continent> getContinentHashMap() {
+        return continentHashMap;
+    }
 
-	/**
-	 * Get the Countries Graph.
-	 * 
-	 * @return the countriesGraph
-	 */
-	public CountriesGraph getCountriesGraph() {
-		return countriesGraph;
-	}
+    /**
+     * Get the countries HashMap
+     *
+     * @return Countries hashmap
+     */
+    public HashMap<String, Country> getCountriesHashMap() {
+        return countriesHashMap;
+    }
 
-	/**
-	 * Get the Map file writer.
-	 *
-	 * @return MapFileWriter
-	 */
-	public MapFileWriter getMapFileWriter() {
-		return mapFileWriter;
-	}
+    /**
+     * Get the Countries Graph.
+     *
+     * @return the countriesGraph
+     */
+    public CountriesGraph getCountriesGraph() {
+        return countriesGraph;
+    }
+
+    /**
+     * Get the Map file writer.
+     *
+     * @return MapFileWriter
+     */
+    public MapFileWriter getMapFileWriter() {
+        return mapFileWriter;
+    }
 }

@@ -19,7 +19,6 @@ public class MapValidation {
     /**
      * Array List to store continents which will be found in [Territories] tag
      */
-
     private ArrayList continentInTerritory;
 
     /**
@@ -30,26 +29,30 @@ public class MapValidation {
     /**
      * File Reader class variable
      */
-
     private FileReader fileReader;
 
     /**
      * Constructor
+     */
+    public MapValidation() {
+        continentInContinent = new ArrayList();
+        continentInTerritory = new ArrayList();
+        Countries = new HashMap<String, ArrayList<String>>();
+    }
+
+    /**
+     * Method to validate File
      *
      * @param filename
+     * @return isValid
      * @throws IOException
      */
-
-    public MapValidation(String filename) throws IOException {
-
-        ArrayList continentInContinent = new ArrayList();
-        ArrayList continentInTerritory = new ArrayList();
-        HashMap<String, ArrayList<String>> Countries = new HashMap<String, ArrayList<String>>();
-        FileReader fileReader = new FileReader(filename);
-
+    public boolean validateFile(String filename) throws IOException {
+        if (filename == null) return false;
+        fileReader = new FileReader(filename);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
-
+        boolean isValid = true;
         File file = new File(filename);
         FileInputStream fis = new FileInputStream(file);
         byte[] data = new byte[(int) file.length()];
@@ -63,13 +66,16 @@ public class MapValidation {
 
             if (!str.contains("[Map]")) {
                 System.out.println("No [Map] tag is defined");
+                isValid = false;
             }
             if (!str.contains("[Territories]")) {
                 System.out.println("No [Territories] tag is defined");
+                isValid = false;
                 break;
             }
             if (!str.contains("[Continents]")) {
                 System.out.println("No [Continents] tag is defined");
+                isValid = false;
                 break;
             }
 
@@ -77,7 +83,6 @@ public class MapValidation {
 
             if (line == null) {
                 break;
-
             }
             // Check for continents format
 
@@ -177,6 +182,6 @@ public class MapValidation {
             bufferedReader.close();
 
         }
-
+        return isValid;
     }
 }
