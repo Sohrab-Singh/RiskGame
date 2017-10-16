@@ -140,6 +140,7 @@ public class CountriesGraph {
 	 */
 	public void addCountry(Country country) {
 		adjListHashMap.put(country, new LinkedList<Country>());
+		continentHashMap.get(country.getContinentName()).addCountry(country);
 	}
 
 	/**

@@ -1,14 +1,9 @@
 package com.game.risk.view;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Scanner;
-
 import com.game.risk.core.parser.MapFileParser;
 import com.game.risk.core.parser.MapFileWriter;
 import com.game.risk.model.Continent;
@@ -67,6 +62,17 @@ public class MapEditorView {
 				country.setxCoordinate(DEFAULT_COUNTRY_COORDINATE_VALUE);
 				country.setyCoordinate(DEFAULT_COUNTRY_COORDINATE_VALUE);
 				mapFileParser.getCountriesGraph().addCountry(country);
+				mapFileParser.getCountriesHashMap().put(countryName, country);
+				if (mapFileParser.getCountriesGraph().getContinentHashMap().get(continentName).getCountries()
+						.size() > 1) {
+					System.out
+							.println("- Add adjacency (Edge) with other countries -\n- Enter Adjacent Country Name -");
+					String adjCountryName = reader.readLine();
+					mapFileParser.getCountriesGraph().addEdge(country,
+							mapFileParser.getCountriesHashMap().get(adjCountryName));
+					mapFileParser.getCountriesGraph().addEdge(mapFileParser.getCountriesHashMap().get(adjCountryName),
+							country);
+				}
 				System.out.println("\n::::: Map Updated :::::");
 				askForNewLineInput(reader);
 				printMapElements();
@@ -162,7 +168,7 @@ public class MapEditorView {
 	}
 
 	/**
-	 * Me
+	 * Check whether the User wants to move to the new line
 	 * 
 	 * @param reader
 	 *            BufferedReader object reference
@@ -179,7 +185,7 @@ public class MapEditorView {
 	 * CountriesGraph
 	 * 
 	 * @param continentName
-	 * @return
+	 * @return true if the continent is present in the continent HashMap else false
 	 */
 	private boolean isContinentPresent(String continentName) {
 		for (String continent : mapFileParser.getCountriesGraph().getContinentHashMap().keySet()) {
@@ -193,7 +199,7 @@ public class MapEditorView {
 	 * Check whether the country is present in the Country HashMap in MapFileParser
 	 * 
 	 * @param countryName
-	 * @return
+	 * @return true if the country is present in the countries HashMap else false
 	 */
 	private boolean isCountryPresent(String countryName) {
 		for (String country : mapFileParser.getCountriesHashMap().keySet()) {
