@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import com.game.risk.core.CountriesGraph;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
@@ -11,12 +12,15 @@ import com.game.risk.model.Country;
  * Map file writer to write the map data into the .map file
  * 
  * @author sohrab_singh
- *
+ * @author Sarthak
  */
 public class MapFileWriter {
 
 	/** Map File parser used for getting the current map data */
 	private MapFileParser fileParser;
+
+	/** Graph to access countries adjacency list and perform CRUD operations */
+	private CountriesGraph countriesGraph;
 
 	/** Name of file where data to be written. */
 	private String fileName;
@@ -36,6 +40,20 @@ public class MapFileWriter {
 		this.fileName = fileName;
 		this.fileParser = fileParser;
 
+	}
+
+	/**
+	 * Map File Writer Constructor
+	 * 
+	 * @param countriesGraph
+	 *            CountriesGraph object reference
+	 * @param fileName
+	 *            Name of file
+	 */
+	public MapFileWriter(CountriesGraph countriesGraph, String fileName) {
+		super();
+		this.countriesGraph = countriesGraph;
+		this.fileName = fileName;
 	}
 
 	/**
@@ -78,7 +96,7 @@ public class MapFileWriter {
 				builder.append("\n");
 			}
 		}
-		
+
 		bufferedWriter.write(builder.toString());
 		bufferedWriter.close();
 		return this;

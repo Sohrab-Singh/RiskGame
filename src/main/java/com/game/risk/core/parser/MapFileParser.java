@@ -56,7 +56,7 @@ public class MapFileParser {
      * @throws FileNotFoundException
      */
     public MapFileParser(String filename) throws FileNotFoundException {
-        fileReader = new FileReader("");
+        fileReader = new FileReader(filename);
         countriesHashMap = new HashMap<String, Country>();
         continentHashMap = new HashMap<String, Continent>();
         countriesGraph = new CountriesGraph(this);
@@ -93,6 +93,7 @@ public class MapFileParser {
                         String[] splitLine = line.split("=");
                         Continent continent = new Continent(splitLine[0], Integer.parseInt(splitLine[1]));
                         continentHashMap.put(splitLine[0], continent);
+                        countriesGraph.addContinent(continent);
                     }
                 }
             }

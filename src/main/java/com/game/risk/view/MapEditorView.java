@@ -1,5 +1,9 @@
 package com.game.risk.view;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -7,6 +11,7 @@ import java.util.Scanner;
 
 import com.game.risk.core.parser.MapFileParser;
 import com.game.risk.core.parser.MapFileWriter;
+import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
 /**
@@ -15,39 +20,208 @@ import com.game.risk.model.Country;
  * @author Sarthak
  */
 public class MapEditorView {
+	private static final String SEPERATOR = " - ";
+	private static final String COLON_SEPERATOR = ", ";
+	private static final String DEFAULT_COUNTRY_COORDINATE_VALUE = "NULL";
 	private MapFileWriter mapFileWriter;
 	private MapFileParser mapFileParser;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param mapFileParser reference to the Map File Parser object
-	 * @param mapFileWriter reference to the Map File Writer object
+	 * @param mapFileParser
+	 *            reference to the Map File Parser object
+	 * @param mapFileWriter
+	 *            reference to the Map File Writer object
 	 */
 	public MapEditorView(MapFileParser mapFileParser, MapFileWriter mapFileWriter) {
 		this.mapFileParser = mapFileParser;
 		this.mapFileWriter = mapFileWriter;
 	}
-	
+
 	/**
 	 * Method to print the adjacency Matrix representation and edit the map
+	 * 
+	 * @throws IOException
 	 */
-	public void readMapEditor() {
-		Iterator iterator =  mapFileParser.getCountriesGraph().getAdjListHashMap().entrySet().iterator();
-		while(iterator.hasNext()) {
-			Map.Entry<Country, LinkedList<Country>> pair = (Map.Entry<Country, LinkedList<Country>>) iterator.next(); 
-			StringBuilder builder = new StringBuilder();
-			System.out.print(builder.append(pair.getKey().getCountryName()).append(" "));
-			for(Country adjCountry : pair.getValue()) {
-				System.out.print(builder.append(adjCountry.getCountryName()).append(" "));
+	public void readMapEditor() throws IOException {
+		printMapElements();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		while (true) {
+			System.out.println(
+					":: Edit the Map ::\n\n1. Add a Country\n2. Delete a country\n3. Add an Edge\n4. Delete an Edge\n5. Add a Continent\n6. Delete a Continent\n7. Exit");
+			int choice = Integer.parseInt(reader.readLine());
+			if (choice == 7)
+				break;
+			// Initialing variables for the switch case use
+			String countryName = null;
+			String countryName2 = null;
+			String continentName = null;
+			switch (choice) {
+			case 1:
+				System.out.println("\n:: Enter the Country Name and its Continent ::");
+				countryName = reader.readLine();
+				continentName = reader.readLine();
+				Country country = new Country(countryName);
+				country.setContinentName(continentName);
+				country.setxCoordinate(DEFAULT_COUNTRY_COORDINATE_VALUE);
+				country.setyCoordinate(DEFAULT_COUNTRY_COORDINATE_VALUE);
+				mapFileParser.getCountriesGraph().addCountry(country);
+				System.out.println("\n::::: Map Updated :::::");
+				askForNewLineInput(reader);
+				printMapElements();
+				break;
+			case 2:
+				System.out.println("\n:: Enter the Country Name to perform Deletion ::");
+				countryName = reader.readLine();
+				mapFileParser.getCountriesGraph().removeCountry(mapFileParser.getCountriesHashMap().get(countryName));
+				System.out.println("\n::::: Map Updated :::::");
+				askForNewLineInput(reader);
+				printMapElements();
+				break;
+			case 3:
+				System.out.println("\n:: Enter the two countries to be connected ::");
+				countryName = reader.readLine();
+				countryName2 = reader.readLine();
+				mapFileParser.getCountriesGraph().addEdge(mapFileParser.getCountriesHashMap().get(countryName),
+						mapFileParser.getCountriesHashMap().get(countryName2));
+				mapFileParser.getCountriesGraph().addEdge(mapFileParser.getCountriesHashMap().get(countryName2),
+						mapFileParser.getCountriesHashMap().get(countryName));
+				System.out.println("\n::::: Map Updated :::::");
+				askForNewLineInput(reader);
+				printMapElements();
+				break;
+			case 4:
+				System.out.println("\n:: Enter the two countries to remove their connectivity ::");
+				countryName = reader.readLine();
+				countryName2 = reader.readLine();
+				mapFileParser.getCountriesGraph().removeEdge(mapFileParser.getCountriesHashMap().get(countryName),
+						mapFileParser.getCountriesHashMap().get(countryName2));
+				mapFileParser.getCountriesGraph().removeEdge(mapFileParser.getCountriesHashMap().get(countryName2),
+						mapFileParser.getCountriesHashMap().get(countryName));
+				System.out.println("\n::::: Map Updated :::::");
+				askForNewLineInput(reader);
+				printMapElements();
+				break;
+			case 5:
+				System.out.println("\n:: Enter a Name for the new Continent ::");
+				continentName = reader.readLine();
+				System.out.println("- How many new countries you want to insert? -");
+				int count = Integer.parseInt(reader.readLine());
+				String[] countriesArray = new String[count];
+				for (int i = 0; i < countriesArray.length; i++) {
+					countriesArray[i] = reader.readLine();
+					Country newCountry = new Country(countriesArray[i]);
+					newCountry.setContinentName(continentName);
+					newCountry.setxCoordinate(DEFAULT_COUNTRY_COORDINATE_VALUE);
+					newCountry.setyCoordinate(DEFAULT_COUNTRY_COORDINATE_VALUE);
+				}
+				System.out.println("- Define an edge for each new country created -");
+				for (int i = 0; i < countriesArray.length; i++) {
+					System.out.println("- Enter count of the Adjacent Country(ies) for " + countriesArray[i] + " -");
+					int adjacentCount = Integer.parseInt(reader.readLine());
+					System.out.println("- Enter the Country Name(s) to be placed Adjacent -");
+					for (int j = 0; j < adjacentCount; j++) {
+						String adjacentCountryNm = reader.readLine();
+						if (isCountryPresent(adjacentCountryNm)) {
+							mapFileParser.getCountriesGraph().addEdge(
+									mapFileParser.getCountriesHashMap().get(countriesArray[i]),
+									mapFileParser.getCountriesHashMap().get(adjacentCountryNm));
+							mapFileParser.getCountriesGraph().addEdge(
+									mapFileParser.getCountriesHashMap().get(adjacentCountryNm),
+									mapFileParser.getCountriesHashMap().get(countriesArray[i]));
+						} else {
+							System.out.println("Invalid Country Name Input");
+						}
+					}
+				}
+				System.out.println("\n::::: Map Updated :::::");
+				askForNewLineInput(reader);
+				printMapElements();
+				break;
+			case 6:
+				System.out.println("\n:: Enter a Continent Name to be deleted ::");
+				continentName = reader.readLine();
+				boolean isPresent = isContinentPresent(continentName);
+				if (isPresent) {
+					mapFileParser.getCountriesGraph()
+							.removeContinent(mapFileParser.getContinentHashMap().get(continentName));
+				} else {
+					System.out.println("Invalid Continent Name Input");
+				}
+				System.out.println("\n::::: Map Updated :::::");
+				askForNewLineInput(reader);
+				printMapElements();
+				break;
+			default:
+				System.out.println("Invalid Input.");
+				break;
 			}
-			System.out.println();
 		}
-		final Scanner sc = new Scanner(System.in);
-		while(true) {
-			System.out.println("1. Add a Country\n2. Delete a country\n3. Add an Edge\n4. Delete an Edge\n5. Add a Continent\n6. Delete a Continent\n7. Exit");
-			int choice = sc.nextInt();
-			if(choice == 7) break;
+		reader.close();
+	}
+
+	/**
+	 * Me
+	 * 
+	 * @param reader
+	 *            BufferedReader object reference
+	 * @throws IOException
+	 */
+	private void askForNewLineInput(BufferedReader reader) throws IOException {
+		while (reader.readLine().equalsIgnoreCase("\n")) {
+
 		}
+	}
+
+	/**
+	 * Check whether the continent is present in the Continent HashMap in
+	 * CountriesGraph
+	 * 
+	 * @param continentName
+	 * @return
+	 */
+	private boolean isContinentPresent(String continentName) {
+		for (String continent : mapFileParser.getCountriesGraph().getContinentHashMap().keySet()) {
+			if (continent.equals(continentName))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Check whether the country is present in the Country HashMap in MapFileParser
+	 * 
+	 * @param countryName
+	 * @return
+	 */
+	private boolean isCountryPresent(String countryName) {
+		for (String country : mapFileParser.getCountriesHashMap().keySet()) {
+			if (country.equals(countryName))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Print the countries and their adjacent countries stored in graph
+	 */
+	private void printMapElements() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("\nCountry - Continent - Adjacent Countries\n\n");
+		for (Continent continent : mapFileParser.getCountriesGraph().getContinentHashMap().values()) {
+			for (Country country : continent.getCountries()) {
+				builder.append(country.getCountryName() + SEPERATOR + continent.getContinentName() + SEPERATOR);
+				LinkedList<Country> currentCountryList = mapFileParser.getCountriesGraph().getAdjListHashMap()
+						.get(country);
+				for (int i = 0; i < currentCountryList.size(); i++) {
+					builder.append(currentCountryList.get(i).getCountryName()
+							+ (i != currentCountryList.size() - 1 ? COLON_SEPERATOR : ""));
+				}
+				builder.append("\n");
+			}
+			builder.append("\n");
+		}
+		System.out.print(builder.toString());
 	}
 }
