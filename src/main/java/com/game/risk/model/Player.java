@@ -11,21 +11,29 @@ import com.game.risk.cardenum.CardEnum;
  *
  */
 public class Player {
-	/** Player name. */
+	/**
+	 * Player name.
+	 */
 	private String playerName;
 
-	/** Countries owned */
+	/**
+	 * Countries owned
+	 */
 	private List<Country> countriesOwned;
 
-	/** Card List. */
+	/**
+	 * Card List.
+	 */
 	private List<CardEnum> cardList;
 
-	/** Number of armies. */
+	/**
+	 * Number of armies.
+	 */
 	private int numberOfArmies;
 
 	/**
 	 * Get the player name.
-	 * 
+	 *
 	 * @return the playerName
 	 */
 	public String getPlayerName() {
@@ -34,9 +42,8 @@ public class Player {
 
 	/**
 	 * Set the player name.
-	 * 
-	 * @param playerName
-	 *            the playerName to set
+	 *
+	 * @param playerName the playerName to set
 	 */
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
@@ -44,7 +51,7 @@ public class Player {
 
 	/**
 	 * Get the countries owned by player.
-	 * 
+	 *
 	 * @return the countriesOwned
 	 */
 	public List<Country> getCountriesOwned() {
@@ -53,9 +60,8 @@ public class Player {
 
 	/**
 	 * Set the countries owned by player.
-	 * 
-	 * @param countriesOwned
-	 *            the countriesOwned to set
+	 *
+	 * @param countriesOwned the countriesOwned to set
 	 */
 	public void setCountriesOwned(List<Country> countriesOwned) {
 		this.countriesOwned = countriesOwned;
@@ -63,7 +69,7 @@ public class Player {
 
 	/**
 	 * Get the card list.
-	 * 
+	 *
 	 * @return the cardList
 	 */
 	public List<CardEnum> getCardList() {
@@ -72,9 +78,8 @@ public class Player {
 
 	/**
 	 * Set the card list.
-	 * 
-	 * @param cardList
-	 *            the cardList to set
+	 *
+	 * @param cardList the cardList to set
 	 */
 	public void setCardList(List<CardEnum> cardList) {
 		this.cardList = cardList;
@@ -82,7 +87,7 @@ public class Player {
 
 	/**
 	 * Get the number of armies.
-	 * 
+	 *
 	 * @return the numberOfArmies
 	 */
 	public int getNumberOfArmies() {
@@ -91,11 +96,19 @@ public class Player {
 
 	/**
 	 * Set the number of armies.
-	 * 
-	 * @param numberOfArmies
-	 *            the numberOfArmies to set
+	 *
+	 * @param numberOfArmies the numberOfArmies to set
 	 */
 	public void setNumberOfArmies(int numberOfArmies) {
 		this.numberOfArmies = numberOfArmies;
+	}
+
+	/**
+	 * Add country to the CountriesOwend list
+	 *
+	 * @param country
+	 */
+	public void addCountry(Country country) {
+		this.countriesOwned.add(country);
 	}
 }
