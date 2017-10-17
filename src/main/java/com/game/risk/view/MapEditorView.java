@@ -112,8 +112,12 @@ public class MapEditorView {
 			case 5:
 				System.out.println("\n:: Enter a Name for the new Continent ::");
 				continentName = reader.readLine();
+				System.out.println("- Enter its control value -");
+				int controlValue = Integer.parseInt(reader.readLine());
+				Continent continent = new Continent(continentName, controlValue);
 				System.out.println("- How many new countries you want to insert? -");
 				int count = Integer.parseInt(reader.readLine());
+				mapFileParser.getCountriesGraph().addContinent(continent);
 				String[] countriesArray = new String[count];
 				for (int i = 0; i < countriesArray.length; i++) {
 					countriesArray[i] = reader.readLine();
@@ -121,6 +125,8 @@ public class MapEditorView {
 					newCountry.setContinentName(continentName);
 					newCountry.setxCoordinate(DEFAULT_COUNTRY_COORDINATE_VALUE);
 					newCountry.setyCoordinate(DEFAULT_COUNTRY_COORDINATE_VALUE);
+					mapFileParser.getCountriesGraph().addCountry(newCountry);
+					mapFileParser.getCountriesHashMap().put(countriesArray[i], newCountry);
 				}
 				System.out.println("- Define an edge for each new country created -");
 				for (int i = 0; i < countriesArray.length; i++) {
@@ -129,15 +135,15 @@ public class MapEditorView {
 					System.out.println("- Enter the Country Name(s) to be placed Adjacent -");
 					for (int j = 0; j < adjacentCount; j++) {
 						String adjacentCountryNm = reader.readLine();
-						if (isCountryPresent(adjacentCountryNm)) {
+						if (isCountryPresent(adjacentCountryNm) && !mapFileParser.getCountriesGraph().isAdjacent(
+								mapFileParser.getCountriesHashMap().get(countriesArray[i]),
+								mapFileParser.getCountriesHashMap().get(adjacentCountryNm))) {
 							mapFileParser.getCountriesGraph().addEdge(
 									mapFileParser.getCountriesHashMap().get(countriesArray[i]),
 									mapFileParser.getCountriesHashMap().get(adjacentCountryNm));
 							mapFileParser.getCountriesGraph().addEdge(
 									mapFileParser.getCountriesHashMap().get(adjacentCountryNm),
 									mapFileParser.getCountriesHashMap().get(countriesArray[i]));
-						} else {
-							System.out.println("Invalid Country Name Input");
 						}
 					}
 				}

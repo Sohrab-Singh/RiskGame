@@ -177,4 +177,13 @@ public class CountriesGraph {
 		}
 		return false;
 	}
+
+	public boolean isAdjacent(Country country, Country country2) {
+		for (int i = 0; i < adjListHashMap.get(country).size(); i++) {
+			if (country2.getCountryName().equals(adjListHashMap.get(country).get(i).getCountryName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
