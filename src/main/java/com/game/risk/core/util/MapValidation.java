@@ -9,9 +9,11 @@ import java.util.HashMap;
  * with map file parser
  *
  * @author Vida Abdollahi
+ * @author sohrab_singh
  */
 
 public class MapValidation {
+
 	/**
 	 * Array List to store continents which will be found in [Continents] tag
 	 */
@@ -33,7 +35,7 @@ public class MapValidation {
 	private FileReader fileReader;
 
 	/**
-	 * Constructor
+	 * Map validation constructor
 	 */
 	public MapValidation() {
 		continentInContinent = new ArrayList<>();
@@ -42,11 +44,13 @@ public class MapValidation {
 	}
 
 	/**
-	 * Method to validate File
+	 * Method to validate file.
 	 *
 	 * @param filename
-	 * @return isValid
+	 *            file name to be validated.
+	 * @return true if file is valid otherwise false.
 	 * @throws IOException
+	 *             input out exception
 	 */
 	public boolean validateFile(String filename) throws IOException {
 		if (filename == null)
@@ -62,24 +66,10 @@ public class MapValidation {
 		fis.close();
 
 		String str = new String(data, "UTF-8");
+		isValid = checkMandatoryTags(str);
 
 		// Check to see whether all the tags are defined in the file
 		while (true) {
-
-			if (!str.contains("[Map]")) {
-				System.out.println("No [Map] tag is defined");
-				isValid = false;
-			}
-			if (!str.contains("[Territories]")) {
-				System.out.println("No [Territories] tag is defined");
-				isValid = false;
-				break;
-			}
-			if (!str.contains("[Continents]")) {
-				System.out.println("No [Continents] tag is defined");
-				isValid = false;
-				break;
-			}
 
 			line = bufferedReader.readLine();
 
@@ -88,66 +78,11 @@ public class MapValidation {
 			}
 			// Check for continents format
 
-			if (line.startsWith("[Continents]")) {
-				while ((!(line = bufferedReader.readLine()).startsWith("[Territories]"))) {
-					if (!line.isEmpty()) {
-						String pattern = "[^,;=]+=[1-9]+";
-
-						if (!line.matches(pattern)) {
-							System.out.println("* " + line + ": Invalid format for a continent ");
-
-						} else {
-							String[] splitLine = line.split("=");
-							if (!continentInContinent.contains(splitLine[0])) {
-								continentInContinent.add(splitLine[0]);
-
-							} else {
-								System.out.println("*" + splitLine[0] + " is defined more than one time");
-							}
-						}
-					}
-				}
-			}
+			line = checkContinentFormat(bufferedReader, line);
 
 			// Check for countries format
 
-			if (line.startsWith("[Territories]")) {
-				while ((line = bufferedReader.readLine()) != null) {
-					if (!line.isEmpty()) {
-						String pattern = "[^;,]+,[0-9]+,[0-9]+,[^;,]+,[^;,]+(,[^;,]+)*";
-
-						if (!line.matches(pattern)) {
-							System.out.println("* " + line + ": Invalid format for a territory ");
-
-						} else {
-							String[] split = line.split(",");
-
-							if (!continentInTerritory.contains(split[3])) {
-								continentInTerritory.add(split[3]);
-
-							}
-
-							if (!Countries.containsKey(split[0])) {
-
-								ArrayList<String> arrayList = new ArrayList<String>();
-								for (int i = 4; i < split.length; i++) {
-									arrayList.add(split[i]);
-
-								}
-								Countries.put(split[0], arrayList);
-
-							} else {
-								System.out.println("* " + split[0] + ": is defined more than one time");
-
-							}
-
-						}
-
-					}
-
-				}
-
-			}
+			checkCountriesFormat(bufferedReader, line);
 
 		}
 
@@ -186,6 +121,115 @@ public class MapValidation {
 
 			bufferedReader.close();
 
+		}
+		return isValid;
+	}
+
+	/**
+	 * Check continents format.
+	 * 
+	 * @param bufferedReader
+	 *            buffer reader to read file
+	 * @param line
+	 *            previous line
+	 * @return current read line
+	 * @throws IOException
+	 */
+	private String checkContinentFormat(BufferedReader bufferedReader, String line) throws IOException {
+		if (line.startsWith("[Continents]")) {
+			while ((!(line = bufferedReader.readLine()).startsWith("[Territories]"))) {
+				if (!line.isEmpty()) {
+					String pattern = "[^,;=]+=[1-9]+";
+
+					if (!line.matches(pattern)) {
+						System.out.println("* " + line + ": Invalid format for a continent ");
+
+					} else {
+						String[] splitLine = line.split("=");
+						if (!continentInContinent.contains(splitLine[0])) {
+							continentInContinent.add(splitLine[0]);
+
+						} else {
+							System.out.println("*" + splitLine[0] + " is defined more than one time");
+						}
+					}
+				}
+			}
+		}
+		return line;
+	}
+
+	/**
+	 * Check countries format.
+	 * 
+	 * @param bufferedReader
+	 *            buffer reader to read file
+	 * @param line
+	 *            current read line
+	 * @throws IOException
+	 */
+	private void checkCountriesFormat(BufferedReader bufferedReader, String line) throws IOException {
+		if (line.startsWith("[Territories]")) {
+			while ((line = bufferedReader.readLine()) != null) {
+				if (!line.isEmpty()) {
+					String pattern = "[^;,]+,[0-9]+,[0-9]+,[^;,]+,[^;,]+(,[^;,]+)*";
+
+					if (!line.matches(pattern)) {
+						System.out.println("* " + line + ": Invalid format for a territory ");
+
+					} else {
+						String[] split = line.split(",");
+
+						if (!continentInTerritory.contains(split[3])) {
+							continentInTerritory.add(split[3]);
+
+						}
+
+						if (!Countries.containsKey(split[0])) {
+
+							ArrayList<String> arrayList = new ArrayList<String>();
+							for (int i = 4; i < split.length; i++) {
+								arrayList.add(split[i]);
+
+							}
+							Countries.put(split[0], arrayList);
+
+						} else {
+							System.out.println("* " + split[0] + ": is defined more than one time");
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+	}
+
+	/**
+	 * 
+	 * Check mandatory tags.
+	 * 
+	 * @param string
+	 *            whole file
+	 * @return true if present
+	 */
+	private boolean checkMandatoryTags(String str) {
+		boolean isValid = true;
+
+		if (!str.contains("[Map]")) {
+			System.out.println("No [Map] tag is defined");
+			isValid = false;
+		}
+		if (!str.contains("[Territories]")) {
+			System.out.println("No [Territories] tag is defined");
+			isValid = false;
+		}
+		if (!str.contains("[Continents]")) {
+			System.out.println("No [Continents] tag is defined");
+			isValid = false;
 		}
 		return isValid;
 	}

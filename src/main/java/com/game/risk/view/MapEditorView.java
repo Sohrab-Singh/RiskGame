@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import com.game.risk.core.parser.MapFileParser;
-import com.game.risk.core.parser.MapFileWriter;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
@@ -13,12 +12,20 @@ import com.game.risk.model.Country;
  * Editor View Class
  * 
  * @author Sarthak
+ * @author sohrab_singh
  */
 public class MapEditorView {
+
+	/*** Hyphen seperator */
 	private static final String SEPERATOR = " - ";
-	private static final String COLON_SEPERATOR = ", ";
+
+	/** Comma seperator. */
+	private static final String COMMA_SEPERATOR = ", ";
+
+	/** DEFAULT country coordinate value. */
 	private static final String DEFAULT_COUNTRY_COORDINATE_VALUE = "NULL";
-	private MapFileWriter mapFileWriter;
+
+	/** Parser to changing the data stored. */
 	private MapFileParser mapFileParser;
 
 	/**
@@ -29,9 +36,8 @@ public class MapEditorView {
 	 * @param mapFileWriter
 	 *            reference to the Map File Writer object
 	 */
-	public MapEditorView(MapFileParser mapFileParser, MapFileWriter mapFileWriter) {
+	public MapEditorView(MapFileParser mapFileParser) {
 		this.mapFileParser = mapFileParser;
-		this.mapFileWriter = mapFileWriter;
 	}
 
 	/**
@@ -48,10 +54,12 @@ public class MapEditorView {
 			int choice = Integer.parseInt(reader.readLine());
 			if (choice == 7)
 				break;
+
 			// Initialing variables for the switch case use
 			String countryName = null;
 			String countryName2 = null;
 			String continentName = null;
+
 			switch (choice) {
 			case 1:
 				System.out.println("\n:: Enter the Country Name and its Continent ::");
@@ -177,7 +185,6 @@ public class MapEditorView {
 	 * Check whether the User wants to move to the new line
 	 * 
 	 * @param reader
-	 *            BufferedReader object reference
 	 * @throws IOException
 	 */
 	private void askForNewLineInput(BufferedReader reader) throws IOException {
@@ -228,7 +235,7 @@ public class MapEditorView {
 						.get(country);
 				for (int i = 0; i < currentCountryList.size(); i++) {
 					builder.append(currentCountryList.get(i).getCountryName()
-							+ (i != currentCountryList.size() - 1 ? COLON_SEPERATOR : ""));
+							+ (i != currentCountryList.size() - 1 ? COMMA_SEPERATOR : ""));
 				}
 				builder.append("\n");
 			}

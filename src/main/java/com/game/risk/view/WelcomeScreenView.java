@@ -8,7 +8,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 import com.game.risk.core.parser.MapFileParser;
-import com.game.risk.core.parser.MapFileWriter;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -24,15 +23,22 @@ import java.io.IOException;
  * View for the user to choose from loading a map file or creating a new map
  * 
  * @author Sarthak
+ * @author sohrab_singh
  *
  */
 public class WelcomeScreenView extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5774732089402932902L;
 	private JPanel contentPane;
 	private JButton btnLoad;
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param args
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -84,8 +90,8 @@ public class WelcomeScreenView extends JFrame {
 					System.out.println("Path: " + filename);
 					try {
 						MapFileParser parser = new MapFileParser(filename).readFile();
-						MapFileWriter fileWriter = new MapFileWriter(filename, parser);
-						MapEditorView view = new MapEditorView(parser, fileWriter);
+						// MapFileWriter fileWriter = new MapFileWriter(filename, parser);
+						MapEditorView view = new MapEditorView(parser);
 						view.readMapEditor();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

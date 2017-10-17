@@ -10,6 +10,7 @@ import java.util.LinkedList;
  * Graph class to hold the countries and its adjacent countries
  *
  * @author Sarthak
+ * @author sohrab_singh
  */
 public class CountriesGraph {
 
@@ -35,7 +36,10 @@ public class CountriesGraph {
 	private HashMap<Country, LinkedList<Country>> adjListHashMap;
 
 	/**
+	 * Countries Graph constructor
+	 * 
 	 * @param fileParser
+	 *            parser for storing data
 	 */
 	public CountriesGraph(MapFileParser fileParser) {
 		this.mapFileParser = fileParser;
@@ -62,6 +66,8 @@ public class CountriesGraph {
 	}
 
 	/**
+	 * Get the Adjacent List Map
+	 * 
 	 * @return the adjListHashMap
 	 */
 	public HashMap<Country, LinkedList<Country>> getAdjListHashMap() {
@@ -72,7 +78,9 @@ public class CountriesGraph {
 	 * Add a connectivity as adjacent countries between two countries
 	 *
 	 * @param startCountry
+	 *            start country of edge
 	 * @param endCountry
+	 *            end country of edge
 	 */
 	public void addEdge(Country startCountry, Country endCountry) {
 		if (adjListHashMap.containsKey(startCountry)) {
@@ -86,6 +94,8 @@ public class CountriesGraph {
 
 	/**
 	 * Get Continent HashMap
+	 * 
+	 * @return Hashmap of continents
 	 */
 	public HashMap<String, Continent> getContinentHashMap() {
 		return continentHashMap;
@@ -104,7 +114,9 @@ public class CountriesGraph {
 	 * Remove a connectivity as adjacent countries between two countries
 	 *
 	 * @param startCountry
+	 *            start country of edge
 	 * @param endCountry
+	 *            end country of edge
 	 */
 	public void removeEdge(Country startCountry, Country endCountry) {
 		adjListHashMap.get(startCountry).remove(endCountry);
@@ -115,7 +127,8 @@ public class CountriesGraph {
 	 * Remove a country from the graph and model classes
 	 *
 	 * @param country
-	 * @return
+	 *            country to be removed
+	 * @return true if removed
 	 */
 	public boolean removeCountry(Country country) {
 		if (adjListHashMap.containsKey(country)) {
@@ -137,6 +150,7 @@ public class CountriesGraph {
 	 * Add a country to the graph
 	 *
 	 * @param country
+	 *            country to be added
 	 */
 	public void addCountry(Country country) {
 		adjListHashMap.put(country, new LinkedList<Country>());
@@ -147,16 +161,18 @@ public class CountriesGraph {
 	 * Add a continent to the graph
 	 *
 	 * @param continent
+	 *            continent to added
 	 */
 	public void addContinent(Continent continent) {
 		continentHashMap.put(continent.getContinentName(), continent);
 	}
 
 	/**
-	 * Remove a continent from the graph
+	 * Remove a continent from the graph.
 	 *
 	 * @param continent
-	 * @return
+	 *            continent to be removed
+	 * @return true if continent is removed
 	 */
 	public boolean removeContinent(Continent continent) {
 		if (continentHashMap.containsValue(continent)) {
@@ -178,6 +194,15 @@ public class CountriesGraph {
 		return false;
 	}
 
+	/**
+	 * Check if two countries are adjacent.
+	 * 
+	 * @param country
+	 *            first country
+	 * @param country2
+	 *            second country
+	 * @return true if adjacent
+	 */
 	public boolean isAdjacent(Country country, Country country2) {
 		for (int i = 0; i < adjListHashMap.get(country).size(); i++) {
 			if (country2.getCountryName().equals(adjListHashMap.get(country).get(i).getCountryName())) {

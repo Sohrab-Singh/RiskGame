@@ -8,10 +8,13 @@ package com.game.risk.cardenum;
  */
 public enum CardEnum {
 	
+	/** Infantry Card*/
 	infantry,
 	
+	/** Cavalry Card*/
 	cavalry,
 	
+	/**Artillery Card */
 	artillery;
 
 }

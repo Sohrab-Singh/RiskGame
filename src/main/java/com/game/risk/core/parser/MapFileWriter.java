@@ -61,6 +61,7 @@ public class MapFileWriter {
 	 * 
 	 * @return Map File Writer
 	 * @throws IOException
+	 *             input output exception
 	 */
 	public MapFileWriter saveMapToFile() throws IOException {
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));

@@ -4,17 +4,28 @@ import java.util.List;
 
 import com.game.risk.cardenum.CardEnum;
 
+/**
+ * Player object for populating the data related to player.
+ * 
+ * @author sohrab_singh
+ *
+ */
 public class Player {
-
+	/** Player name. */
 	private String playerName;
-	
+
+	/** Countries owned */
 	private List<Country> countriesOwned;
-	
+
+	/** Card List. */
 	private List<CardEnum> cardList;
-	
+
+	/** Number of armies. */
 	private int numberOfArmies;
 
 	/**
+	 * Get the player name.
+	 * 
 	 * @return the playerName
 	 */
 	public String getPlayerName() {
@@ -22,13 +33,18 @@ public class Player {
 	}
 
 	/**
-	 * @param playerName the playerName to set
+	 * Set the player name.
+	 * 
+	 * @param playerName
+	 *            the playerName to set
 	 */
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
 	}
 
 	/**
+	 * Get the countries owned by player.
+	 * 
 	 * @return the countriesOwned
 	 */
 	public List<Country> getCountriesOwned() {
@@ -36,13 +52,18 @@ public class Player {
 	}
 
 	/**
-	 * @param countriesOwned the countriesOwned to set
+	 * Set the countries owned by player.
+	 * 
+	 * @param countriesOwned
+	 *            the countriesOwned to set
 	 */
 	public void setCountriesOwned(List<Country> countriesOwned) {
 		this.countriesOwned = countriesOwned;
 	}
 
 	/**
+	 * Get the card list.
+	 * 
 	 * @return the cardList
 	 */
 	public List<CardEnum> getCardList() {
@@ -50,13 +71,18 @@ public class Player {
 	}
 
 	/**
-	 * @param cardList the cardList to set
+	 * Set the card list.
+	 * 
+	 * @param cardList
+	 *            the cardList to set
 	 */
 	public void setCardList(List<CardEnum> cardList) {
 		this.cardList = cardList;
 	}
 
 	/**
+	 * Get the number of armies.
+	 * 
 	 * @return the numberOfArmies
 	 */
 	public int getNumberOfArmies() {
@@ -64,7 +90,10 @@ public class Player {
 	}
 
 	/**
-	 * @param numberOfArmies the numberOfArmies to set
+	 * Set the number of armies.
+	 * 
+	 * @param numberOfArmies
+	 *            the numberOfArmies to set
 	 */
 	public void setNumberOfArmies(int numberOfArmies) {
 		this.numberOfArmies = numberOfArmies;
