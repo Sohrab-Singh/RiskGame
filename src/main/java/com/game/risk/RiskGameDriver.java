@@ -3,13 +3,15 @@
  */
 package com.game.risk;
 
-import java.io.FileNotFoundException;
+import java.awt.EventQueue;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
-import org.apache.log4j.Logger;
-
-import com.game.risk.core.parser.MapFileParser;
-import com.game.risk.core.parser.MapFileWriter;
+import com.game.risk.core.StartUpPhase;
+import com.game.risk.view.WelcomeScreenView;
+import com.game.risk.view.WelcomeScreenView.WelcomeScreenInterface;
 
 /**
  * Risk game driver is main class to call all phases of the game.
@@ -17,9 +19,17 @@ import com.game.risk.core.parser.MapFileWriter;
  * @author sohrab_singh
  *
  */
-public class RiskGameDriver {
+public class RiskGameDriver implements WelcomeScreenView.WelcomeScreenInterface {
 
-	public static final Logger LOGGER = Logger.getLogger(RiskGameDriver.class);
+	/**
+	 * WelcomeScreenView object
+	 */
+	private static WelcomeScreenView frame;
+	private static WelcomeScreenInterface welcomeScreenInterface;
+
+	public RiskGameDriver() {
+		welcomeScreenInterface = this;
+	}
 
 	/**
 	 * Main method for Risk Game Driver.
@@ -28,24 +38,24 @@ public class RiskGameDriver {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) {
+		RiskGameDriver driver = new RiskGameDriver();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					frame = new WelcomeScreenView();
+					frame.setVisible(true);
+					frame.addListener(welcomeScreenInterface);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	@Override
+	public void notifyRiskGameDriver(int numberOfPlayers) {
 		
-		LOGGER.info("Execution started. Welcome to Risk Game");
-
-		// Hard coded files
-		// To be changed to different files. Later it will changed to MapWriter overrite the same file.
-		final String fileName = "/Users/sohrab_singh/Documents/workspace-sts-3.9.0.RELEASE/RiskGame/res/Canada.map";
-		final String fileName1 = "/Users/sohrab_singh/Documents/workspace-sts-3.9.0.RELEASE/RiskGame/res/Canada1.map";
-
-		MapFileParser fileParser;
-		MapFileWriter writer;
-		try {
-			fileParser = new MapFileParser(fileName).readFile();
-			writer = new MapFileWriter(fileName1, fileParser).saveMapToFile();
-			writer.saveMapToFile();
-		} catch (FileNotFoundException e) {
-			LOGGER.error("File not found" + fileName);
-		} catch (IOException e) {
-			LOGGER.error("Error occured while reading file.");
-		}
+		System.out.println(numberOfPlayers + " ");
+		StartUpPhase startUpPhase = new StartUpPhase(frame.getParser(), numberOfPlayers);
 	}
 }

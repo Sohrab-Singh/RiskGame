@@ -19,9 +19,6 @@ public class MapFileWriter {
 	/** Map File parser used for getting the current map data */
 	private MapFileParser fileParser;
 
-	/** Graph to access countries adjacency list and perform CRUD operations */
-	private CountriesGraph countriesGraph;
-
 	/** Name of file where data to be written. */
 	private String fileName;
 
@@ -43,34 +40,24 @@ public class MapFileWriter {
 	}
 
 	/**
-	 * Map File Writer Constructor
-	 * 
-	 * @param countriesGraph
-	 *            CountriesGraph object reference
-	 * @param fileName
-	 *            Name of file
-	 */
-	public MapFileWriter(CountriesGraph countriesGraph, String fileName) {
-		super();
-		this.countriesGraph = countriesGraph;
-		this.fileName = fileName;
-	}
-
-	/**
 	 * Map file writer to write map data to .map file.
 	 * 
 	 * @return Map File Writer
 	 * @throws IOException
 	 *             input output exception
 	 */
-	public MapFileWriter saveMapToFile() throws IOException {
+	public MapFileWriter saveMapToFile(boolean isNewMap) throws IOException {
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
 		StringBuilder builder = new StringBuilder();
 
 		// Writing [Map] tag meta-data.
-		for (String str : fileParser.getMapMetaData()) {
-			builder.append(str);
-			builder.append("\n");
+		if (isNewMap) {
+			builder.append("[Map]\n").append("author=${user}");
+		} else {
+			for (String str : fileParser.getMapMetaData()) {
+				builder.append(str);
+				builder.append("\n");
+			}
 		}
 		builder.append("\n");
 

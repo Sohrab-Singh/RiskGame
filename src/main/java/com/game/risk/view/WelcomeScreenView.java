@@ -17,7 +17,11 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * View for the user to choose from loading a map file or creating a new map
@@ -26,37 +30,39 @@ import java.io.IOException;
  * @author sohrab_singh
  *
  */
-public class WelcomeScreenView extends JFrame {
+public class WelcomeScreenView extends JFrame implements MouseListener {
 
 	/**
-	 * 
+	 * Serial Version UID
 	 */
 	private static final long serialVersionUID = -5774732089402932902L;
-	private JPanel contentPane;
-	private JButton btnLoad;
 
 	/**
-	 * Launch the application.
-	 * 
-	 * @param args
+	 * Map File Parser
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WelcomeScreenView frame = new WelcomeScreenView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private MapFileParser parser;
+
+	/**
+	 * Map Editor View to create a new Map or make changes to the existing map file
+	 */
+	private MapEditorView view;
+
+	private WelcomeScreenInterface welcomeInterface;
+	private JPanel contentPane;
+	private JButton btnLoad;
+	private JButton btnNewMap;
 
 	/**
 	 * Create the frame.
 	 */
 	public WelcomeScreenView() {
+		initializeView();
+
+		btnLoad.addMouseListener(this);
+		btnNewMap.addMouseListener(this);
+	}
+
+	private void initializeView() {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -75,31 +81,6 @@ public class WelcomeScreenView extends JFrame {
 		contentPane.add(lblWelcome);
 
 		btnLoad = new JButton("Load Map File");
-		btnLoad.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				setVisible(false);
-				JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-				fileChooser.setDialogTitle("Choose a Map File");
-				fileChooser.setAcceptAllFileFilterUsed(false);
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("Map File Extensions", "map", "MAP");
-				fileChooser.addChoosableFileFilter(filter);
-				int returnValue = fileChooser.showOpenDialog(null);
-				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					String filename = fileChooser.getSelectedFile().getAbsolutePath();
-					System.out.println("Path: " + filename);
-					try {
-						MapFileParser parser = new MapFileParser(filename).readFile();
-						// MapFileWriter fileWriter = new MapFileWriter(filename, parser);
-						MapEditorView view = new MapEditorView(parser);
-						view.readMapEditor();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		});
 
 		JLabel lblInfoText = new JLabel("Start with selecting a Map File, or Creating a new Map");
 		lblInfoText.setHorizontalAlignment(SwingConstants.CENTER);
@@ -111,8 +92,119 @@ public class WelcomeScreenView extends JFrame {
 		btnLoad.setBounds(135, 109, 166, 47);
 		contentPane.add(btnLoad);
 
-		JButton btnNewMap = new JButton("Create a New Map");
+		btnNewMap = new JButton("Create a New Map");
 		btnNewMap.setBounds(135, 169, 166, 47);
 		contentPane.add(btnNewMap);
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent event) {
+		if (event.getComponent() == btnLoad) {
+			setVisible(false);
+			JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+			fileChooser.setDialogTitle("Choose a Map File");
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Map File Extensions", "map", "MAP");
+			fileChooser.addChoosableFileFilter(filter);
+			int returnValue = fileChooser.showOpenDialog(null);
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				String filename = fileChooser.getSelectedFile().getAbsolutePath();
+				System.out.println("Path: " + filename);
+				try {
+					parser = new MapFileParser(filename).readFile();
+					view = new MapEditorView(parser);
+					int playersCount = view.readMapEditor(false);
+					startStartupPhase(playersCount);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			setVisible(false);
+			parser = new MapFileParser();
+			view = new MapEditorView(parser);
+			try {
+				int playersCount = view.readMapEditor(true);
+				startStartupPhase(playersCount);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void startStartupPhase(int playersCount) {
+		welcomeInterface.notifyRiskGameDriver(playersCount);
+
+	}
+
+	public void addListener(WelcomeScreenInterface welcomeInterface) {
+		this.welcomeInterface = welcomeInterface;
+	}
+
+	/**
+	 * Get Map File Parser
+	 * 
+	 * @return parser MapFileParser object
+	 */
+	public MapFileParser getParser() {
+		return parser;
+	}
+
+	/**
+	 * Set the MapFileParser object to the private class variable
+	 * 
+	 * @param parser
+	 *            MapFileParser object
+	 */
+	public void setParser(MapFileParser parser) {
+		this.parser = parser;
+	}
+
+	/**
+	 * Get the Map Editor View object
+	 * 
+	 * @return view MapEditorView object
+	 */
+	public MapEditorView getView() {
+		return view;
+	}
+
+	/**
+	 * Set the MapEditorView object to the private class variable
+	 * 
+	 * @param view
+	 */
+	public void setView(MapEditorView view) {
+		this.view = view;
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public interface WelcomeScreenInterface {
+		public void notifyRiskGameDriver(int numberOfPlayers);
 	}
 }

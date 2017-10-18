@@ -5,18 +5,25 @@ import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.swing.filechooser.FileSystemView;
+import javax.xml.crypto.Data;
 
 /**
  * Map File Parser for reading map data for the game.
  *
- * @author sohrab_singh
  * @author Sarthak
+ * @author sohrab_singh
  */
 public class MapFileParser {
 
@@ -49,6 +56,20 @@ public class MapFileParser {
 	 * Map meta deta
 	 */
 	private List<String> mapMetaData = new ArrayList<>();
+
+	/**
+	 * Map File Parser Default Constructor
+	 */
+	public MapFileParser() {
+		countriesHashMap = new HashMap<>();
+		continentHashMap = new HashMap<>();
+		countriesGraph = new CountriesGraph(this);
+		File file = FileSystemView.getFileSystemView().getDefaultDirectory();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss");
+		Date date = new Date();
+		String filename = file.getAbsolutePath() + "\\" + dateFormat.format(date) + "_MAP_FILE.map";
+		mapFileWriter = new MapFileWriter(filename, this);
+	}
 
 	/**
 	 * Map File Parser constructor.

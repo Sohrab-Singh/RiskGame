@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
+import java.util.Scanner;
+
 import com.game.risk.core.parser.MapFileParser;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
@@ -28,6 +30,9 @@ public class MapEditorView {
 	/** Parser to changing the data stored. */
 	private MapFileParser mapFileParser;
 
+	/** Check whether a new map is created or an existing map file is altered **/
+	private boolean isNewMap;
+
 	/**
 	 * Constructor
 	 * 
@@ -45,15 +50,16 @@ public class MapEditorView {
 	 * 
 	 * @throws IOException
 	 */
-	public void readMapEditor() throws IOException {
-		printMapElements();
+	public int readMapEditor(boolean isNewMap) throws IOException {
+		int playersCount = 2;
+		this.isNewMap = isNewMap;
+		if (!isNewMap)
+			printMapElements();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
-			System.out.println(
-					":: Edit the Map ::\n\n1. Add a Country\n2. Delete a country\n3. Add an Edge\n4. Delete an Edge\n5. Add a Continent\n6. Delete a Continent\n7. Exit");
+			System.out.println(":: " + (isNewMap ? "Create a New Map" : " Edit the Map")
+					+ " ::\n\n1. Add a Country\n2. Delete a country\n3. Add an Edge\n4. Delete an Edge\n5. Add a Continent\n6. Delete a Continent\n7. Save and Exit");
 			int choice = Integer.parseInt(reader.readLine());
-			if (choice == 7)
-				break;
 
 			// Initialing variables for the switch case use
 			String countryName = null;
@@ -173,12 +179,21 @@ public class MapEditorView {
 				askForNewLineInput(reader);
 				printMapElements();
 				break;
+			case 7:
+				mapFileParser.getMapFileWriter().saveMapToFile(isNewMap);
+				break;
 			default:
 				System.out.println("Invalid Input.");
 				break;
 			}
+			if (choice == 7) {
+				System.out.println(":: Enter the number of Player playing the game (Min - 2, Max - 6) ::");
+				playersCount = Integer.parseInt(reader.readLine());
+				break;
+			}
 		}
 		reader.close();
+		return playersCount;
 	}
 
 	/**

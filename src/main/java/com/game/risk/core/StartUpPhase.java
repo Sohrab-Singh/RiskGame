@@ -44,7 +44,6 @@ public class StartUpPhase {
 	 * @param numberOfPlayers
 	 *            number of players that we need to start the game
 	 */
-
 	public StartUpPhase(MapFileParser mapFileParser, int numberOfPlayers) {
 		this.mapFileParser = mapFileParser;
 		this.playerCounts = numberOfPlayers;
@@ -62,7 +61,6 @@ public class StartUpPhase {
 	 *
 	 * @param playerCounts
 	 */
-
 	public void setPlayerCounts(int playerCounts) {
 		this.playerCounts = playerCounts;
 	}
@@ -72,7 +70,6 @@ public class StartUpPhase {
 	 *
 	 * @return playerCounts which shows the number of players
 	 */
-
 	public int getPlayerCounts() {
 		return playerCounts;
 	}
@@ -82,7 +79,6 @@ public class StartUpPhase {
 	 *
 	 * @return playerLists
 	 */
-
 	public ArrayList<Player> getPlayerList() {
 		return playersList;
 	}
@@ -99,7 +95,6 @@ public class StartUpPhase {
 	/**
 	 * Assign countries randomly to players
 	 */
-
 	public void assignCountries() {
 
 		for (String key : mapFileParser.getCountriesHashMap().keySet()) {
