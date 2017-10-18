@@ -18,6 +18,9 @@ public class Country {
 	/** Y coordinate */
 	private String yCoordinate;
 
+	/** Owner of this country */
+	private String playerName;
+
 	/**
 	 * Current number of armies in the country.
 	 */
@@ -119,5 +122,24 @@ public class Country {
 	 */
 	public void setyCoordinate(String yCoordinate) {
 		this.yCoordinate = yCoordinate;
+	}
+
+	/**
+	 * Get the player name.
+	 * 
+	 * @return the playerName
+	 */
+	public String getPlayerName() {
+		return playerName;
+	}
+
+	/**
+	 * Set the player name.
+	 * 
+	 * @param playerName
+	 *            the playerName to set
+	 */
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
 	}
 }
