@@ -139,7 +139,7 @@ public class StartUp {
         }
         for (Player player : playersList) {
             int number = player.getNumberOfArmies();
-            player.setNumberOfArmies(number - 1);
+            player.setNumberOfArmies(number - player.getCountriesOwned().size());
         }
     }
 
