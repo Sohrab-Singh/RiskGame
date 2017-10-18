@@ -1,14 +1,13 @@
 package com.game.risk.core;
 
 import com.game.risk.core.parser.MapFileParser;
-import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Startup class
+ * Startup class.
  *
  * @author Vida Abdollahi
  * @author sohrab_singh
@@ -23,7 +22,7 @@ public class StartUpPhase {
 	private ArrayList<Player> playersList;
 
 	/** Number of players */
-	private int playerCounts;
+	private int numberOfPlayers;
 
 	/** Minimum number of players */
 	private static final int MINIMUM_NUMBER_PLAYERS = 2;
@@ -46,33 +45,16 @@ public class StartUpPhase {
 	 */
 	public StartUpPhase(MapFileParser mapFileParser, int numberOfPlayers) {
 		this.mapFileParser = mapFileParser;
-		this.playerCounts = numberOfPlayers;
+		this.numberOfPlayers = numberOfPlayers;
 		playersList = new ArrayList<Player>();
 
-		for (int i = 0; i < playerCounts; i++) {
+		for (int i = 0; i < numberOfPlayers; i++) {
 			Player player = new Player();
 			playersList.add(player);
 
 		}
 	}
 
-	/**
-	 * Set the PlayerCounts
-	 *
-	 * @param playerCounts
-	 */
-	public void setPlayerCounts(int playerCounts) {
-		this.playerCounts = playerCounts;
-	}
-
-	/**
-	 * Get the playerCounts
-	 *
-	 * @return playerCounts which shows the number of players
-	 */
-	public int getPlayerCounts() {
-		return playerCounts;
-	}
 
 	/**
 	 * Get the PlayerList
@@ -99,7 +81,7 @@ public class StartUpPhase {
 
 		for (String key : mapFileParser.getCountriesHashMap().keySet()) {
 			Random rand = new Random();
-			playersList.get(rand.nextInt((playerCounts))).addCountry(mapFileParser.getCountriesHashMap().get(key));
+			playersList.get(rand.nextInt((numberOfPlayers))).addCountry(mapFileParser.getCountriesHashMap().get(key));
 
 		}
 
@@ -111,7 +93,7 @@ public class StartUpPhase {
 	 * @param numberOfPlayers
 	 *            can vary between minimum = 2 and maximum = 6
 	 */
-	public void allocateArmiesToPlayers(int numberOfPlayers) {
+	public void allocateArmiesToPlayers() {
 
 		for (Player player : playersList) {
 			switch (numberOfPlayers) {
@@ -154,28 +136,19 @@ public class StartUpPhase {
 	}
 
 	/**
-	 * After initializing the armies, remaining armies will be given to countries
-	 * owned by users.
-	 *
-	 * @param selectedCountry
-	 *            is the country which the player has selected to put an army on
-	 * @param selectedPlayer
-	 *            is the player who needs to place an army on its own countries
+	 * @return the numberOfPlayers
 	 */
-	public void assignArmiesToCountries(Country selectedCountry, Player selectedPlayer) {
-
-		if ((selectedPlayer.getNumberOfArmies()) > 0) {
-			if (selectedPlayer.getCountriesOwned().contains(selectedCountry)) {
-				int current = selectedCountry.getCurrentNumberOfArmies();
-				selectedCountry.setCurrentNumberOfArmies(current + 1);
-				int current2 = selectedPlayer.getNumberOfArmies();
-				selectedPlayer.setNumberOfArmies(current2 - 1);
-			} else {
-				System.out.println("This country does not belong to you!");
-			}
-		} else {
-			System.out.println("You don't have any army!");
-		}
+	public int getNumberOfPlayers() {
+		return numberOfPlayers;
 	}
+
+	/**
+	 * @param numberOfPlayers the numberOfPlayers to set
+	 */
+	public void setNumberOfPlayers(int numberOfPlayers) {
+		this.numberOfPlayers = numberOfPlayers;
+	}
+
+
 
 }

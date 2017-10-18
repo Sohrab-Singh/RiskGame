@@ -1,6 +1,5 @@
 package com.game.risk.view;
 
-import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -15,13 +14,9 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
 
 /**
  * View for the user to choose from loading a map file or creating a new map
@@ -134,7 +129,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		}
 	}
 
-	private void startStartupPhase(int playersCount) {
+	private void startStartupPhase(int playersCount) throws NumberFormatException, IOException {
 		welcomeInterface.notifyRiskGameDriver(playersCount);
 
 	}
@@ -205,6 +200,6 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	}
 
 	public interface WelcomeScreenInterface {
-		public void notifyRiskGameDriver(int numberOfPlayers);
+		public void notifyRiskGameDriver(int numberOfPlayers) throws NumberFormatException, IOException;
 	}
 }

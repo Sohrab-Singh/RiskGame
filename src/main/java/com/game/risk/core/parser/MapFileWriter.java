@@ -41,6 +41,7 @@ public class MapFileWriter {
 
 	/**
 	 * Map file writer to write map data to .map file.
+	 * @param isNewMap 
 	 * 
 	 * @return Map File Writer
 	 * @throws IOException

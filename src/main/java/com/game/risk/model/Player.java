@@ -1,5 +1,6 @@
 package com.game.risk.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.game.risk.cardenum.CardEnum;
@@ -30,6 +31,14 @@ public class Player {
 	 * Number of armies.
 	 */
 	private int numberOfArmies;
+	
+	/**
+	 * Player Constructor
+	 */
+	public Player() {
+		countriesOwned = new ArrayList<>();
+	}
+
 
 	/**
 	 * Get the player name.
@@ -43,7 +52,8 @@ public class Player {
 	/**
 	 * Set the player name.
 	 *
-	 * @param playerName the playerName to set
+	 * @param playerName
+	 *            the playerName to set
 	 */
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
@@ -61,7 +71,8 @@ public class Player {
 	/**
 	 * Set the countries owned by player.
 	 *
-	 * @param countriesOwned the countriesOwned to set
+	 * @param countriesOwned
+	 *            the countriesOwned to set
 	 */
 	public void setCountriesOwned(List<Country> countriesOwned) {
 		this.countriesOwned = countriesOwned;
@@ -79,7 +90,8 @@ public class Player {
 	/**
 	 * Set the card list.
 	 *
-	 * @param cardList the cardList to set
+	 * @param cardList
+	 *            the cardList to set
 	 */
 	public void setCardList(List<CardEnum> cardList) {
 		this.cardList = cardList;
@@ -97,7 +109,8 @@ public class Player {
 	/**
 	 * Set the number of armies.
 	 *
-	 * @param numberOfArmies the numberOfArmies to set
+	 * @param numberOfArmies
+	 *            the numberOfArmies to set
 	 */
 	public void setNumberOfArmies(int numberOfArmies) {
 		this.numberOfArmies = numberOfArmies;
@@ -110,5 +123,27 @@ public class Player {
 	 */
 	public void addCountry(Country country) {
 		this.countriesOwned.add(country);
+	}
+
+	/**
+	 * After initializing the armies, remaining armies will be given to countries
+	 * owned by users.
+	 *
+	 * @param selectedCountry
+	 *            is the country which the player has selected to put an army on
+	 * @param numberOfArmies
+	 */
+	public void assignArmiesToCountries(Country selectedCountry, int numberOfArmies) {
+
+		if ((this.getNumberOfArmies()) > 0 && this.getNumberOfArmies() >= numberOfArmies) {
+			if (this.getCountriesOwned().contains(selectedCountry)) {
+				selectedCountry.setCurrentNumberOfArmies(selectedCountry.getCurrentNumberOfArmies() + numberOfArmies);
+				this.setNumberOfArmies(this.getNumberOfArmies() - numberOfArmies);
+			} else {
+				System.out.println("This country does not belong to you!");
+			}
+		} else {
+			System.out.println("You don't have any army!");
+		}
 	}
 }
