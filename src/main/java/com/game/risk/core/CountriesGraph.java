@@ -59,6 +59,7 @@ public class CountriesGraph {
 	 * Set the count of countries in the graph
 	 *
 	 * @param countriesCount
+	 *            number of countries present in the Map
 	 */
 	public void setCountriesCount(int countriesCount) {
 		this.countriesCount = countriesCount;
@@ -94,7 +95,7 @@ public class CountriesGraph {
 	/**
 	 * Get Continent HashMap
 	 * 
-	 * @return Hashmap of continents
+	 * @return Hashmap of Continents
 	 */
 	public HashMap<String, Continent> getContinentHashMap() {
 		return continentHashMap;
@@ -104,6 +105,7 @@ public class CountriesGraph {
 	 * Set the Continent HashMap
 	 * 
 	 * @param continentHashMap
+	 *            HashMap to store or retrieve the continents via their name as key
 	 */
 	public void setContinentHashMap(HashMap<String, Continent> continentHashMap) {
 		this.continentHashMap = continentHashMap;
@@ -127,7 +129,7 @@ public class CountriesGraph {
 	 *
 	 * @param country
 	 *            country to be removed
-	 * @return true if removed
+	 * @return true if removed else false if country is not present
 	 */
 	public boolean removeCountry(Country country) {
 		if (adjListHashMap.containsKey(country)) {
@@ -171,7 +173,7 @@ public class CountriesGraph {
 	 *
 	 * @param continent
 	 *            continent to be removed
-	 * @return true if continent is removed
+	 * @return true if continent is removed else false if continent is not present
 	 */
 	public boolean removeContinent(Continent continent) {
 		if (continentHashMap.containsValue(continent)) {

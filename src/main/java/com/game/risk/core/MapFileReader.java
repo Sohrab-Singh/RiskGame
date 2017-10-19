@@ -63,7 +63,11 @@ public class MapFileReader {
 	 * Map File Parser constructor.
 	 *
 	 * @param filename
-	 *            file to be read
+	 *            <<<<<<< Updated
+	 *            upstream:src/main/java/com/game/risk/core/MapFileReader.java file
+	 *            to be read ======= Name of the file containing the Map information
+	 *            >>>>>>> Stashed
+	 *            changes:src/main/java/com/game/risk/core/parser/MapFileParser.java
 	 * @throws FileNotFoundException
 	 *             file not found exception
 	 */

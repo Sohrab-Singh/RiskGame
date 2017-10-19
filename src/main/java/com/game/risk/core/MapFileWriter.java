@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.swing.filechooser.FileSystemView;
-
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 

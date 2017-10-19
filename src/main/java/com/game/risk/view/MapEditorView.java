@@ -4,14 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 import com.game.risk.core.MapFileReader;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
 /**
- * Editor View Class
+ * Editor View Class to update the map or create a new map
  * 
  * @author Sarthak
  * @author sohrab_singh
@@ -29,9 +28,6 @@ public class MapEditorView {
 
 	/** Parser to changing the data stored. */
 	private MapFileReader mapFileReader;
-
-	/** Check whether a new map is created or an existing map file is altered **/
-	private boolean isNewMap;
 
 	/**
 	 * Constructor
@@ -51,8 +47,7 @@ public class MapEditorView {
 	 * @throws IOException
 	 */
 	public boolean readMapEditor(boolean isNewMap) throws IOException {
-		int playersCount = 2;
-		this.isNewMap = isNewMap;
+
 		if (!isNewMap)
 			printMapElements();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -148,6 +143,7 @@ public class MapEditorView {
 					int adjacentCount = Integer.parseInt(reader.readLine());
 					System.out.println("- Enter the Country Name(s) to be placed Adjacent -");
 					for (int j = 0; j < adjacentCount; j++) {
+
 						String adjacentCountryNm = reader.readLine();
 						if (isCountryPresent(adjacentCountryNm) && !mapFileReader.getCountriesGraph().isAdjacent(
 								mapFileReader.getCountriesHashMap().get(countriesArray[i]),
@@ -198,6 +194,7 @@ public class MapEditorView {
 	 * Check whether the User wants to move to the new line
 	 * 
 	 * @param reader
+	 *            BufferedReader object reference
 	 * @throws IOException
 	 */
 	private void askForNewLineInput(BufferedReader reader) throws IOException {
@@ -211,6 +208,7 @@ public class MapEditorView {
 	 * CountriesGraph
 	 * 
 	 * @param continentName
+	 *            Name of the continent
 	 * @return true if the continent is present in the continent HashMap else false
 	 */
 	private boolean isContinentPresent(String continentName) {
@@ -225,6 +223,7 @@ public class MapEditorView {
 	 * Check whether the country is present in the Country HashMap in MapFileReader
 	 * 
 	 * @param countryName
+	 *            Name of the country
 	 * @return true if the country is present in the countries HashMap else false
 	 */
 	private boolean isCountryPresent(String countryName) {
@@ -241,7 +240,9 @@ public class MapEditorView {
 	private void printMapElements() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("\nCountry - Continent - Adjacent Countries\n\n");
+
 		for (Continent continent : mapFileReader.getContinentHashMap().values()) {
+
 			for (Country country : continent.getCountries()) {
 				builder.append(country.getCountryName() + SEPERATOR + continent.getContinentName() + SEPERATOR);
 				LinkedList<Country> currentCountryList = mapFileReader.getCountriesGraph().getAdjListHashMap()

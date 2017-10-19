@@ -14,8 +14,6 @@ import com.game.risk.model.Player;
 public class ReinforcementPhaseUtil {
 
 	/**
-	 * Calculate Reinforcement armies based on various factors such as countries
-	 * owned , Continent control value and it will have minimum value of 3.
 	 * 
 	 * @param player
 	 *            current player

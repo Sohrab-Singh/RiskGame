@@ -10,13 +10,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Startup class.
+ * Class to implement Startup Phase
  *
  * @author Vida Abdollahi
  * @author sohrab_singh
  * @author Sarthak
  */
-
 public class StartUpPhase {
 
 	/** Map file parser */
@@ -35,7 +34,7 @@ public class StartUpPhase {
 	private static final int MAXIMUM_NUMBER_PLAYERS = 6;
 
 	/**
-	 * Startup Constructor.
+	 * Startup Phase Constructor.
 	 *
 	 * @param mapFileReader
 	 *            reference to the map file parser object
@@ -55,9 +54,9 @@ public class StartUpPhase {
 	}
 
 	/**
-	 * Get the PlayerList
+	 * Get the PlayerList.
 	 *
-	 * @return playerLists
+	 * @return playerLists List of Players
 	 */
 	public ArrayList<Player> getPlayerList() {
 		return playersList;
@@ -74,7 +73,7 @@ public class StartUpPhase {
 	}
 
 	/**
-	 * Assign countries randomly to players
+	 * Assign countries randomly to players.
 	 */
 	public void assignCountries() {
 
@@ -83,12 +82,11 @@ public class StartUpPhase {
 			playersList.get(rand.nextInt((numberOfPlayers))).addCountry(mapFileReader.getCountriesHashMap().get(key));
 
 		}
-
 	}
 
 	/**
 	 * Allocate initial armies to the players according to the players number.
-	 *
+	 * 
 	 */
 	public void allocateArmiesToPlayers() {
 
@@ -133,6 +131,8 @@ public class StartUpPhase {
 	}
 
 	/**
+	 * Get the Number of Players.
+	 * 
 	 * @return the numberOfPlayers
 	 */
 	public int getNumberOfPlayers() {
@@ -140,6 +140,8 @@ public class StartUpPhase {
 	}
 
 	/**
+	 * Set the Number of Players.
+	 * 
 	 * @param numberOfPlayers
 	 *            the numberOfPlayers to set
 	 */
@@ -173,6 +175,15 @@ public class StartUpPhase {
 			}
 			i++;
 		}
+	}
+
+	/**
+	 * Get minimum no of players allowed to play the game.
+	 * 
+	 * @return minimum no of players defined
+	 */
+	public static int getMinimumNumberPlayers() {
+		return MINIMUM_NUMBER_PLAYERS;
 	}
 
 }

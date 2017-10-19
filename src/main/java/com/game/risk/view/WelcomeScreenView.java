@@ -42,8 +42,21 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	 */
 	private MapEditorView view;
 
+	/**
+	 * JPanel object to
+	 */
 	private JPanel contentPane;
+
+	/**
+	 * JButton object to load the existing Map file via JFileChooser, store the data
+	 * and edit the map
+	 **/
 	private JButton btnLoad;
+
+	/**
+	 * JButton object to create a new Map calling the MapEditorView on mouse clicked
+	 * action
+	 **/
 	private JButton btnNewMap;
 
 	/**
@@ -52,6 +65,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	public WelcomeScreenView() {
 		initializeView();
 
+		// Attach Mouse Listeners to the JButton objects
 		btnLoad.addMouseListener(this);
 		btnNewMap.addMouseListener(this);
 	}
@@ -60,6 +74,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+		// Initialize JPanel contentPane to hold the JLabel and JButton elements
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.BLACK);
 		contentPane.setBorder(new EmptyBorder(20, 5, 5, 5));
@@ -75,6 +90,8 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		contentPane.add(lblWelcome);
 
 		btnLoad = new JButton("Load Map File");
+		btnLoad.setBounds(135, 109, 166, 47);
+		contentPane.add(btnLoad);
 
 		JLabel lblInfoText = new JLabel("Start with selecting a Map File, or Creating a new Map");
 		lblInfoText.setHorizontalAlignment(SwingConstants.CENTER);
@@ -83,13 +100,10 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		lblInfoText.setBackground(Color.BLACK);
 		lblInfoText.setBounds(0, 46, 432, 33);
 		contentPane.add(lblInfoText);
-		btnLoad.setBounds(135, 109, 166, 47);
-		contentPane.add(btnLoad);
 
 		btnNewMap = new JButton("Create a New Map");
 		btnNewMap.setBounds(135, 169, 166, 47);
 		contentPane.add(btnNewMap);
-
 	}
 
 	@Override
@@ -116,9 +130,9 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 
 			}
 		} else {
+			// Implementing the mouse clicked event for btnNewMap
 			setVisible(false);
 			parser = new MapFileReader();
-			setParser(parser);
 			view = new MapEditorView(parser);
 			try {
 				view.readMapEditor(true);
@@ -151,7 +165,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	/**
 	 * Get the Map Editor View object
 	 * 
-	 * @return view MapEditorView object
+	 * @return MapEditorView object reference
 	 */
 	public MapEditorView getView() {
 		return view;
@@ -161,6 +175,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	 * Set the MapEditorView object to the private class variable
 	 * 
 	 * @param view
+	 *            MapEditorView object reference
 	 */
 	public void setView(MapEditorView view) {
 		this.view = view;
@@ -168,25 +183,21 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 }
