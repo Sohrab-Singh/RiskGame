@@ -55,20 +55,20 @@ public class MapValidation {
 	public boolean validateFile(String filename) throws IOException {
 		if (filename == null)
 			return false;
-		fileReader = new FileReader(filename);
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		File file = new File(getClass().getClassLoader().getResource(filename).getFile());
+		System.out.println(file.getAbsolutePath());
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 		String line;
 		boolean isValid = true;
-		File file = new File(filename);
 		FileInputStream fis = new FileInputStream(file);
 		byte[] data = new byte[(int) file.length()];
 		fis.read(data);
 		fis.close();
 
 		String str = new String(data, "UTF-8");
+		// Check to see whether all the tags are defined in the file
 		isValid = checkMandatoryTags(str);
 
-		// Check to see whether all the tags are defined in the file
 		while (true) {
 
 			line = bufferedReader.readLine();
@@ -79,10 +79,12 @@ public class MapValidation {
 			// Check for continents format
 
 			line = checkContinentFormat(bufferedReader, line);
+				
 
 			// Check for countries format
 
 			checkCountriesFormat(bufferedReader, line);
+			
 
 		}
 
@@ -143,6 +145,7 @@ public class MapValidation {
 
 					if (!line.matches(pattern)) {
 						System.out.println("* " + line + ": Invalid format for a continent ");
+						return "Invalid";
 
 					} else {
 						String[] splitLine = line.split("=");
@@ -168,7 +171,8 @@ public class MapValidation {
 	 *            current read line
 	 * @throws IOException
 	 */
-	public void checkCountriesFormat(BufferedReader bufferedReader, String line) throws IOException {
+	public boolean checkCountriesFormat(BufferedReader bufferedReader, String line) throws IOException {
+		boolean isValid = true;
 		if (line.startsWith("[Territories]")) {
 			while ((line = bufferedReader.readLine()) != null) {
 				if (!line.isEmpty()) {
@@ -176,6 +180,7 @@ public class MapValidation {
 
 					if (!line.matches(pattern)) {
 						System.out.println("* " + line + ": Invalid format for a territory ");
+						isValid = false;
 
 					} else {
 						String[] split = line.split(",");
@@ -206,6 +211,7 @@ public class MapValidation {
 			}
 
 		}
+		return isValid;
 	}
 
 	/**

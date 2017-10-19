@@ -17,7 +17,7 @@ public class MapFileParserTest {
 
     @Before
     public void setUp() throws Exception {
-        mapFileParser = new MapFileParser("res\\Québec.MAP");
+        mapFileParser = new MapFileParser("Quebec.map");
     }
 
     @Test

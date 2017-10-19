@@ -1,8 +1,14 @@
 package com.game.risk.core.parser;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.filechooser.FileSystemView;
 
 import com.game.risk.core.CountriesGraph;
 import com.game.risk.model.Continent;
@@ -48,6 +54,10 @@ public class MapFileWriter {
 	 *             input output exception
 	 */
 	public MapFileWriter saveMapToFile(boolean isNewMap) throws IOException {
+		File file = FileSystemView.getFileSystemView().getDefaultDirectory();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		Date date = new Date();
+		String fileName = file.getAbsolutePath() + "\\" + dateFormat.format(date) + "_MAP_FILE.map";
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
 		StringBuilder builder = new StringBuilder();
 

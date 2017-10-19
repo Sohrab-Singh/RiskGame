@@ -1,4 +1,4 @@
-package com.game.risk.core;
+package com.game.risk.core.util;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,7 +11,7 @@ import com.game.risk.model.Player;
  * @author sohrab_singh
  *
  */
-public class ReinforcementPhase {
+public class ReinforcementPhaseUtil {
 
 	/**
 	 * @param player
@@ -49,7 +49,6 @@ public class ReinforcementPhase {
 			country1.setCurrentNumberOfArmies(country1.getCurrentNumberOfArmies() - numberOfArmies);
 			country2.setCurrentNumberOfArmies(country2.getCurrentNumberOfArmies() + numberOfArmies);
 		}
-
 	}
 
 	/**

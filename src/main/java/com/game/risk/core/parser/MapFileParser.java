@@ -78,7 +78,7 @@ public class MapFileParser {
 	 * @throws FileNotFoundException
 	 */
 	public MapFileParser(String filename) throws FileNotFoundException {
-		fileReader = new FileReader(filename);
+		fileReader = new FileReader(getClass().getClassLoader().getResource(filename).getFile());
 		countriesHashMap = new HashMap<String, Country>();
 		continentHashMap = new HashMap<String, Continent>();
 		countriesGraph = new CountriesGraph(this);
@@ -153,7 +153,8 @@ public class MapFileParser {
 				}
 			}
 		}
-
+		System.out.println(countriesHashMap.size());
+		System.out.println(continentHashMap.size());
 		reader.close();
 		return this;
 	}

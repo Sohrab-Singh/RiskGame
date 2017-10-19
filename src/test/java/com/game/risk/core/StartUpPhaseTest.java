@@ -21,7 +21,7 @@ public class StartUpPhaseTest {
 
     @Before
     public void setUp() throws Exception {
-        mapFileParser = new MapFileParser("/Users/veedaa/Documents/RiskGame/res/Canada.map");
+        mapFileParser = new MapFileParser("Canada.map");
         startUpPhase = new StartUpPhase(mapFileParser, 2);
         numberofplayers = 2;
         p1 = new Player();

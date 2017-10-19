@@ -6,15 +6,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
 
 import com.game.risk.core.StartUpPhase;
-import com.game.risk.view.WelcomeScreenView;
-import com.game.risk.core.ReinforcementPhase;
 import com.game.risk.core.parser.MapFileParser;
+import com.game.risk.core.util.FortificationPhaseUtil;
+import com.game.risk.core.util.ReinforcementPhaseUtil;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
+import com.game.risk.view.WelcomeScreenView;
 
 /**
  * Risk game driver is main class to call all phases of the game.
@@ -67,7 +67,8 @@ public class RiskGameDriver {
 						System.out.println("Reinforcement phase begins");
 						Continent continent = fileParser.getContinentHashMap()
 								.get(player.getCountriesOwned().get(0).getContinentName());
-						int reinforcementArmies = ReinforcementPhase.calculateReinforcementArmies(player, continent);
+						int reinforcementArmies = ReinforcementPhaseUtil.calculateReinforcementArmies(player,
+								continent);
 						System.out.println("Total reinforcement armies available for " + player.getPlayerName() + " : "
 								+ reinforcementArmies);
 						player.setNumberOfArmies(player.getNumberOfArmies() + reinforcementArmies);
@@ -118,7 +119,7 @@ public class RiskGameDriver {
 							}
 						}
 
-						ReinforcementPhase.moveArmiesBetweenCountries(country1, country2, fortificationArmies,
+						FortificationPhaseUtil.moveArmiesBetweenCountries(country1, country2, fortificationArmies,
 								fileParser.getCountriesGraph().getAdjListHashMap());
 						rounds++;
 					}
@@ -129,28 +130,5 @@ public class RiskGameDriver {
 
 			}
 		});
-
-	}
-
-	static class Mythread extends Thread {
-		Thread predecessor;
-
-		public Mythread(Thread predecessor) {
-			this.predecessor = predecessor;
-		}
-
-		@Override
-		public void run() {
-			super.run();
-			if (predecessor != null && predecessor.isAlive()) {
-				try {
-					predecessor.join();
-					System.out.println("Hello");
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 }
