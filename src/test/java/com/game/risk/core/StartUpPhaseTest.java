@@ -9,6 +9,11 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
+/**
+ * Test Class for StartUp Phase
+ * @author Vida Abdollahi
+ */
+
 public class StartUpPhaseTest {
     private MapFileReader mapFileReader;
     private StartUpPhase startUpPhase;
@@ -17,6 +22,11 @@ public class StartUpPhaseTest {
     private Player p2;
     private ArrayList<Player> list1;
     private Country c1;
+
+    /**
+     * Setup the initial objects
+     * @throws Exception
+     */
 
     @Before
     public void setUp() throws Exception {
@@ -32,6 +42,11 @@ public class StartUpPhaseTest {
 
     }
 
+    /**
+     * Test method for getting  player list
+     *
+     * @throws Exception
+     */
     @Test
 
     public void getPlayerList() throws Exception {
@@ -40,12 +55,21 @@ public class StartUpPhaseTest {
 
     }
 
+    /**
+     * Test method for allocating armies to players
+     * @throws Exception
+     */
+
     @Test
     public void allocateArmiesToPlayers() throws Exception {
         startUpPhase.allocateArmiesToPlayers();
         assertNotEquals(45, p1.getNumberOfArmies());
     }
 
+    /**
+     * Test method for getting number of players
+     * @throws Exception
+     */
 
     @Test
     public void getNumberOfPlayers() throws Exception {

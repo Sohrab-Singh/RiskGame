@@ -6,6 +6,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test class for Map Validation class
+ * @author Vida Abdollahi
  * @author sohrab_singh
  *
  */
@@ -18,6 +20,7 @@ public class MapValidationTest {
     private String fileName1;
 
     /**
+     * Set up the initial objects
      * @throws Exception
      */
     @Before
@@ -30,6 +33,7 @@ public class MapValidationTest {
     }
 
     /**
+     * Test method for testing validation of a file
      * @throws Exception
      */
     @Test
@@ -41,6 +45,7 @@ public class MapValidationTest {
 
 
     /**
+     * test method for checking mandatory tags like [Map]
      * @throws Exception
      */
     @Test
