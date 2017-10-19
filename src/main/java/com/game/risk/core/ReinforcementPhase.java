@@ -1,5 +1,8 @@
 package com.game.risk.core;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
@@ -38,10 +41,14 @@ public class ReinforcementPhase {
 	 * @param country1
 	 * @param country2
 	 * @param numberOfArmies
+	 * @param adjacentMap 
 	 */
-	public static void moveArmiesBetweenCountries(Country country1, Country country2, int numberOfArmies) {
-		country1.setCurrentNumberOfArmies(country1.getCurrentNumberOfArmies() - numberOfArmies);
-		country2.setCurrentNumberOfArmies(country2.getCurrentNumberOfArmies() + numberOfArmies);
+	public static void moveArmiesBetweenCountries(Country country1, Country country2, int numberOfArmies,
+			HashMap<Country, LinkedList<Country>> adjacentMap) {
+		if (adjacentMap.get(country1).contains(country2)) {
+			country1.setCurrentNumberOfArmies(country1.getCurrentNumberOfArmies() - numberOfArmies);
+			country2.setCurrentNumberOfArmies(country2.getCurrentNumberOfArmies() + numberOfArmies);
+		}
 
 	}
 

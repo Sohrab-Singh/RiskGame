@@ -107,7 +107,8 @@ public class RiskGameDriver implements WelcomeScreenView.WelcomeScreenInterface 
 					countryFlag = true;
 				}
 			}
-			ReinforcementPhase.moveArmiesBetweenCountries(country1, country2, fortificationArmies);
+			ReinforcementPhase.moveArmiesBetweenCountries(country1, country2, fortificationArmies,
+					fileParser.getCountriesGraph().getAdjListHashMap());
 			rounds++;
 		}
 		reader.close();
