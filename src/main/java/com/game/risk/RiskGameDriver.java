@@ -41,7 +41,6 @@ public class RiskGameDriver implements WelcomeScreenView.WelcomeScreenInterface 
 
 		System.out.println(numberOfPlayers + " ");
 		MapFileParser fileParser = frame.getParser();
-		Continent continent = new Continent("Europe", 5);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		StartUpPhase startUpPhase = new StartUpPhase(fileParser, numberOfPlayers);
 		startUpPhase.assignCountries();
@@ -59,6 +58,7 @@ public class RiskGameDriver implements WelcomeScreenView.WelcomeScreenInterface 
 
 			// Reinforcement phase
 			System.out.println("Reinforcement phase begins");
+			Continent continent = fileParser.getContinentHashMap().get(player.getCountriesOwned().get(0).getContinentName());
 
 			int reinforcementArmies = ReinforcementPhase.calculateReinforcementArmies(player, continent);
 			System.out.println(

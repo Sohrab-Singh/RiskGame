@@ -15,18 +15,18 @@ public class ReinforcementPhase {
 
 	/**
 	 * @param player
-	 * @param continentName
+	 * @param continent 
 	 * @return reinforcement armies.
 	 * 
 	 */
-	public static int calculateReinforcementArmies(Player player, Continent continentName) {
+	public static int calculateReinforcementArmies(Player player, Continent continent) {
 		int countriesOwned = player.getCountriesOwned().size();
 		int reinfoArmies = countriesOwned / 3;
 
 		// If player owns all the countries of continents then reinforcement armies will
 		// be the control value of continent.
-		if (checkPlayerOwnsWholeContinent(player.getPlayerName(), continentName)) {
-			reinfoArmies = continentName.getControlValue();
+		if (checkPlayerOwnsWholeContinent(player) && continent !=null ) {
+			reinfoArmies = continent.getControlValue();
 		}
 
 		// Minimum number of armies for any player in case reinforcement armies are less
@@ -58,9 +58,10 @@ public class ReinforcementPhase {
 	 * @param continentName
 	 * @return true if player owns all the countries of continent.
 	 */
-	private static boolean checkPlayerOwnsWholeContinent(String playerName, Continent continentName) {
-		for (Country country : continentName.getCountries()) {
-			if (!country.getPlayerName().equals(playerName)) {
+	private static boolean checkPlayerOwnsWholeContinent(Player player) {
+		Country country1 = player.getCountriesOwned().get(0);
+		for (Country country : player.getCountriesOwned()) {
+			if (!country.getContinentName().equals(country1.getContinentName())) {
 				return false;
 			}
 		}
