@@ -1,5 +1,6 @@
 package com.game.risk.core;
 
+import com.game.risk.core.util.MapValidation;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
@@ -49,6 +50,8 @@ public class MapFileReader {
 	 */
 	private List<String> mapMetaData = new ArrayList<>();
 
+	private String fileName;
+
 	/**
 	 * Map File Parser Default Constructor
 	 */
@@ -63,16 +66,13 @@ public class MapFileReader {
 	 * Map File Parser constructor.
 	 *
 	 * @param filename
-	 *            <<<<<<< Updated
-	 *            upstream:src/main/java/com/game/risk/core/MapFileReader.java file
-	 *            to be read ======= Name of the file containing the Map information
-	 *            >>>>>>> Stashed
-	 *            changes:src/main/java/com/game/risk/core/parser/MapFileParser.java
+	 *            Name of the file containing the Map information
 	 * @throws FileNotFoundException
 	 *             file not found exception
 	 */
 	public MapFileReader(String filename) throws FileNotFoundException {
-		fileReader = new FileReader(getClass().getClassLoader().getResource(filename).getFile());
+		fileReader = new FileReader(filename);
+		this.fileName = filename;
 		countriesHashMap = new HashMap<String, Country>();
 		continentHashMap = new HashMap<String, Continent>();
 		countriesGraph = new CountriesGraph(this);
@@ -87,6 +87,7 @@ public class MapFileReader {
 	 *             input output exception
 	 */
 	public MapFileReader readFile() throws IOException {
+		
 		BufferedReader reader = new BufferedReader(fileReader);
 		String line;
 		while (true) {
@@ -148,10 +149,12 @@ public class MapFileReader {
 				}
 			}
 		}
-		System.out.println(countriesHashMap.size());
-		System.out.println(continentHashMap.size());
-		reader.close();
 		return this;
+	}
+
+	public boolean checkFileValidation() throws IOException {
+
+		return new MapValidation().validateFile(fileName);
 	}
 
 	/**

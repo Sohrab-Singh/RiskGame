@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.swing.filechooser.FileSystemView;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
@@ -50,10 +51,12 @@ public class MapFileWriter {
 	 */
 	public MapFileWriter saveMapToFile(boolean isNewMap) throws IOException {
 		File file = FileSystemView.getFileSystemView().getDefaultDirectory();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 		Date date = new Date();
-		String fileName = file.getAbsolutePath() + "\\" + dateFormat.format(date) + "_MAP_FILE.map";
-		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
+		String fileName = file.getAbsolutePath() + "\\" + "mapfile-" + dateFormat.format(date) + ".map";
+		System.out.println(fileName);
+		File newFile = new File(fileName);
+		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile));
 		StringBuilder builder = new StringBuilder();
 
 		// Writing [Map] tag meta-data.

@@ -1,11 +1,9 @@
-package com.game.risk.view;
+package com.game.risk.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
-
-import com.game.risk.core.MapFileReader;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
@@ -15,7 +13,7 @@ import com.game.risk.model.Country;
  * @author Sarthak
  * @author sohrab_singh
  */
-public class MapEditorView {
+public class MapEditor {
 
 	/*** Hyphen seperator */
 	private static final String SEPERATOR = " - ";
@@ -37,7 +35,7 @@ public class MapEditorView {
 	 * @param mapFileWriter
 	 *            reference to the Map File Writer object
 	 */
-	public MapEditorView(MapFileReader mapFileReader) {
+	public MapEditor(MapFileReader mapFileReader) {
 		this.mapFileReader = mapFileReader;
 	}
 
@@ -186,7 +184,7 @@ public class MapEditorView {
 				break;
 			}
 		}
-		reader.close();
+
 		return true;
 	}
 

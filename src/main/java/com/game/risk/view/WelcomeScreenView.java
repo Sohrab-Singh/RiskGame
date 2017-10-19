@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
-
+import com.game.risk.core.MapEditor;
 import com.game.risk.core.MapFileReader;
 
 import java.awt.Color;
@@ -40,7 +40,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	/**
 	 * Map Editor View to create a new Map or make changes to the existing map file
 	 */
-	private MapEditorView view;
+	private MapEditor view;
 
 	/**
 	 * JPanel object to
@@ -121,25 +121,27 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				System.out.println("Path: " + filename);
 				try {
 					parser = new MapFileReader(filename).readFile();
-					System.out.println("Parser : " + parser);
-					view = new MapEditorView(parser);
+					view = new MapEditor(parser);
 					view.readMapEditor(false);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
 			}
 		} else {
 			// Implementing the mouse clicked event for btnNewMap
 			setVisible(false);
 			parser = new MapFileReader();
-			view = new MapEditorView(parser);
+			view = new MapEditor(parser);
 			try {
 				view.readMapEditor(true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		implementPhases();
+	}
+
+	private void implementPhases() {
 
 	}
 
@@ -167,7 +169,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	 * 
 	 * @return MapEditorView object reference
 	 */
-	public MapEditorView getView() {
+	public MapEditor getView() {
 		return view;
 	}
 
@@ -177,7 +179,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	 * @param view
 	 *            MapEditorView object reference
 	 */
-	public void setView(MapEditorView view) {
+	public void setView(MapEditor view) {
 		this.view = view;
 	}
 

@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Class to implement Startup Phase
@@ -40,14 +39,20 @@ public class StartUpPhase {
 	 *            reference to the map file parser object
 	 * @param numberOfPlayers
 	 *            number of players that we need to start the game
+	 * @throws IOException
 	 */
-	public StartUpPhase(MapFileReader mapFileReader, int numberOfPlayers) {
+	public StartUpPhase(MapFileReader mapFileReader, int numberOfPlayers, BufferedReader reader) throws IOException {
 		this.mapFileReader = mapFileReader;
 		this.numberOfPlayers = numberOfPlayers;
 		playersList = new ArrayList<Player>();
 
+		System.out.println("Enter the Name of the Player(s)");
 		for (int i = 0; i < numberOfPlayers; i++) {
 			Player player = new Player();
+			String playerName = null;
+			if ((playerName = reader.readLine()) != null) {
+				player.setPlayerName(playerName);
+			}
 			playersList.add(player);
 
 		}
@@ -77,10 +82,12 @@ public class StartUpPhase {
 	 */
 	public void assignCountries() {
 
+		int i = 0;
 		for (String key : mapFileReader.getCountriesHashMap().keySet()) {
-			Random rand = new Random();
-			playersList.get(rand.nextInt((numberOfPlayers))).addCountry(mapFileReader.getCountriesHashMap().get(key));
-
+			i = i % playersList.size();
+			Player player = playersList.get(i);
+			player.addCountry(mapFileReader.getCountriesHashMap().get(key));
+			i++;
 		}
 	}
 
@@ -166,7 +173,8 @@ public class StartUpPhase {
 					System.out.println(
 							"How many armies do you want to assign to your country " + country.getCountryName() + " ?");
 					System.out.println("Current number of armies of " + country.getCountryName() + " is "
-							+ country.getCurrentNumberOfArmies());
+							+ country.getCurrentNumberOfArmies() + " | Available armies : "
+							+ player.getNumberOfArmies());
 					int armies = Integer.parseInt(reader.readLine());
 					player.assignArmiesToCountries(country, armies);
 				} else {
