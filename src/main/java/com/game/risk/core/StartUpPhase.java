@@ -1,8 +1,12 @@
 package com.game.risk.core;
 
 import com.game.risk.core.parser.MapFileParser;
+import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,6 +15,7 @@ import java.util.Random;
  *
  * @author Vida Abdollahi
  * @author sohrab_singh
+ * @author Sarthak
  */
 
 public class StartUpPhase {
@@ -29,7 +34,6 @@ public class StartUpPhase {
 
 	/** Maximum number of players. */
 	private static final int MAXIMUM_NUMBER_PLAYERS = 6;
-
 
 	/**
 	 * Startup Constructor.
@@ -51,7 +55,6 @@ public class StartUpPhase {
 		}
 	}
 
-
 	/**
 	 * Get the PlayerList
 	 *
@@ -64,7 +67,8 @@ public class StartUpPhase {
 	/**
 	 * Set the player list.
 	 * 
-	 * @param playersList Set the PlayerList
+	 * @param playersList
+	 *            Set the PlayerList
 	 */
 	public void setPlayersList(ArrayList<Player> playersList) {
 		this.playersList = playersList;
@@ -137,12 +141,39 @@ public class StartUpPhase {
 	}
 
 	/**
-	 * @param numberOfPlayers the numberOfPlayers to set
+	 * @param numberOfPlayers
+	 *            the numberOfPlayers to set
 	 */
 	public void setNumberOfPlayers(int numberOfPlayers) {
 		this.numberOfPlayers = numberOfPlayers;
 	}
 
-
+	/**
+	 * Allocate Remaining armies to countries
+	 * 
+	 * @throws IOException
+	 * @throws NumberFormatException
+	 */
+	public void allocateRemainingArmiesToCountries() throws NumberFormatException, IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		int i = 0;
+		while (i < playersList.size()) {
+			Player player = playersList.get(i);
+			System.out.println(":: Player " + (i + 1) + " ::");
+			for (Country country : player.getCountriesOwned()) {
+				if (player.getNumberOfArmies() > 0) {
+					System.out.println(
+							"How many armies do you want to assign to your country " + country.getCountryName() + " ?");
+					System.out.println("Current number of armies of " + country.getCountryName() + " is "
+							+ country.getCurrentNumberOfArmies());
+					int armies = Integer.parseInt(reader.readLine());
+					player.assignArmiesToCountries(country, armies);
+				} else {
+					break;
+				}
+			}
+			i++;
+		}
+	}
 
 }

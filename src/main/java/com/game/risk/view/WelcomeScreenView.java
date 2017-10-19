@@ -42,7 +42,6 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	 */
 	private MapEditorView view;
 
-	private WelcomeScreenInterface welcomeInterface;
 	private JPanel contentPane;
 	private JButton btnLoad;
 	private JButton btnNewMap;
@@ -108,34 +107,26 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				System.out.println("Path: " + filename);
 				try {
 					parser = new MapFileParser(filename).readFile();
+					System.out.println("Parser : " + parser);
 					view = new MapEditorView(parser);
-					int playersCount = view.readMapEditor(false);
-					startStartupPhase(playersCount);
+					view.readMapEditor(false);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+
 			}
 		} else {
 			setVisible(false);
 			parser = new MapFileParser();
+			setParser(parser);
 			view = new MapEditorView(parser);
 			try {
-				int playersCount = view.readMapEditor(true);
-				startStartupPhase(playersCount);
+				view.readMapEditor(true);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-	}
 
-	private void startStartupPhase(int playersCount) throws NumberFormatException, IOException {
-		welcomeInterface.notifyRiskGameDriver(playersCount);
-
-	}
-
-	public void addListener(WelcomeScreenInterface welcomeInterface) {
-		this.welcomeInterface = welcomeInterface;
 	}
 
 	/**
@@ -197,9 +188,5 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 
-	}
-
-	public interface WelcomeScreenInterface {
-		public void notifyRiskGameDriver(int numberOfPlayers) throws NumberFormatException, IOException;
 	}
 }

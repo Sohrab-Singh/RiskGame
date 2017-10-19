@@ -50,7 +50,7 @@ public class MapEditorView {
 	 * 
 	 * @throws IOException
 	 */
-	public int readMapEditor(boolean isNewMap) throws IOException {
+	public boolean readMapEditor(boolean isNewMap) throws IOException {
 		int playersCount = 2;
 		this.isNewMap = isNewMap;
 		if (!isNewMap)
@@ -187,13 +187,11 @@ public class MapEditorView {
 				break;
 			}
 			if (choice == 7) {
-				System.out.println(":: Enter the number of Player playing the game (Min - 2, Max - 6) ::");
-				playersCount = Integer.parseInt(reader.readLine());
 				break;
 			}
 		}
 		reader.close();
-		return playersCount;
+		return true;
 	}
 
 	/**
@@ -243,7 +241,7 @@ public class MapEditorView {
 	private void printMapElements() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("\nCountry - Continent - Adjacent Countries\n\n");
-		for (Continent continent : mapFileParser.getCountriesGraph().getContinentHashMap().values()) {
+		for (Continent continent : mapFileParser.getContinentHashMap().values()) {
 			for (Country country : continent.getCountries()) {
 				builder.append(country.getCountryName() + SEPERATOR + continent.getContinentName() + SEPERATOR);
 				LinkedList<Country> currentCountryList = mapFileParser.getCountriesGraph().getAdjListHashMap()

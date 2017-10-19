@@ -15,17 +15,17 @@ public class ReinforcementPhase {
 
 	/**
 	 * @param player
-	 * @param continent 
+	 * @param continent
 	 * @return reinforcement armies.
 	 * 
 	 */
 	public static int calculateReinforcementArmies(Player player, Continent continent) {
 		int countriesOwned = player.getCountriesOwned().size();
-		int reinfoArmies = countriesOwned / 3;
+		int reinfoArmies = (int) Math.floor(countriesOwned / 3);
 
 		// If player owns all the countries of continents then reinforcement armies will
 		// be the control value of continent.
-		if (checkPlayerOwnsWholeContinent(player) && continent !=null ) {
+		if (checkPlayerOwnsWholeContinent(player) && continent != null) {
 			reinfoArmies = continent.getControlValue();
 		}
 
@@ -41,7 +41,7 @@ public class ReinforcementPhase {
 	 * @param country1
 	 * @param country2
 	 * @param numberOfArmies
-	 * @param adjacentMap 
+	 * @param adjacentMap
 	 */
 	public static void moveArmiesBetweenCountries(Country country1, Country country2, int numberOfArmies,
 			HashMap<Country, LinkedList<Country>> adjacentMap) {
