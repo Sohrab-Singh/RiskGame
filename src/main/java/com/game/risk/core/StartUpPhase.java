@@ -1,6 +1,5 @@
 package com.game.risk.core;
 
-import com.game.risk.core.parser.MapFileParser;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
@@ -21,7 +20,7 @@ import java.util.Random;
 public class StartUpPhase {
 
 	/** Map file parser */
-	private MapFileParser mapFileParser;
+	private MapFileReader mapFileReader;
 
 	/** Player List */
 	private ArrayList<Player> playersList;
@@ -38,13 +37,13 @@ public class StartUpPhase {
 	/**
 	 * Startup Constructor.
 	 *
-	 * @param mapFileParser
+	 * @param mapFileReader
 	 *            reference to the map file parser object
 	 * @param numberOfPlayers
 	 *            number of players that we need to start the game
 	 */
-	public StartUpPhase(MapFileParser mapFileParser, int numberOfPlayers) {
-		this.mapFileParser = mapFileParser;
+	public StartUpPhase(MapFileReader mapFileReader, int numberOfPlayers) {
+		this.mapFileReader = mapFileReader;
 		this.numberOfPlayers = numberOfPlayers;
 		playersList = new ArrayList<Player>();
 
@@ -79,9 +78,9 @@ public class StartUpPhase {
 	 */
 	public void assignCountries() {
 
-		for (String key : mapFileParser.getCountriesHashMap().keySet()) {
+		for (String key : mapFileReader.getCountriesHashMap().keySet()) {
 			Random rand = new Random();
-			playersList.get(rand.nextInt((numberOfPlayers))).addCountry(mapFileParser.getCountriesHashMap().get(key));
+			playersList.get(rand.nextInt((numberOfPlayers))).addCountry(mapFileReader.getCountriesHashMap().get(key));
 
 		}
 
@@ -123,9 +122,9 @@ public class StartUpPhase {
 	 * Each country belonged to a player must have at least one army.
 	 */
 	public void assignInitialArmiesToCountries() {
-		for (String key : mapFileParser.getCountriesHashMap().keySet()) {
+		for (String key : mapFileReader.getCountriesHashMap().keySet()) {
 
-			mapFileParser.getCountriesHashMap().get(key).setCurrentNumberOfArmies(1);
+			mapFileReader.getCountriesHashMap().get(key).setCurrentNumberOfArmies(1);
 		}
 		for (Player player : playersList) {
 			int number = player.getNumberOfArmies();

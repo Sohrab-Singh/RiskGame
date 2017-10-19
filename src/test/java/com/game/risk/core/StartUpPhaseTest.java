@@ -1,6 +1,5 @@
 package com.game.risk.core;
 
-import com.game.risk.core.parser.MapFileParser;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 import org.junit.Before;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 public class StartUpPhaseTest {
-    private MapFileParser mapFileParser;
+    private MapFileReader mapFileReader;
     private StartUpPhase startUpPhase;
     private int numberofplayers;
     private Player p1;
@@ -21,8 +20,8 @@ public class StartUpPhaseTest {
 
     @Before
     public void setUp() throws Exception {
-        mapFileParser = new MapFileParser("Canada.map");
-        startUpPhase = new StartUpPhase(mapFileParser, 2);
+        mapFileReader = new MapFileReader("Canada.map");
+        startUpPhase = new StartUpPhase(mapFileReader, 2);
         numberofplayers = 2;
         p1 = new Player();
         p2 = new Player();

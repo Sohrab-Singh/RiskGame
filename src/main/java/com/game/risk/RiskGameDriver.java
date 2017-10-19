@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 
+import com.game.risk.core.MapFileReader;
 import com.game.risk.core.StartUpPhase;
-import com.game.risk.core.parser.MapFileParser;
 import com.game.risk.core.util.FortificationPhaseUtil;
 import com.game.risk.core.util.ReinforcementPhaseUtil;
 import com.game.risk.model.Continent;
@@ -42,7 +42,7 @@ public class RiskGameDriver {
 			public void run() {
 				// TODO Auto-generated method stub
 				try {
-					MapFileParser fileParser = frame.getParser();
+					MapFileReader fileParser = frame.getParser();
 					System.out.println(fileParser);
 					BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 					int numberOfPlayers = Integer.parseInt(reader.readLine());

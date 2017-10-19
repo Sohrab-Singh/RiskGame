@@ -30,11 +30,6 @@ public class MapValidation {
 	private HashMap<String, ArrayList<String>> Countries;
 
 	/**
-	 * File Reader class variable
-	 */
-	private FileReader fileReader;
-
-	/**
 	 * Map validation constructor
 	 */
 	public MapValidation() {
@@ -44,7 +39,7 @@ public class MapValidation {
 	}
 
 	/**
-	 * Method to validate file.
+	 * Method to check whether file is valid or not.
 	 *
 	 * @param filename
 	 *            file name to be validated.
@@ -79,12 +74,10 @@ public class MapValidation {
 			// Check for continents format
 
 			line = checkContinentFormat(bufferedReader, line);
-				
 
 			// Check for countries format
 
 			checkCountriesFormat(bufferedReader, line);
-			
 
 		}
 
@@ -169,6 +162,7 @@ public class MapValidation {
 	 *            buffer reader to read file
 	 * @param line
 	 *            current read line
+	 * @return true if format is valid otherwise false
 	 * @throws IOException
 	 */
 	public boolean checkCountriesFormat(BufferedReader bufferedReader, String line) throws IOException {
@@ -220,7 +214,7 @@ public class MapValidation {
 	 * 
 	 * @param str
 	 *            whole file
-	 * @return true if present
+	 * @return true if present otherwise false
 	 */
 	public boolean checkMandatoryTags(String str) {
 		boolean isValid = true;

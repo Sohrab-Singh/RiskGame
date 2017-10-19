@@ -1,6 +1,5 @@
 package com.game.risk.core;
 
-import com.game.risk.core.parser.MapFileParser;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 import java.util.HashMap;
@@ -20,9 +19,9 @@ public class CountriesGraph {
 	private int countriesCount;
 
 	/**
-	 * MapFileParser class variable
+	 * MapFileReader class variable
 	 */
-	private MapFileParser mapFileParser;
+	private MapFileReader mapFileReader;
 
 	/**
 	 * List to store continents
@@ -41,8 +40,8 @@ public class CountriesGraph {
 	 * @param fileParser
 	 *            parser for storing data
 	 */
-	public CountriesGraph(MapFileParser fileParser) {
-		this.mapFileParser = fileParser;
+	public CountriesGraph(MapFileReader fileParser) {
+		this.mapFileReader = fileParser;
 		adjListHashMap = new HashMap<Country, LinkedList<Country>>();
 		continentHashMap = new HashMap<String, Continent>();
 	}
@@ -138,9 +137,9 @@ public class CountriesGraph {
 				adjListHashMap.get(adjCountry).remove(country);
 			}
 			adjListHashMap.remove(country);
-			mapFileParser.getCountriesHashMap().remove(country.getCountryName());
+			mapFileReader.getCountriesHashMap().remove(country.getCountryName());
 			// Removing the country from its respective continent
-			mapFileParser.getContinentHashMap().get(country.getContinentName()).removeCountry(country);
+			mapFileReader.getContinentHashMap().get(country.getContinentName()).removeCountry(country);
 			return true;
 		}
 		return false;
@@ -184,7 +183,7 @@ public class CountriesGraph {
 				for (Country adjCountry : adjCountries) {
 					adjListHashMap.get(adjCountry).remove(continent.getCountries().get(i));
 				}
-				mapFileParser.getCountriesHashMap().remove(continent.getCountries().get(i).getCountryName());
+				mapFileReader.getCountriesHashMap().remove(continent.getCountries().get(i).getCountryName());
 			}
 
 			continentHashMap.remove(continent.getContinentName());

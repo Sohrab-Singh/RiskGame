@@ -1,23 +1,15 @@
-package com.game.risk.core.parser;
+package com.game.risk.core;
 
-import com.game.risk.core.CountriesGraph;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.swing.filechooser.FileSystemView;
-import javax.xml.crypto.Data;
 
 /**
  * Map File Parser for reading map data for the game.
@@ -25,7 +17,7 @@ import javax.xml.crypto.Data;
  * @author Sarthak
  * @author sohrab_singh
  */
-public class MapFileParser {
+public class MapFileReader {
 
 	/**
 	 * FileReader class variable
@@ -60,38 +52,37 @@ public class MapFileParser {
 	/**
 	 * Map File Parser Default Constructor
 	 */
-	public MapFileParser() {
+	public MapFileReader() {
 		countriesHashMap = new HashMap<>();
 		continentHashMap = new HashMap<>();
 		countriesGraph = new CountriesGraph(this);
-		File file = FileSystemView.getFileSystemView().getDefaultDirectory();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss");
-		Date date = new Date();
-		String filename = file.getAbsolutePath() + "\\" + dateFormat.format(date) + "_MAP_FILE.map";
-		mapFileWriter = new MapFileWriter(filename, this);
+		mapFileWriter = new MapFileWriter(this);
 	}
 
 	/**
 	 * Map File Parser constructor.
 	 *
 	 * @param filename
+	 *            file to be read
 	 * @throws FileNotFoundException
+	 *             file not found exception
 	 */
-	public MapFileParser(String filename) throws FileNotFoundException {
+	public MapFileReader(String filename) throws FileNotFoundException {
 		fileReader = new FileReader(getClass().getClassLoader().getResource(filename).getFile());
 		countriesHashMap = new HashMap<String, Country>();
 		continentHashMap = new HashMap<String, Continent>();
 		countriesGraph = new CountriesGraph(this);
-		mapFileWriter = new MapFileWriter(filename, this);
+		mapFileWriter = new MapFileWriter(this);
 	}
 
 	/**
 	 * Method to read and store data into the model classes from map file.
 	 *
-	 * @return the country HashMap
+	 * @return map file reader
 	 * @throws IOException
+	 *             input output exception
 	 */
-	public MapFileParser readFile() throws IOException {
+	public MapFileReader readFile() throws IOException {
 		BufferedReader reader = new BufferedReader(fileReader);
 		String line;
 		while (true) {

@@ -7,9 +7,7 @@ package com.game.risk.model;
  */
 public class Country {
 
-	/**
-	 * Country Name.
-	 */
+	/** Country Name. */
 	private String countryName;
 
 	/** X coordinate */
@@ -89,12 +87,15 @@ public class Country {
 	 * Set the Continent Name
 	 *
 	 * @param continentName
+	 *            name of continent
 	 */
 	public void setContinentName(String continentName) {
 		this.continentName = continentName;
 	}
 
 	/**
+	 * Get the x coordinate.
+	 * 
 	 * @return the xCoordinate
 	 */
 	public String getxCoordinate() {
@@ -102,6 +103,8 @@ public class Country {
 	}
 
 	/**
+	 * Set the x coordinate.
+	 * 
 	 * @param xCoordinate
 	 *            the xCoordinate to set
 	 */
@@ -110,6 +113,8 @@ public class Country {
 	}
 
 	/**
+	 * Get the y coordinate.
+	 * 
 	 * @return the yCoordinate
 	 */
 	public String getyCoordinate() {
@@ -117,6 +122,8 @@ public class Country {
 	}
 
 	/**
+	 * Set the y coordinate.
+	 * 
 	 * @param yCoordinate
 	 *            the yCoordinate to set
 	 */

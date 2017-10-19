@@ -12,33 +12,23 @@ import com.game.risk.cardenum.CardEnum;
  *
  */
 public class Player {
-	/**
-	 * Player name.
-	 */
+
+	/** Player name */
 	private String playerName;
 
-	/**
-	 * Countries owned
-	 */
+	/** Countries owned by the player */
 	private List<Country> countriesOwned;
 
-	/**
-	 * Card List.
-	 */
+	/** Card List */
 	private List<CardEnum> cardList;
 
-	/**
-	 * Number of armies.
-	 */
+	/** Number of armies */
 	private int numberOfArmies;
-	
-	/**
-	 * Player Constructor
-	 */
+
+	/** Player Constructor */
 	public Player() {
 		countriesOwned = new ArrayList<>();
 	}
-
 
 	/**
 	 * Get the player name.
@@ -132,6 +122,7 @@ public class Player {
 	 * @param selectedCountry
 	 *            is the country which the player has selected to put an army on
 	 * @param numberOfArmies
+	 *            number of armies to assign
 	 */
 	public void assignArmiesToCountries(Country selectedCountry, int numberOfArmies) {
 

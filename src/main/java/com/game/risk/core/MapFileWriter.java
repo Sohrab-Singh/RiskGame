@@ -1,4 +1,4 @@
-package com.game.risk.core.parser;
+package com.game.risk.core;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,7 +10,6 @@ import java.util.Date;
 
 import javax.swing.filechooser.FileSystemView;
 
-import com.game.risk.core.CountriesGraph;
 import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
@@ -23,10 +22,7 @@ import com.game.risk.model.Country;
 public class MapFileWriter {
 
 	/** Map File parser used for getting the current map data */
-	private MapFileParser fileParser;
-
-	/** Name of file where data to be written. */
-	private String fileName;
+	private MapFileReader fileParser;
 
 	/** COMMA Separator */
 	private static final String COMMA_SEPERATOR = ",";
@@ -39,15 +35,16 @@ public class MapFileWriter {
 	 * @param fileParser
 	 *            file Parser
 	 */
-	public MapFileWriter(String fileName, MapFileParser fileParser) {
-		this.fileName = fileName;
+	public MapFileWriter(MapFileReader fileParser) {
 		this.fileParser = fileParser;
 
 	}
 
 	/**
 	 * Map file writer to write map data to .map file.
-	 * @param isNewMap 
+	 * 
+	 * @param isNewMap
+	 *            true if map is new and false if map is already in file.
 	 * 
 	 * @return Map File Writer
 	 * @throws IOException

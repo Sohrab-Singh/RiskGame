@@ -6,7 +6,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
-import com.game.risk.core.parser.MapFileParser;
+import com.game.risk.core.MapFileReader;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -35,7 +35,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	/**
 	 * Map File Parser
 	 */
-	private MapFileParser parser;
+	private MapFileReader parser;
 
 	/**
 	 * Map Editor View to create a new Map or make changes to the existing map file
@@ -106,7 +106,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				String filename = fileChooser.getSelectedFile().getAbsolutePath();
 				System.out.println("Path: " + filename);
 				try {
-					parser = new MapFileParser(filename).readFile();
+					parser = new MapFileReader(filename).readFile();
 					System.out.println("Parser : " + parser);
 					view = new MapEditorView(parser);
 					view.readMapEditor(false);
@@ -117,7 +117,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 			}
 		} else {
 			setVisible(false);
-			parser = new MapFileParser();
+			parser = new MapFileReader();
 			setParser(parser);
 			view = new MapEditorView(parser);
 			try {
@@ -132,19 +132,19 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	/**
 	 * Get Map File Parser
 	 * 
-	 * @return parser MapFileParser object
+	 * @return parser MapFileReader object
 	 */
-	public MapFileParser getParser() {
+	public MapFileReader getParser() {
 		return parser;
 	}
 
 	/**
-	 * Set the MapFileParser object to the private class variable
+	 * Set the MapFileReader object to the private class variable
 	 * 
 	 * @param parser
-	 *            MapFileParser object
+	 *            MapFileReader object
 	 */
-	public void setParser(MapFileParser parser) {
+	public void setParser(MapFileReader parser) {
 		this.parser = parser;
 	}
 
