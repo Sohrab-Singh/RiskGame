@@ -30,10 +30,6 @@ public class StartUpPhase {
 	/** Maximum number of players. */
 	private static final int MAXIMUM_NUMBER_PLAYERS = 6;
 
-	/**
-	 * Current player.
-	 */
-	public Player currentPlayer;
 
 	/**
 	 * Startup Constructor.
@@ -68,7 +64,7 @@ public class StartUpPhase {
 	/**
 	 * Set the player list.
 	 * 
-	 * @param playersList
+	 * @param playersList Set the PlayerList
 	 */
 	public void setPlayersList(ArrayList<Player> playersList) {
 		this.playersList = playersList;
@@ -90,8 +86,6 @@ public class StartUpPhase {
 	/**
 	 * Allocate initial armies to the players according to the players number.
 	 *
-	 * @param numberOfPlayers
-	 *            can vary between minimum = 2 and maximum = 6
 	 */
 	public void allocateArmiesToPlayers() {
 

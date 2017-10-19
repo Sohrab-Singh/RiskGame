@@ -135,11 +135,11 @@ public class MapValidation {
 	 * @return current read line
 	 * @throws IOException
 	 */
-	private String checkContinentFormat(BufferedReader bufferedReader, String line) throws IOException {
+	public String checkContinentFormat(BufferedReader bufferedReader, String line) throws IOException {
 		if (line.startsWith("[Continents]")) {
 			while ((!(line = bufferedReader.readLine()).startsWith("[Territories]"))) {
 				if (!line.isEmpty()) {
-					String pattern = "[^,;=]+=[1-9]+";
+					String pattern = "[^,;=]+=[0-9]+";
 
 					if (!line.matches(pattern)) {
 						System.out.println("* " + line + ": Invalid format for a continent ");
@@ -168,7 +168,7 @@ public class MapValidation {
 	 *            current read line
 	 * @throws IOException
 	 */
-	private void checkCountriesFormat(BufferedReader bufferedReader, String line) throws IOException {
+	public void checkCountriesFormat(BufferedReader bufferedReader, String line) throws IOException {
 		if (line.startsWith("[Territories]")) {
 			while ((line = bufferedReader.readLine()) != null) {
 				if (!line.isEmpty()) {
@@ -212,11 +212,11 @@ public class MapValidation {
 	 * 
 	 * Check mandatory tags.
 	 * 
-	 * @param string
+	 * @param str
 	 *            whole file
 	 * @return true if present
 	 */
-	private boolean checkMandatoryTags(String str) {
+	public boolean checkMandatoryTags(String str) {
 		boolean isValid = true;
 
 		if (!str.contains("[Map]")) {
