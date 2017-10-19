@@ -1,8 +1,6 @@
 package com.game.risk.core.util;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -14,6 +12,7 @@ import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 /**
+ * Test class for reinforcement phase.
  * 
  * @author sohrab_singh
  *
@@ -23,8 +22,6 @@ public class ReinforcementPhaseUtilTest {
 	private Player player;
 	private Continent continent;
 	private ArrayList<Country> countriesOwned;
-	private ReinforcementPhaseUtil reinforcementPhaseUtil;
-	private String fileName1;
 	private Country country1;
 	private Country country2;
 	private Country country3;
@@ -40,10 +37,10 @@ public class ReinforcementPhaseUtilTest {
 	private Country country13;
 
 	/**
-	 * @throws Exception
+	 * Initial Setup of objects.
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		player = new Player();
 		continent = new Continent("Europe", 5);
 		countriesOwned = new ArrayList<>();
@@ -73,7 +70,6 @@ public class ReinforcementPhaseUtilTest {
 		country10.setContinentName(continent.getContinentName());
 		country11.setContinentName(continent.getContinentName());
 		country12.setContinentName(continent.getContinentName());
-		
 
 		countriesOwned.add(country1);
 		countriesOwned.add(country2);
@@ -89,15 +85,14 @@ public class ReinforcementPhaseUtilTest {
 		countriesOwned.add(country12);
 		countriesOwned.add(country13);
 		player.setCountriesOwned(countriesOwned);
-		reinforcementPhaseUtil = new ReinforcementPhaseUtil();
 
 	}
 
 	/**
-	 * @throws Exception
+	 * Test method for calculating reinforcement armies.
 	 */
 	@Test
-	public void testcalculateReinforcementArmies() throws Exception {
+	public void testcalculateReinforcementArmies() {
 		country13.setContinentName("Canada");
 		int reinforcementArmy = ReinforcementPhaseUtil.calculateReinforcementArmies(player, continent);
 		assertEquals(4, reinforcementArmy);
@@ -105,10 +100,10 @@ public class ReinforcementPhaseUtilTest {
 	}
 
 	/**
-	 * @throws Exception
+	 * Test method for calculating reinforcement armies for whole continent.
 	 */
 	@Test
-	public void testcalculateReinforcementArmiesWithWholeContinent() throws Exception {
+	public void testcalculateReinforcementArmiesWithWholeContinent() {
 		country13.setContinentName(continent.getContinentName());
 		int reinforcementArmy = ReinforcementPhaseUtil.calculateReinforcementArmies(player, continent);
 		assertEquals(5, reinforcementArmy);

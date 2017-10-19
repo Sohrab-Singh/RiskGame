@@ -87,7 +87,7 @@ public class MapFileReader {
 	 *             input output exception
 	 */
 	public MapFileReader readFile() throws IOException {
-		
+
 		BufferedReader reader = new BufferedReader(fileReader);
 		String line;
 		while (true) {
@@ -152,6 +152,12 @@ public class MapFileReader {
 		return this;
 	}
 
+	/**
+	 * Check File Validation.
+	 * 
+	 * @return true if file is valid
+	 * @throws IOException
+	 */
 	public boolean checkFileValidation() throws IOException {
 
 		return new MapValidation().validateFile(fileName);

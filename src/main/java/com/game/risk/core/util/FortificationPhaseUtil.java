@@ -38,6 +38,7 @@ public class FortificationPhaseUtil {
 		if (adjacentMap.get(country1).contains(country2)) {
 			country1.setCurrentNumberOfArmies(country1.getCurrentNumberOfArmies() - numberOfArmies);
 			country2.setCurrentNumberOfArmies(country2.getCurrentNumberOfArmies() + numberOfArmies);
+			
 		}
 
 	}

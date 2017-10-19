@@ -39,6 +39,8 @@ public class StartUpPhase {
 	 *            reference to the map file parser object
 	 * @param numberOfPlayers
 	 *            number of players that we need to start the game
+	 * @param reader
+	 *            buffer reader
 	 * @throws IOException
 	 */
 	public StartUpPhase(MapFileReader mapFileReader, int numberOfPlayers, BufferedReader reader) throws IOException {
@@ -50,7 +52,8 @@ public class StartUpPhase {
 		for (int i = 0; i < numberOfPlayers; i++) {
 			Player player = new Player();
 			String playerName = null;
-			if ((playerName = reader.readLine()) != null) {
+			
+			if (reader!= null && (playerName = reader.readLine()) != null) {
 				player.setPlayerName(playerName);
 			}
 			playersList.add(player);

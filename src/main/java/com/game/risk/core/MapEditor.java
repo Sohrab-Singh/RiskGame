@@ -42,6 +42,10 @@ public class MapEditor {
 	/**
 	 * Method to print the adjacency Matrix representation and edit the map
 	 * 
+	 * @param isNewMap
+	 *            true if new map and false if user want to edit old map.
+	 * @return true if properly read.
+	 * 
 	 * @throws IOException
 	 */
 	public boolean readMapEditor(boolean isNewMap) throws IOException {

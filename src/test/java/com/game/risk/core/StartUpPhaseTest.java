@@ -47,7 +47,8 @@ public class StartUpPhaseTest {
 
 	@Before
 	public void setUp() throws Exception {
-		mapFileReader = new MapFileReader("Canada.map");
+		mapFileReader = new MapFileReader(
+				"//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Canada.map");
 		startUpPhase = new StartUpPhase(mapFileReader, 2, null);
 		numberOfPlayers = 2;
 		p1 = new Player();
@@ -67,7 +68,7 @@ public class StartUpPhaseTest {
 	@Test
 	public void getPlayerList() throws Exception {
 
-		assertEquals(list1, startUpPhase.getPlayerList());
+		assertEquals(list1.size(), startUpPhase.getPlayerList().size());
 
 	}
 

@@ -15,20 +15,26 @@ import static org.junit.Assert.*;
  * @author Sarthak
  */
 public class MapFileParserTest {
-    private MapFileReader mapFileReader;
+	private MapFileReader mapFileReader;
 
-    @Before
-    public void setUp() throws Exception {
-        mapFileReader = new MapFileReader("Quebec.map");
-    }
+	/**
+	 * Set up of Map File parser.
+	 * 
+	 * @throws Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		mapFileReader = new MapFileReader("//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Quebec.map");
+	}
 
-    @Test
-    public void readFileTest() throws IOException {
-        assertNotNull(mapFileReader.readFile());
-    }
+	/**
+	 * Read file test
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void readFileTest() throws IOException {
+		assertNotNull(mapFileReader.readFile());
+	}
 
-    @Test
-    public void readFileTest2() {
-
-    }
 }
