@@ -5,8 +5,16 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+
+import com.game.risk.RoundRobinScheduler;
 import com.game.risk.core.MapEditor;
 import com.game.risk.core.MapFileReader;
+import com.game.risk.core.StartUpPhase;
+import com.game.risk.core.util.FortificationPhaseUtil;
+import com.game.risk.core.util.ReinforcementPhaseUtil;
+import com.game.risk.model.Continent;
+import com.game.risk.model.Country;
+import com.game.risk.model.Player;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -16,7 +24,9 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * View for the user to choose from loading a map file or creating a new map
@@ -108,6 +118,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
+		boolean isSaved = false;
 		if (event.getComponent() == btnLoad) {
 			setVisible(false);
 			JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
@@ -120,9 +131,14 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				String filename = fileChooser.getSelectedFile().getAbsolutePath();
 				System.out.println("Path: " + filename);
 				try {
-					parser = new MapFileReader(filename).readFile();
+					parser = new MapFileReader(filename);
+					if (!parser.checkFileValidation()) {
+						System.out.println("Invalid File Selected!");
+						return;
+					}
+					parser.readFile();
 					view = new MapEditor(parser);
-					view.readMapEditor(false);
+					isSaved = view.readMapEditor(false);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -133,15 +149,106 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 			parser = new MapFileReader();
 			view = new MapEditor(parser);
 			try {
-				view.readMapEditor(true);
+				isSaved = view.readMapEditor(true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		implementPhases();
+		if (isSaved)
+			try {
+				implementPhases(parser);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	}
 
-	private void implementPhases() {
+	private void implementPhases(MapFileReader fileParser) throws IOException {
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+		System.out.println(":: Input the no of players playing ::");
+		int numberOfPlayers = Integer.parseInt(reader.readLine());
+
+		// Startup Phase
+		StartUpPhase startUpPhase = new StartUpPhase(fileParser, numberOfPlayers, reader);
+		startUpPhase.assignCountries();
+		startUpPhase.allocateArmiesToPlayers();
+		startUpPhase.assignInitialArmiesToCountries();
+		startUpPhase.allocateRemainingArmiesToCountries();
+
+		// Players playing in round robin fashion
+		RoundRobinScheduler<Player> robinScheduler = new RoundRobinScheduler<Player>(startUpPhase.getPlayerList());
+
+		// As of now we are only giving 5 rounds , when attack phase will be implemented
+		// then we will end game when player wins.
+		int rounds = 0;
+		while (rounds < 5) {
+
+			Player player = robinScheduler.next();
+
+			// Reinforcement phase
+			System.out.println("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
+			Continent continent = fileParser.getContinentHashMap()
+					.get(player.getCountriesOwned().get(0).getContinentName());
+			int reinforcementArmies = ReinforcementPhaseUtil.calculateReinforcementArmies(player, continent);
+			System.out.println(
+					"Total reinforcement armies available for " + player.getPlayerName() + " : " + reinforcementArmies);
+			player.setNumberOfArmies(player.getNumberOfArmies() + reinforcementArmies);
+
+			for (Country country : player.getCountriesOwned()) {
+				if (player.getNumberOfArmies() > 0) {
+					System.out.println(
+							"How many armies do you want to assign to your country " + country.getCountryName() + " ?");
+					System.out.println("Current number of armies of " + country.getCountryName() + " is "
+							+ country.getCurrentNumberOfArmies() + " | Available armies : "
+							+ player.getNumberOfArmies());
+					int armies = Integer.parseInt(reader.readLine());
+					player.assignArmiesToCountries(country, armies);
+				} else {
+					break;
+				}
+			}
+
+			// Attack phase will be here
+
+			// Fortification phase
+			System.out.println("\nFortification phase begins.\n");
+			Country country1 = null;
+			Country country2 = null;
+			boolean flag = true;
+			while (flag) {
+				flag = false;
+				System.out.println("Enter the Country Name from where you want to move some Army");
+				country1 = fileParser.getCountriesHashMap().get(reader.readLine());
+
+				System.out.println("Enter the Country Name to which you want to move some Army");
+				country2 = FortificationPhaseUtil.retrieveAndSelectAdjacentArmies(country1, reader, fileParser);
+
+				if (country1 == null || country2 == null) {
+					System.out.println("You have entered wrong data.");
+					System.out.println("Enter again");
+					flag = true;
+				}
+			}
+
+			boolean countryFlag = true;
+			int fortificationArmies = 0;
+			while (countryFlag) {
+				countryFlag = false;
+				System.out.println("Enter the Number of Armies to Move");
+				fortificationArmies = Integer.parseInt(reader.readLine());
+				if (fortificationArmies > country1.getCurrentNumberOfArmies()) {
+					System.out.println("You can not enter more armies than donor country have");
+					System.out.println("Enter again");
+					countryFlag = true;
+				}
+			}
+
+			FortificationPhaseUtil.moveArmiesBetweenCountries(country1, country2, fortificationArmies,
+					fileParser.getCountriesGraph().getAdjListHashMap());
+			rounds++;
+		}
+		reader.close();
 
 	}
 
