@@ -72,18 +72,15 @@ public class MapValidation {
 				break;
 			}
 			// Check for continents format
-
 			line = checkContinentFormat(bufferedReader, line);
 
 			// Check for countries format
-
 			checkCountriesFormat(bufferedReader, line);
 
 		}
 
 		// Check to see whether number of continents in [Continents] tag is equeal with
 		// number of continents in [Territories tag]
-
 		if (continentInContinent.size() != continentInTerritory.size()) {
 			System.out.println(
 					"* Number of continents in [Continents] tag is not equal with number of continents in [Territories] tag");
@@ -91,7 +88,6 @@ public class MapValidation {
 		}
 
 		// make sure that all continents have at least one country
-
 		for (Object continent : continentInContinent) {
 			if (!continentInTerritory.contains(continent)) {
 				System.out.println(continent + ": does not have any country");
@@ -99,7 +95,6 @@ public class MapValidation {
 		}
 		// check to make sure that if country X has country Y as it adjacent then,
 		// country Y has country X as its adjacent as well
-
 		for (String country : Countries.keySet()) {
 
 			for (Object adjlist : Countries.get(country)) {

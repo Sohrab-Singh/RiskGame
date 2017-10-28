@@ -129,12 +129,11 @@ public class MapFileReader {
 							country.setContinentName(splits[3]);
 							countriesGraph.addCountry(country);
 							countriesHashMap.put(country.getCountryName(), country);
-							continentHashMap.get(country.getContinentName()).addCountry(country);
 						} else if (countriesHashMap.get(splits[0]).getContinentName() == null) {
 							countriesHashMap.get(splits[0]).setxCoordinate(splits[1]);
 							countriesHashMap.get(splits[0]).setyCoordinate(splits[2]);
 							countriesHashMap.get(splits[0]).setContinentName(splits[3]);
-							continentHashMap.get(splits[3]).addCountry(countriesHashMap.get(splits[0]));
+							countriesGraph.addCountry(countriesHashMap.get(splits[0]));
 						}
 
 						// Check whether adjacent country is already created and present in HashMap

@@ -246,6 +246,7 @@ public class MapEditor {
 		for (Continent continent : mapFileReader.getContinentHashMap().values()) {
 
 			for (Country country : continent.getCountries()) {
+
 				builder.append(country.getCountryName() + SEPERATOR + continent.getContinentName() + SEPERATOR);
 				LinkedList<Country> currentCountryList = mapFileReader.getCountriesGraph().getAdjListHashMap()
 						.get(country);
