@@ -52,8 +52,8 @@ public class StartUpPhase {
 		for (int i = 0; i < numberOfPlayers; i++) {
 			Player player = new Player();
 			String playerName = null;
-			
-			if (reader!= null && (playerName = reader.readLine()) != null) {
+
+			if (reader != null && (playerName = reader.readLine()) != null) {
 				player.setPlayerName(playerName);
 			}
 			playersList.add(player);
@@ -90,6 +90,7 @@ public class StartUpPhase {
 			i = i % playersList.size();
 			Player player = playersList.get(i);
 			player.addCountry(mapFileReader.getCountriesHashMap().get(key));
+			mapFileReader.getCountriesHashMap().get(key).setPlayerName(player.getPlayerName());
 			i++;
 		}
 	}

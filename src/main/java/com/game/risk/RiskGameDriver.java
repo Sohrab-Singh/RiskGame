@@ -2,6 +2,10 @@ package com.game.risk;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+
+import com.game.risk.core.MapFileReader;
+import com.game.risk.view.AttackPhaseView;
+import com.game.risk.view.PhaseView;
 import com.game.risk.view.WelcomeScreenView;
 
 /**
@@ -12,6 +16,8 @@ import com.game.risk.view.WelcomeScreenView;
  *
  */
 public class RiskGameDriver {
+
+	private static PhaseObservable phaseObservable;
 
 	/**
 	 * Main method for Risk Game Driver Class
@@ -34,4 +40,23 @@ public class RiskGameDriver {
 		});
 		thread.start();
 	}
+
+	public static void startGame(MapFileReader fileParser) {
+		PhaseView view = new PhaseView(fileParser);
+
+		phaseObservable = new PhaseObservable(fileParser);
+		phaseObservable.addObserver(view);
+		try {
+			phaseObservable.startGamePhases();
+		} catch (NumberFormatException | IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void startAttackPhase(MapFileReader fileParser) {
+		AttackPhaseView attackView = new AttackPhaseView(fileParser);
+		phaseObservable.addObserver(attackView);
+	}
+
 }
