@@ -149,4 +149,13 @@ public class Country {
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
 	}
+
+	@Override
+	public String toString() {
+		return "Country [countryName=" + countryName + ", xCoordinate=" + xCoordinate + ", yCoordinate=" + yCoordinate
+				+ ", playerName=" + playerName + ", currentNumberOfArmies=" + currentNumberOfArmies + ", continentName="
+				+ continentName + "]";
+	}
+	
+	
 }

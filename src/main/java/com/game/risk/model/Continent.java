@@ -115,4 +115,12 @@ public class Continent {
 	public void removeCountry(Country country) {
 		countries.remove(country);
 	}
+
+	@Override
+	public String toString() {
+		return "Continent [continentName=" + continentName + ", countries=" + countries + ", controlValue="
+				+ controlValue + "]";
+	}
+	
+	
 }
