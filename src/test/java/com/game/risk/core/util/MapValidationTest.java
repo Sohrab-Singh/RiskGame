@@ -66,6 +66,7 @@ public class MapValidationTest {
     /**
      * test method for checking the connected graph
      * @throws Exception
+     * 
      */
     @Test
 

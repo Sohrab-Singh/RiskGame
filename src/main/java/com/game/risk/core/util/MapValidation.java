@@ -241,6 +241,7 @@ public class MapValidation {
      * Check to see whether the garph is a connected graph (DFS)
      * @param countriesGraph
      * @return true if it is a connected graph
+     *
      */
 
     public boolean checkConnectedGraph(CountriesGraph countriesGraph) {
@@ -268,7 +269,6 @@ public class MapValidation {
                 }
 
             }
-
         }
 
         for(Country country: countries.keySet())
