@@ -257,18 +257,17 @@ public class MapValidation {
 
 			String rootCountry = (String) stack.peek();
 
-			for (Country key : countries.keySet()) {
-				for (Country country : countries.get(key)) {
 
-					if (country.isVisited() == false) {
-						stack.push(country);
-						country.setVisited(true);
-					} else {
-						stack.pop();
-					}
+			for (Country country : countries.get(rootCountry)) {
+
+				if (country.isVisited() == false) {
+					stack.push(country);
+					country.setVisited(true);
+				} else {
+					stack.pop();
 				}
-
 			}
+
 		}
 
 		for (Country country : countries.keySet()) {

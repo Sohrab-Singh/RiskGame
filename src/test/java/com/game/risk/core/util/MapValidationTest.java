@@ -32,8 +32,8 @@ public class MapValidationTest {
         mapValidation = new MapValidation();
         str1 = " [Continents] [Territories]";
         str2 = "[Map] [Continents] [Territories]";
-        fileName = "//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Canada.map";
-        fileName1 = "//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Invalid_Canada.map";
+        fileName = "./src/main/resources/Canada.map";
+        fileName1 = "./src/main/resources/Invalid_Canada.map";
         mapFileReader = new MapFileReader(fileName1);
         graph = mapFileReader.getCountriesGraph();
     }
