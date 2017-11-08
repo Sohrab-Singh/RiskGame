@@ -1,0 +1,76 @@
+[Map]
+author=Andr� Beaus�jour
+warn=no
+image=Qu�bec.bmp
+wrap=no
+scroll=no
+
+[Continents]
+C�te Nord=4
+Cantons de l'est=3
+Abitibi=5
+Rive Nord=6
+Bas du Fleuve=2
+Nouveau Qu�bec=6
+Labrador=5
+
+[Territories]
+Manicouagan,325,552,C�te Nord,Fermont,Sept-Iles,Charlevoix,Saguenay,Lac St-Jean,Matane
+Manicouagan,325,552,C�te Nord,Fermont,Sept-Iles,Charlevoix,Saguenay,Lac St-Jean,Matane
+Sept-Iles,398,517,C�te Nord,Fermont,Churchill,Havre St-Pierre,Manicouagan
+Havre St-Pierre,486,493,C�te Nord,Churchill,Blanc Sablon,Natashquan,Sept-Iles
+Natashquan,548,518,C�te Nord,Havre St-Pierre,Blanc Sablon,Anticosti
+Blanc Sablon,584,465,C�te Nord,Churchill,Natashquan,Havre St-Pierre,Goose Bay
+
+Mont�r�gie,210,750,Cantons de l'est,Montr�al,Centre du Qu�bec,Estrie
+Mont�r�gie,210,750,Cantons de l'est,Montr�al,Centre du Qu�bec,Estrie
+Centre du Qu�bec,235,728,Cantons de l'est,Mont�r�gie,Estrie,Chaudi�re
+Estrie,249,749,Cantons de l'est,Mont�r�gie,Centre du Qu�bec,Chaudi�re
+Chaudi�re,276,709,Cantons de l'est,Centre du Qu�bec,Estrie,Rimouski,Qu�bec
+
+Matagami,96,540,Abitibi,Eastmain,Mistassini,T�miscamingue,Rouyn
+Matagami,96,540,Abitibi,Eastmain,Mistassini,T�miscamingue,Rouyn
+Mistassini,180,537,Abitibi,Eastmain,La Grande,Lac St-Jean,Gouin,Matagami
+Lac St-Jean,241,570,Abitibi,La Grande,Fermont,Manicouagan,Saguenay,Mauricie,Gouin,Mistassini
+Rouyn,50,635,Abitibi,Matagami,T�miscamingue,Outaouais
+T�miscamingue,105,618,Abitibi,Rouyn,Matagami,Gouin,Outaouais
+Outaouais,102,692,Abitibi,T�miscamingue,Laurentides,Rouyn,Laval
+Gouin,169,627,Abitibi,Mistassini,Lac St-Jean,Mauricie,Lanaudi�re,Laurentides,T�miscamingue
+Saguenay,271,623,Abitibi,Lac St-Jean,Manicouagan,Charlevoix,Stoneham
+
+Stoneham,253,656,Rive Nord,Saguenay,Charlevoix,Qu�bec,Mauricie
+Laurentides,150,687,Rive Nord,Gouin,Lanaudi�re,Laval,Outaouais
+Lanaudi�re,187,697,Rive Nord,Gouin,Mauricie,Montr�al,Laval,Laurentides
+Mauricie,213,676,Rive Nord,Gouin,Lac St-Jean,Qu�bec,Lanaudi�re,Stoneham
+Qu�bec,252,683,Rive Nord,Charlevoix,Mauricie,Chaudi�re,Stoneham
+Charlevoix,283,652,Rive Nord,Saguenay,Manicouagan,Qu�bec,Stoneham
+Laval,170,725,Rive Nord,Laurentides,Lanaudi�re,Montr�al,Outaouais
+Montr�al,183,742,Rive Nord,Laval,Lanaudi�re,Mont�r�gie
+
+Rimouski,324,653,Bas du Fleuve,Chaudi�re,Matane
+Matane,372,625,Bas du Fleuve,Rimouski,Gasp�sie,Chaudi�re
+Gasp�sie,428,611,Bas du Fleuve,Sept-Iles,Anticosti,Matane,Iles de la Madeleine
+Anticosti,497,581,Bas du Fleuve,Natashquan,Gasp�sie,Iles de la Madeleine
+Iles de la Madeleine,523,655,Bas du Fleuve,Anticosti,Gasp�sie
+
+Uniujak,189,256,Nouveau Qu�bec,Inukjuak,Nunavik,Kuujjuarapik,Inukjuak,Nunavik,Kuujjuarapik
+Uniujak,189,256,Nouveau Qu�bec,Inukjuak,Nunavik,Kuujjuarapik,Inukjuak,Nunavik,Kuujjuarapik
+Ivujivik,178,87,Nouveau Qu�bec,Salluit,Inukjuak,Salluit,Inukjuak
+Ivujivik,178,87,Nouveau Qu�bec,Salluit,Inukjuak,Salluit,Inukjuak
+Salluit,249,95,Nouveau Qu�bec,Ungava,Ivujivik
+Inukjuak,185,178,Nouveau Qu�bec,Ungava,Ivujivik,Uniujak
+Ungava,279,184,Nouveau Qu�bec,Salluit,Inukjuak,Nunavik,Kuujuaq
+Nunavik,271,268,Nouveau Qu�bec,Ungava,Kuujuaq,Kuujjuarapik,Uniujak
+Kuujjuarapik,195,322,Nouveau Qu�bec,Nunavik,Baie James,La Grande,Uniujak
+Baie James,106,369,Nouveau Qu�bec,Kuujjuarapik,La Grande,Eastmain
+La Grande,226,410,Nouveau Qu�bec,Kuujjuarapik,Caniapiscau,Baie James,Eastmain,Mistassini,Lac St-Jean
+Eastmain,120,450,Nouveau Qu�bec,Baie James,La Grande,Mistassini,Matagami
+
+Goose Bay,604,404,Labrador,C�tes du Labrador,Churchill,Blanc Sablon,C�tes du Labrador,Churchill,Blanc Sablon
+Kangiqsualujjaq,412,226,Labrador,Kuujuaq,C�tes du Labrador,Kuujuaq,C�tes du Labrador
+Kangiqsualujjaq,412,226,Labrador,Kuujuaq,C�tes du Labrador,Kuujuaq,C�tes du Labrador
+Kuujuaq,372,299,Labrador,Caniapiscau,Churchill,C�tes du Labrador,Nunavik,Ungava,Kangiqsualujjaq
+C�tes du Labrador,492,305,Labrador,Kuujuaq,Churchill,Kangiqsualujjaq,Goose Bay,Salluit
+Caniapiscau,331,388,Labrador,Kuujuaq,La Grande,Fermont,Churchill
+Churchill,468,399,Labrador,C�tes du Labrador,Kuujuaq,Caniapiscau,Fermont,Sept-Iles,Havre St-Pierre,Blanc Sablon,Goose Bay
+Fermont,342,458,Labrador,Lac St-Jean,Caniapiscau,Churchill,Manicouagan,Sept-Iles

@@ -137,4 +137,12 @@ public class Player {
 			System.out.println("You don't have any army!");
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "Player [playerName=" + playerName + ", countriesOwned=" + countriesOwned + ", cardList=" + cardList
+				+ ", numberOfArmies=" + numberOfArmies + "]";
+	}
+	
+	
 }
