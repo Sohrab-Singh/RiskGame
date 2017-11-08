@@ -23,6 +23,7 @@ public class LoggingUtil {
 
 	/**
 	 * Method to show logging window.
+	 * @wbp.parser.entryPoint
 	 */
 	public void showLoggingWindow() {
 		frame = new JFrame("Logging window");

@@ -1,6 +1,5 @@
 package com.game.risk.core.util;
 
-import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
@@ -22,15 +21,9 @@ public class ReinforcementPhaseUtil {
 	 * @return reinforcement armies
 	 * 
 	 */
-	public static int calculateReinforcementArmies(Player player, Continent continent) {
+	public static int calculateReinforcementArmies(Player player) {
 		int countriesOwned = player.getCountriesOwned().size();
 		int reinfoArmies = (int) Math.floor(countriesOwned / 3);
-
-		// If player owns all the countries of continents then reinforcement armies will
-		// be the control value of continent.
-		if (checkPlayerOwnsWholeContinent(player) && continent != null) {
-			reinfoArmies = continent.getControlValue();
-		}
 
 		// Minimum number of armies for any player in case reinforcement armies are less
 		// than 3.

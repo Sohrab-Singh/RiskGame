@@ -157,6 +157,7 @@ public class Country {
 	}
 
 	/**
+<<<<<<< Updated upstream
 	 * Set the isVisited parameter
 	 * @param visited
 	 */
@@ -172,4 +173,19 @@ public class Country {
 	public boolean isVisited() {
 		return isVisited;
 	}
- }
+
+	/*
+	 * Decrease an army in a battle lost
+	 */
+	public void looseArmy() {
+		currentNumberOfArmies--;
+	}
+
+	/**
+	 * Increase an army in a battle won
+	 */
+	public void addArmy() {
+		currentNumberOfArmies++;
+	}
+}
+

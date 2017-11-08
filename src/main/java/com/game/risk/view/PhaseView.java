@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.game.risk.PhaseObservable;
 import com.game.risk.cardenum.PlayerDominationPhase;
+import com.game.risk.RiskGameDriver;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Country;
@@ -33,7 +34,7 @@ import javax.swing.JButton;
 import java.awt.FlowLayout;
 
 /**
- * View for the user to view represent each Phase run time
+ * (Observer) View for the user to view represent each Phase run time
  * 
  * @author Sarthak
  *
@@ -69,6 +70,21 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	private HashMap<JPanel, Integer> adjacentPanelHashMap;
 
 	/**
+	 * JPanel to contain the adjacent opponent countries;
+	 */
+	private JPanel panel_2;
+
+	/**
+	 * JPanel to contain the countries owned text label
+	 */
+	private JPanel panel_3;
+
+	/**
+	 * JPanel to contain the countries adjacent other than self owned
+	 */
+	private JPanel panel_4;
+
+	/**
 	 * JPanel to contain the player owned countries JLabel Array
 	 */
 	private JPanel panel_5;
@@ -77,6 +93,11 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	 * JPanel to contain the adjacent countries JLabel Array
 	 */
 	private JPanel panel_6;
+
+	/**
+	 * JLabel to show the Current Phase
+	 */
+	private JLabel lblCurrentPhase;
 
 	/**
 	 * Country Object to maintain the attacking country
@@ -111,11 +132,26 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	private JLabel dominationPanels[];
 
 	/**
+	 * JButton object to perform attack phase init
+	 */
+	private JButton btnAttack;
+
+	/**
+	 * JButton object to perform fortification phase init
+	 */
+	private JButton btnFortify;
+
+	/**
+	 * JButton object to end the player's turn
+	 */
+	private JButton btnEndTurn;
+
+	/**
 	 * List to store the Adjacent Countries jlabels with player owned selected
 	 * country
 	 */
 	private List<JPanel> adjPanels;
-	
+
 	private JPanel colorPanel;
 
 	/**
@@ -125,12 +161,16 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 	private List<Player> players;
 
+	private JLabel lblArmiesCount;
+	private JLabel lblPlayer;
+	private int currentState;
+
 	/**
 	 * PhaseView Constructor
 	 * 
 	 * @param reader
 	 *            MapFileReader object
-	 * @param players 
+	 * @param players
 	 */
 	public PhaseView(MapFileReader reader, List<Player> players) {
 		this.fileParser = reader;
@@ -147,7 +187,9 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	private void initializeView() {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 750);
+
+		setBounds(100, 100, 850, 781);
+
 		jframe = this;
 		// Initialize JPanel contentPane to hold the JLabel and JButton elements
 		contentPane = new JPanel();
@@ -157,17 +199,17 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 		contentPane.setLayout(null);
 
 		JPanel panelMapDetails = new JPanel();
-		panelMapDetails.setBounds(0, 33, 782, 394);
+		panelMapDetails.setBounds(0, 33, 832, 444);
 		contentPane.add(panelMapDetails);
 		panelMapDetails.setLayout(null);
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EmptyBorder(10, 10, 10, 10));
-		panel_1.setBounds(0, 0, 782, 218);
+		panel_1.setBounds(0, 0, 833, 248);
 		panelMapDetails.add(panel_1);
 		panel_1.setLayout(null);
 
-		JPanel panel_3 = new JPanel();
+		panel_3 = new JPanel();
 		panel_3.setBackground(Color.BLACK);
 		panel_3.setBounds(0, 13, 162, 26);
 		panel_1.add(panel_3);
@@ -181,17 +223,17 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 		panel_5 = new JPanel();
 		panel_5.setBorder(new EmptyBorder(5, 10, 10, 10));
-		panel_5.setBounds(0, 39, 782, 193);
+		panel_5.setBounds(0, 52, 833, 245);
 		panel_1.add(panel_5);
 		panel_5.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		panel_2.setBackground(Color.LIGHT_GRAY);
-		panel_2.setBounds(0, 232, 782, 162);
+		panel_2.setBounds(0, 297, 833, 147);
 		panelMapDetails.add(panel_2);
 		panel_2.setLayout(null);
 
-		JPanel panel_4 = new JPanel();
+		panel_4 = new JPanel();
 		panel_4.setBackground(Color.BLACK);
 		panel_4.setBounds(0, 13, 168, 27);
 		panel_2.add(panel_4);
@@ -205,15 +247,15 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 		panel_6 = new JPanel();
 		panel_6.setBorder(new EmptyBorder(5, 10, 10, 10));
 		panel_6.setBackground(Color.LIGHT_GRAY);
-		panel_6.setBounds(0, 39, 782, 123);
+		panel_6.setBounds(0, 39, 833, 109);
 		panel_2.add(panel_6);
 
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.BLACK);
-		panel.setBounds(0, 427, 782, 126);
+		panel.setBounds(0, 477, 832, 126);
 		contentPane.add(panel);
 
-		JLabel lblArmiesCount = new JLabel("20");
+		lblArmiesCount = new JLabel();
 		lblArmiesCount.setBounds(12, 13, 66, 52);
 		lblArmiesCount.setForeground(Color.WHITE);
 		lblArmiesCount.setHorizontalAlignment(SwingConstants.CENTER);
@@ -226,29 +268,32 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 		panel.add(lblArmiesCount);
 		panel.add(lblArmies);
 
-		JLabel lblPlayer = new JLabel("Player 1");
+		lblPlayer = new JLabel();
 		lblPlayer.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblPlayer.setForeground(Color.WHITE);
 		lblPlayer.setBounds(106, 13, 142, 30);
 		panel.add(lblPlayer);
 
-		JButton btnAttack = new JButton("Attack");
+		btnAttack = new JButton("Attack");
 		btnAttack.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnAttack.setBounds(356, 13, 97, 25);
+		btnAttack.addMouseListener(this);
 		panel.add(btnAttack);
 
-		JButton btnFortify = new JButton("Fortify");
+		btnFortify = new JButton("Fortify");
 		btnFortify.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnFortify.setBounds(476, 13, 97, 25);
+		btnFortify.addMouseListener(this);
 		panel.add(btnFortify);
 
-		JButton btnEndTurn = new JButton("End Turn");
+		btnEndTurn = new JButton("End Turn");
 		btnEndTurn.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnEndTurn.setBounds(598, 13, 106, 25);
+		btnEndTurn.addMouseListener(this);
 		panel.add(btnEndTurn);
 
-		JLabel lblCurrentPhase = new JLabel("Reinforcement");
-		lblCurrentPhase.setBounds(0, 0, 782, 34);
+		lblCurrentPhase = new JLabel("Reinforcement");
+		lblCurrentPhase.setBounds(0, 0, 832, 34);
 		contentPane.add(lblCurrentPhase);
 		lblCurrentPhase.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCurrentPhase.setForeground(Color.BLACK);
@@ -256,7 +301,7 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 		JPanel dominationPanel = new JPanel();
 		dominationPanel.setBackground(Color.WHITE);
-		dominationPanel.setBounds(0, 553, 782, 130);
+		dominationPanel.setBounds(0, 602, 832, 130);
 		dominationPanel.setLayout(null);
 
 		JPanel playerInitPanel = new JPanel();
@@ -266,39 +311,38 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 		JPanel statusPanel = new JPanel();
 		statusPanel.setBackground(Color.WHITE);
-		statusPanel.setBounds(231, 48, 500, 29);
+		statusPanel.setBounds(254, 44, 500, 29);
 		statusPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
-		
+
 		int i = 0;
 		for (Player player : players) {
 			JPanel playerColorPanel = new JPanel();
 			playerColorPanel.setLayout(new FlowLayout());
 			playerColorPanel.setBackground(Color.WHITE);
-			
+
 			JLabel labelPlayer = new JLabel(player.getPlayerName());
 			labelPlayer.setFont(new Font("Tahoma", Font.BOLD, 13));
 			labelPlayer.setForeground(Color.BLACK);
 			playerColorPanel.add(labelPlayer);
-			
+
 			JPanel color = new JPanel();
 			color.setBackground(getPlayerColor(i));
 			playerColorPanel.add(color);
-			
+
 			playerInitPanel.add(playerColorPanel);
-			
+
 			colorPanel = new JPanel();
 			colorPanel.setBackground(getPlayerColor(i));
-			colorPanel.setPreferredSize(new Dimension((int)(player.getCurrentDominationPercentage()*500) , 29));
-			
+			colorPanel.setPreferredSize(new Dimension((int) (player.getCurrentDominationPercentage() * 500), 29));
+
 			statusPanel.add(colorPanel);
 			i++;
 		}
 		dominationPanel.add(playerInitPanel);
 		dominationPanel.add(statusPanel);
 		contentPane.add(dominationPanel);
-		
-	}
 
+	}
 
 	private Color getPlayerColor(int i) {
 
@@ -332,21 +376,23 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-
+		setCurrentState(((PhaseObservable) arg0).getCurrentState());
 		if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_STARTUP) {
 			jframe.setVisible(true);
+			lblCurrentPhase.setText("StartUp Phase");
+
+			updatePlayerCountries((PhaseObservable) arg0);
+		} else if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_ACTIVE) {
+			lblCurrentPhase.setText("What do you want to perform now?");
+			updatePlayerCountries((PhaseObservable) arg0);
+		} else if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_REINFORCEMENT) {
+			lblCurrentPhase.setText("Reinforcement Phase");
 			updatePlayerCountries((PhaseObservable) arg0);
 		}
 		
-		if(((PhaseObservable) arg0).getPlayerDominationPhase() == PlayerDominationPhase.AFTER_STARTUP.getState()){
-			//updatePlayerDominationPanel();
+		if(((PhaseObservable)arg0).getPlayerDominationPhase()) {
+			
 		}
-		
-		if(((PhaseObservable) arg0).getPlayerDominationPhase() == PlayerDominationPhase.AFTER_ATTACK.getState()){
-			//updatePlayerDominationPanel();
-		}
-		
-		
 	}
 
 	/**
@@ -358,6 +404,8 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	private void updatePlayerCountries(PhaseObservable observable) {
 		List<Country> countries = observable.getPlayer().getCountriesOwned();
 		currentPlayer = observable.getPlayer();
+		lblPlayer.setText(currentPlayer.getPlayerName());
+		lblArmiesCount.setText(Integer.toString(currentPlayer.getNumberOfArmies()));
 		jpanels = new JPanel[countries.size()];
 		panel_5.removeAll();
 		panel_6.removeAll();
@@ -368,10 +416,22 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 			jlabel.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(5, 5, 5, 5)));
 			jpanels[i].setBorder(new EmptyBorder(-2, -2, -1, -1));
 			jpanels[i].add(jlabel);
+			JPanel armyCount = new JPanel();
+			JLabel label = new JLabel(Integer.toString(countries.get(i).getCurrentNumberOfArmies()));
+			label.setForeground(Color.WHITE);
+			armyCount.setBackground(Color.BLACK);
+			armyCount.add(label);
+			jpanels[i].add(armyCount);
 			jpanels[i].addMouseListener(this);
 			panelHashMap.put(jpanels[i], i);
 			panel_5.add(jpanels[i]);
 		}
+		if (observable.getCurrentState() == PhaseStates.STATE_STARTUP
+				|| observable.getCurrentState() == PhaseStates.STATE_REINFORCEMENT)
+			panel_2.setVisible(false);
+		else
+			panel_2.setVisible(true);
+
 		panel_5.validate();
 		panel_5.repaint();
 	}
@@ -386,12 +446,18 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 			// Ignoring the player owned countries and finding the opponnent
 			if (!adjCountries.get(i).getPlayerName().equals(currentPlayer.getPlayerName())) {
-				JLabel label = new JLabel(adjCountries.get(i).getCountryName());
+				JLabel adjCountryName = new JLabel(adjCountries.get(i).getCountryName());
 				JPanel adjPanel = new JPanel();
 				adjPanel.setBackground(null);
-				label.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(5, 5, 5, 5)));
+				adjCountryName.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(5, 5, 5, 5)));
 				adjPanel.setBorder(new EmptyBorder(-2, -2, -1, -1));
-				adjPanel.add(label);
+				adjPanel.add(adjCountryName);
+				JPanel armyCount = new JPanel();
+				JLabel adjArmyCountLabel = new JLabel(Integer.toString(adjCountries.get(i).getCurrentNumberOfArmies()));
+				adjArmyCountLabel.setForeground(Color.WHITE);
+				armyCount.setBackground(Color.BLACK);
+				armyCount.add(adjArmyCountLabel);
+				adjPanel.add(armyCount);
 				adjPanel.addMouseListener(this);
 				adjacentPanelHashMap.put(adjPanel, adjCount);
 				adjPanels.add(adjCount++, adjPanel);
@@ -405,8 +471,17 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// Attack Phase
-		if (panelHashMap.containsKey((JPanel) e.getComponent())) {
+
+		if (e.getComponent() == btnAttack) {
+			if (attackingCountry.getCurrentNumberOfArmies() > defendingCountry.getCurrentNumberOfArmies()
+					&& (defendingCountry.getCurrentNumberOfArmies() >= 1))
+				RiskGameDriver.startAttackPhase(attackingCountry, defendingCountry);
+
+		} else if (e.getComponent() == btnEndTurn) {
+
+		} else if (e.getComponent() == btnFortify) {
+
+		} else if (panelHashMap.containsKey((JPanel) e.getComponent())) {
 			Integer value = panelHashMap.get((JPanel) e.getComponent());
 			if (currentOwnedCountry != -1)
 				jpanels[currentOwnedCountry].setBackground(null);
@@ -415,7 +490,27 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 			// Find country name from the jlabel object wrapped in selected country jpanel
 			String countryName = ((JLabel) jpanels[currentOwnedCountry].getComponent(0)).getText();
-			updatePlayerAdjacentCountries(fileParser.getCountriesHashMap().get(countryName));
+			Country country = fileParser.getCountriesHashMap().get(countryName);
+			if (currentState == PhaseStates.STATE_STARTUP) {
+				country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + 1);
+				currentPlayer.setNumberOfArmies(currentPlayer.getNumberOfArmies() - 1);
+				RiskGameDriver.setControlToNewPlayer();
+
+			} else if (currentState == PhaseStates.STATE_REINFORCEMENT) {
+				if (currentPlayer.getNumberOfArmies() > 1) {
+					country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + 1);
+					currentPlayer.setNumberOfArmies(currentPlayer.getNumberOfArmies() - 1);
+					RiskGameDriver.reinitiateReinforcement();
+				} else if (currentPlayer.getNumberOfArmies() == 1) {
+					country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + 1);
+					currentPlayer.setNumberOfArmies(currentPlayer.getNumberOfArmies() - 1);
+					RiskGameDriver.initiateActiveState();
+				}
+			} else if (currentState == PhaseStates.STATE_ACTIVE) {
+				updatePlayerAdjacentCountries(fileParser.getCountriesHashMap().get(countryName));
+				setAttacker();
+				btnAttack.setVisible(false);
+			}
 
 		} else if (adjacentPanelHashMap.containsKey((JPanel) e.getComponent())) {
 			Integer value = adjacentPanelHashMap.get((JPanel) e.getComponent());
@@ -423,8 +518,9 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 				adjPanels.get(currentAdjacentCountry).setBackground(null);
 			currentAdjacentCountry = value;
 			adjPanels.get(currentAdjacentCountry).setBackground(Color.WHITE);
+			setDefender();
+			btnAttack.setVisible(true);
 		}
-
 	}
 
 	@Override
@@ -473,5 +569,23 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 				new PhaseView(null, playerss).setVisible(true);
 			}
 		});
+	}
+
+	public void setAttacker() {
+		String countryName = ((JLabel) jpanels[currentOwnedCountry].getComponent(0)).getText();
+		attackingCountry = fileParser.getCountriesHashMap().get(countryName);
+	}
+
+	public void setDefender() {
+		String countryName = ((JLabel) adjPanels.get(currentAdjacentCountry).getComponent(0)).getText();
+		defendingCountry = fileParser.getCountriesHashMap().get(countryName);
+	}
+
+	public void setCurrentState(int currentState) {
+		this.currentState = currentState;
+	}
+
+	public int getCurrentState() {
+		return currentState;
 	}
 }

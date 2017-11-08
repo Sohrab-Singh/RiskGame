@@ -2,14 +2,13 @@ package com.game.risk.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.game.risk.cardenum.CardEnum;
+import com.game.risk.core.util.AttackPhaseUtil;
 
 /**
  * Player object for populating the data related to player.
  * 
  * @author sohrab_singh
- *
+ * @author Sarthak
  */
 public class Player {
 
@@ -20,12 +19,16 @@ public class Player {
 	private List<Country> countriesOwned;
 
 	/** Card List */
-	private List<CardEnum> cardList;
+	private List<Card> cardList;
 
 	/** Number of armies */
 	private int numberOfArmies;
 
+	/** Current Domination Percentage for Player Domination View */
 	private double currentDominationPercentage;
+
+	/** Indicated the Number of Recent Attack Wins in a turn */
+	private int recentAttackWins = 0;
 
 	/** Player Constructor */
 	public Player() {
@@ -90,7 +93,7 @@ public class Player {
 	 *
 	 * @return the cardList
 	 */
-	public List<CardEnum> getCardList() {
+	public List<Card> getCardList() {
 		return cardList;
 	}
 
@@ -100,7 +103,7 @@ public class Player {
 	 * @param cardList
 	 *            the cardList to set
 	 */
-	public void setCardList(List<CardEnum> cardList) {
+	public void setCardList(List<Card> cardList) {
 		this.cardList = cardList;
 	}
 
@@ -140,6 +143,16 @@ public class Player {
 	}
 
 	/**
+	 * Remove a country from the CountriesOwned list
+	 * 
+	 * @param country
+	 * @return true or false
+	 */
+	public boolean removeCountry(Country country) {
+		return countriesOwned.remove(country);
+	}
+
+	/**
 	 * After initializing the armies, remaining armies will be given to countries
 	 * owned by users.
 	 *
@@ -166,6 +179,21 @@ public class Player {
 	public String toString() {
 		return "Player [playerName=" + playerName + ", countriesOwned=" + countriesOwned + ", cardList=" + cardList
 				+ ", numberOfArmies=" + numberOfArmies + "]";
+	}
+
+	public void attackOpponent(Country attacker, Country defender, int diceAttacker, int diceDefender) {
+		System.out.println("\n:: Before Battle Start ::");
+		System.out.println("Attacker Armies: " + attacker.getCurrentNumberOfArmies());
+		System.out.println("Defender Armies: " + defender.getCurrentNumberOfArmies());
+		AttackPhaseUtil.startBattle(attacker, defender, diceAttacker, diceDefender);
+	}
+
+	public int getRecentAttackWins() {
+		return recentAttackWins;
+	}
+
+	public void setRecentAttackWins(int recentAttackWins) {
+		this.recentAttackWins = recentAttackWins;
 	}
 
 }

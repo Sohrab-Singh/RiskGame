@@ -9,7 +9,10 @@ import javax.swing.SwingUtilities;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Player;
+import com.game.risk.core.util.PhaseStates;
+import com.game.risk.model.Country;
 import com.game.risk.view.AttackPhaseView;
+import com.game.risk.view.CardExchangeView;
 import com.game.risk.view.PhaseView;
 import com.game.risk.view.WelcomeScreenView;
 
@@ -70,7 +73,6 @@ public class RiskGameDriver {
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/***
@@ -87,12 +89,57 @@ public class RiskGameDriver {
 	}
 
 	/**
-	 * Method to start attack phase.
+	 * Start the Attack Phase
 	 * 
 	 * @param fileParser
+	 *            MapFileReader
 	 */
-	public static void startAttackPhase(MapFileReader fileParser) {
-		AttackPhaseView attackView = new AttackPhaseView(fileParser);
+	public static void startAttackPhase(Country attackingCountry, Country defendingCountry) {
+		AttackPhaseView attackView = new AttackPhaseView(attackingCountry, defendingCountry);
+		attackView.setVisible(true);
+		phaseObservable.setCurrentState(PhaseStates.STATE_ATTACK);
 		phaseObservable.addObserver(attackView);
 	}
+
+	/**
+	 * Start the battle
+	 */
+	public static void startBattle(Country attacker, Country defender, int diceAttacker, int diceDefender) {
+		phaseObservable.startBattle(attacker, defender, diceAttacker, diceDefender);
+	}
+
+	/**
+	 * Initiate the Active Game State after Attack
+	 */
+	public static void initiatePostAttackUpdate() {
+		phaseObservable.startActiveState();
+		// If 1st Recent Attack win, then update as adding card
+		phaseObservable.updateCard();
+	}
+
+	/**
+	 * Initiate Active Game State
+	 */
+	public static void initiateActiveState() {
+		phaseObservable.startActiveState();
+	}
+
+	public static void reinitiateReinforcement() {
+		phaseObservable.updateReinforcementArmies();
+	}
+
+	/**
+	 * Start Card Exchange View and attach to observable
+	 */
+	public static void startCardExchangeView() {
+		CardExchangeView view = new CardExchangeView();
+		view.setVisible(true);
+		phaseObservable.addObserver(view);
+	}
+
+	public static void setControlToNewPlayer() {
+		phaseObservable.moveToNextPlayer();
+
+	}
+
 }
