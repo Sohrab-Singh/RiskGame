@@ -30,6 +30,12 @@ public class Country {
 	private String continentName;
 
 	/**
+	 * if the node is visited during DFS
+	 */
+
+	private boolean isVisited;
+
+	/**
 	 * @param countryName
 	 */
 	public Country(String countryName) {
@@ -149,4 +155,21 @@ public class Country {
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
 	}
-}
+
+	/**
+	 * Set the isVisited parameter
+	 * @param visited
+	 */
+	public void setVisited(boolean visited) {
+		isVisited = visited;
+	}
+
+	/**
+	 * get the is isVisited parameter
+	 * @return isVisited
+	 */
+
+	public boolean isVisited() {
+		return isVisited;
+	}
+ }
