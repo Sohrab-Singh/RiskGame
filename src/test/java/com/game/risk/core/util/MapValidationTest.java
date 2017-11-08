@@ -1,5 +1,7 @@
 package com.game.risk.core.util;
 
+import com.game.risk.core.CountriesGraph;
+import com.game.risk.core.MapFileReader;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +20,8 @@ public class MapValidationTest {
     private String str2;
     private String fileName;
     private String fileName1;
+    private MapFileReader mapFileReader;
+    private CountriesGraph graph;
 
     /**
      * Set up the initial objects
@@ -30,6 +34,8 @@ public class MapValidationTest {
         str2 = "[Map] [Continents] [Territories]";
         fileName = "//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Canada.map";
         fileName1 = "//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Invalid_Canada.map";
+        mapFileReader = new MapFileReader(fileName1);
+        graph = mapFileReader.getCountriesGraph();
     }
 
     /**
@@ -37,6 +43,7 @@ public class MapValidationTest {
      * @throws Exception
      */
     @Test
+
     public void testValidateFile() throws Exception {
 
         assertTrue(mapValidation.validateFile(fileName));
@@ -49,10 +56,22 @@ public class MapValidationTest {
      * @throws Exception
      */
     @Test
+
     public void testCheckMandatoryTags() throws Exception {
 
         assertFalse(mapValidation.checkMandatoryTags(str1));
         assertTrue(mapValidation.checkMandatoryTags(str2));
+    }
+
+    /**
+     * test method for checking the connected graph
+     * @throws Exception
+     */
+    @Test
+
+    public void testConnectedGraph() throws Exception {
+        assertFalse(mapValidation.checkConnectedGraph(graph));
+
     }
 
 }

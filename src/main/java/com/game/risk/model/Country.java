@@ -4,8 +4,10 @@ package com.game.risk.model;
  * Country object for populating the data related to country.
  *
  * @author sohrab_singh
+ * @author Vida Abdollahi
  */
 public class Country {
+
 
 	/** Country Name. */
 	private String countryName;
@@ -28,6 +30,11 @@ public class Country {
 	 * Name of the continent it belongs to
 	 */
 	private String continentName;
+
+	/**
+	 *  Visited node in DFS
+	 */
+	private boolean visited;
 
 	/**
 	 * @param countryName
@@ -148,5 +155,22 @@ public class Country {
 	 */
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
+	}
+
+	/**
+	 * Set the visited parameter
+	 *
+	 * @param visited
+	 */
+	public void setVisited(boolean visited) {
+		this.visited = visited;
+	}
+
+	/**
+	 * Get the visited parameter
+	 * @return visited
+	 */
+	public boolean isVisited() {
+		return visited;
 	}
 }
