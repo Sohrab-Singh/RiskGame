@@ -1,6 +1,5 @@
 package com.game.risk.model;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class Player {
 
 	/** Number of armies */
 	private int numberOfArmies;
-	
+
 	private double currentDominationPercentage;
 
 	/** Player Constructor */
@@ -41,7 +40,8 @@ public class Player {
 	}
 
 	/**
-	 * @param currentDominationPercentage the currentDominationPercentage to set
+	 * @param currentDominationPercentage
+	 *            the currentDominationPercentage to set
 	 */
 	public void setCurrentDominationPercentage(double currentDominationPercentage) {
 		this.currentDominationPercentage = currentDominationPercentage;
@@ -162,16 +162,10 @@ public class Player {
 		}
 	}
 
-	/**
-	 * @return the color
-	 */
-	public Color getColor() {
-		return null;
+	@Override
+	public String toString() {
+		return "Player [playerName=" + playerName + ", countriesOwned=" + countriesOwned + ", cardList=" + cardList
+				+ ", numberOfArmies=" + numberOfArmies + "]";
 	}
-	
-	/**
-	 * @param color the color to set
-	 */
-	public void setColor(String color) {
-	}
+
 }
