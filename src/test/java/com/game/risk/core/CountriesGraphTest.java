@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 /**
  * 
- * @author shubhangisheel
+ * @author shubhangi sheel
  * Test class for Countries Graph
  */
 public class CountriesGraphTest {
@@ -31,6 +31,21 @@ public class CountriesGraphTest {
 	 * Country object
 	 */
 	private Country c3;
+
+	/**
+	 * Country object
+	 */
+	private Country c4;
+
+	/**
+	 * Continent object
+	 */
+	private Continent continent1;
+
+	/**
+	 * Continent object
+	 */
+	private Continent continent2;
 
 	/**
 	 * countries graph object
@@ -56,19 +71,20 @@ public class CountriesGraphTest {
 		mapFileReader = new MapFileReader("./src/main/resources/Canada.map");
 		countriesGraph = new CountriesGraph(mapFileReader);
 
-		Continent continent1 = new Continent("Asia", 7);
+		continent1 = new Continent("Asia", 7);
+		continent2 = new Continent("Africa", 6);
 		countriesGraph.getContinentHashMap().put("Asia", continent1);
 
-		//Initializing country object
+		//Initializing country objects
 		c1 = new Country("India");
 		c2 = new Country("China");
 		c3 = new Country("Pakistan");
+		c4 = new Country("Bhutan");
 
 		c1.setContinentName(continent1.getContinentName());
 		c2.setContinentName(continent1.getContinentName());
 		c3.setContinentName(continent1.getContinentName());
 
-		System.out.println(countriesGraph.getContinentHashMap().toString());
 		countriesGraph.addCountry(c1);
 		countriesGraph.addCountry(c2);
 		countriesGraph.addCountry(c3);
@@ -98,8 +114,51 @@ public class CountriesGraphTest {
 		assertEquals(1, countriesGraph.getAdjListHashMap().get(c1).size());
 	}
 
-	//	@Test
-	//	public void testRemoveCountry(){
-	//		
-	//	}
+	/**
+	 * Method to test add countries to continent 
+	 */
+	@Test
+	public void testAddCountry(){
+		c4.setContinentName(continent1.getContinentName());
+		countriesGraph.addCountry(c4);
+		assertTrue(countriesGraph.getContinentHashMap().get(continent1.getContinentName()).getCountries().contains(c4));
+
+	}
+
+	/**
+	 * Method to test add countries to countries hashmap
+	 */
+	@Test
+	public void testAddCountryCountriesMap(){
+		c4.setContinentName(continent1.getContinentName());
+		countriesGraph.addCountry(c4);
+		assertTrue(countriesGraph.getAdjListHashMap().containsKey(c4));
+
+	}
+
+	/**
+	 * Method to test addition of continents to the continent hash map
+	 */
+	@Test
+	public void testAddContinent(){
+		countriesGraph.addContinent(continent2);
+		assertTrue(countriesGraph.getContinentHashMap().containsKey(continent2.getContinentName()));
+	}
+
+	/**
+	 * Method to test adjacency of continent
+	 */
+	@Test
+	public void addIsAdjacent(){
+		countriesGraph.addEdge(c1, c2);
+		assertTrue(countriesGraph.isAdjacent(c1, c2));
+	}
+
+	/**
+	 * Method to test adjacency of continent
+	 */
+	@Test
+	public void addIsAdjacentNegativeTest(){
+		assertFalse(countriesGraph.isAdjacent(c1, c4));
+	}
 }
