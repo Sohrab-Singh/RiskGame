@@ -159,6 +159,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 			try {
 				implementPhases(parser);
 			} catch (IOException e) {
+				System.out.println("Fucked up");
 				e.printStackTrace();
 			}
 	}

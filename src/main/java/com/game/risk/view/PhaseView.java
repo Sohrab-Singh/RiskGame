@@ -1,6 +1,8 @@
 package com.game.risk.view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import com.game.risk.PhaseObservable;
+import com.game.risk.cardenum.PlayerDominationPhase;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Country;
@@ -22,11 +25,12 @@ import com.game.risk.model.Player;
 
 import javax.swing.JLabel;
 import java.awt.Font;
+
 import javax.swing.SwingConstants;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
 
 /**
  * View for the user to view represent each Phase run time
@@ -51,11 +55,6 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	 * Structure
 	 */
 	private MapFileReader fileParser;
-
-	/**
-	 * Controller class to implement the business logic to run 3 game phases
-	 */
-	private PhaseObservable phaseController;
 
 	/**
 	 * HashMap to store the JLabel identifying the country name and its position in
@@ -109,25 +108,33 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	 */
 	private JPanel jpanels[];
 
+	private JLabel dominationPanels[];
+
 	/**
 	 * List to store the Adjacent Countries jlabels with player owned selected
 	 * country
 	 */
 	private List<JPanel> adjPanels;
+	
+	private JPanel colorPanel;
 
 	/**
 	 * Current Player playing the game
 	 */
 	private Player currentPlayer;
 
+	private List<Player> players;
+
 	/**
 	 * PhaseView Constructor
 	 * 
 	 * @param reader
 	 *            MapFileReader object
+	 * @param players 
 	 */
-	public PhaseView(MapFileReader reader) {
+	public PhaseView(MapFileReader reader, List<Player> players) {
 		this.fileParser = reader;
+		this.players = players;
 		initializeView();
 		panelHashMap = new HashMap<>();
 		adjacentPanelHashMap = new HashMap<>();
@@ -140,7 +147,7 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	private void initializeView() {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
+		setBounds(100, 100, 800, 750);
 		jframe = this;
 		// Initialize JPanel contentPane to hold the JLabel and JButton elements
 		contentPane = new JPanel();
@@ -247,6 +254,80 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 		lblCurrentPhase.setForeground(Color.BLACK);
 		lblCurrentPhase.setFont(new Font("Tahoma", Font.BOLD, 18));
 
+		JPanel dominationPanel = new JPanel();
+		dominationPanel.setBackground(Color.WHITE);
+		dominationPanel.setBounds(0, 553, 782, 130);
+		dominationPanel.setLayout(null);
+
+		JPanel playerInitPanel = new JPanel();
+		playerInitPanel.setBackground(Color.WHITE);
+		playerInitPanel.setBounds(0, 0, 197, 130);
+		playerInitPanel.setLayout(new BoxLayout(playerInitPanel, BoxLayout.Y_AXIS));
+
+		JPanel statusPanel = new JPanel();
+		statusPanel.setBackground(Color.WHITE);
+		statusPanel.setBounds(231, 48, 500, 29);
+		statusPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
+		
+		int i = 0;
+		for (Player player : players) {
+			JPanel playerColorPanel = new JPanel();
+			playerColorPanel.setLayout(new FlowLayout());
+			playerColorPanel.setBackground(Color.WHITE);
+			
+			JLabel labelPlayer = new JLabel(player.getPlayerName());
+			labelPlayer.setFont(new Font("Tahoma", Font.BOLD, 13));
+			labelPlayer.setForeground(Color.BLACK);
+			playerColorPanel.add(labelPlayer);
+			
+			JPanel color = new JPanel();
+			color.setBackground(getPlayerColor(i));
+			playerColorPanel.add(color);
+			
+			playerInitPanel.add(playerColorPanel);
+			
+			colorPanel = new JPanel();
+			colorPanel.setBackground(getPlayerColor(i));
+			colorPanel.setPreferredSize(new Dimension((int)(player.getCurrentDominationPercentage()*500) , 29));
+			
+			statusPanel.add(colorPanel);
+			i++;
+		}
+		dominationPanel.add(playerInitPanel);
+		dominationPanel.add(statusPanel);
+		contentPane.add(dominationPanel);
+		
+	}
+
+
+	private Color getPlayerColor(int i) {
+
+		Color color = null;
+		// Assign the player color
+
+		switch (i) {
+		case 0:
+			color = Color.RED;
+			break;
+		case 1:
+			color = Color.BLUE;
+			break;
+		case 2:
+			color = Color.YELLOW;
+			break;
+		case 3:
+			color = Color.GREEN;
+			break;
+		case 4:
+			color = Color.PINK;
+			break;
+		case 5:
+			color = Color.ORANGE;
+			break;
+		default:
+			break;
+		}
+		return color;
 	}
 
 	@Override
@@ -256,6 +337,16 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 			jframe.setVisible(true);
 			updatePlayerCountries((PhaseObservable) arg0);
 		}
+		
+		if(((PhaseObservable) arg0).getPlayerDominationPhase() == PlayerDominationPhase.AFTER_STARTUP.getState()){
+			//updatePlayerDominationPanel();
+		}
+		
+		if(((PhaseObservable) arg0).getPlayerDominationPhase() == PlayerDominationPhase.AFTER_ATTACK.getState()){
+			//updatePlayerDominationPanel();
+		}
+		
+		
 	}
 
 	/**
@@ -321,6 +412,7 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 				jpanels[currentOwnedCountry].setBackground(null);
 			currentOwnedCountry = value;
 			jpanels[currentOwnedCountry].setBackground(Color.WHITE);
+
 			// Find country name from the jlabel object wrapped in selected country jpanel
 			String countryName = ((JLabel) jpanels[currentOwnedCountry].getComponent(0)).getText();
 			updatePlayerAdjacentCountries(fileParser.getCountriesHashMap().get(countryName));
@@ -359,10 +451,26 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 	}
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new PhaseView(null).setVisible(true);
+				Player player = new Player();
+				player.setPlayerName("Sohrab");
+				player.setCurrentDominationPercentage(0.002f);
+				Player player1 = new Player();
+				player1.setPlayerName("Sarthak");
+				player1.setCurrentDominationPercentage(0.5);
+				Player player2 = new Player();
+				player2.setPlayerName("Manjot");
+				player2.setCurrentDominationPercentage(0.3);
+				List<Player> playerss = new ArrayList<Player>();
+				playerss.add(player);
+				playerss.add(player1);
+				playerss.add(player2);
+				new PhaseView(null, playerss).setVisible(true);
 			}
 		});
 	}

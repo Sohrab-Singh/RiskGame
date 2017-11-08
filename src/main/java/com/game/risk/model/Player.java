@@ -1,5 +1,6 @@
 package com.game.risk.model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +25,26 @@ public class Player {
 
 	/** Number of armies */
 	private int numberOfArmies;
+	
+	private double currentDominationPercentage;
 
 	/** Player Constructor */
 	public Player() {
 		countriesOwned = new ArrayList<>();
+	}
+
+	/**
+	 * @return the currentDominationPercentage
+	 */
+	public double getCurrentDominationPercentage() {
+		return currentDominationPercentage;
+	}
+
+	/**
+	 * @param currentDominationPercentage the currentDominationPercentage to set
+	 */
+	public void setCurrentDominationPercentage(double currentDominationPercentage) {
+		this.currentDominationPercentage = currentDominationPercentage;
 	}
 
 	/**
@@ -107,6 +124,13 @@ public class Player {
 	}
 
 	/**
+	 * @return Nummber of Countries Owned by player
+	 */
+	public int getNumberOfCountriesOwned() {
+		return countriesOwned.size();
+	}
+
+	/**
 	 * Add country to the CountriesOwend list
 	 *
 	 * @param country
@@ -136,5 +160,18 @@ public class Player {
 		} else {
 			System.out.println("You don't have any army!");
 		}
+	}
+
+	/**
+	 * @return the color
+	 */
+	public Color getColor() {
+		return null;
+	}
+	
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(String color) {
 	}
 }

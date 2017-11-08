@@ -13,7 +13,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.SwingConstants;
-import java.awt.Panel;
 
 public class AttackPhaseView extends JFrame implements Observer {
 

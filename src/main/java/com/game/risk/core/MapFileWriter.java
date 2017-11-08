@@ -53,7 +53,7 @@ public class MapFileWriter {
 		File file = FileSystemView.getFileSystemView().getDefaultDirectory();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 		Date date = new Date();
-		String fileName = file.getAbsolutePath() + "\\" + "mapfile-" + dateFormat.format(date) + ".map";
+		String fileName = file.getAbsolutePath() + "//" + "mapfile-" + dateFormat.format(date) + ".map";
 		System.out.println(fileName);
 		File newFile = new File(fileName);
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile));

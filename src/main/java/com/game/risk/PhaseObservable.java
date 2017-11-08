@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Observable;
 
+import com.game.risk.cardenum.PlayerDominationPhase;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.StartUpPhase;
 import com.game.risk.core.util.FortificationPhaseUtil;
@@ -14,6 +15,13 @@ import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
+/**
+ * Phase observable for Phase view and Player World Domination View.
+ * 
+ * @author sarthak
+ * @author sohrab_singh
+ *
+ */
 public class PhaseObservable extends Observable {
 
 	/**
@@ -26,6 +34,9 @@ public class PhaseObservable extends Observable {
 	 */
 	private int currentState;
 
+	/** Player Domination phase */
+	private int playerDominationPhase;
+
 	/**
 	 * Player object indicating the current player playing the game
 	 */
@@ -33,11 +44,21 @@ public class PhaseObservable extends Observable {
 
 	/**
 	 * Default Constructor
+	 * 
+	 * @param reader
 	 */
 	public PhaseObservable(MapFileReader reader) {
 		this.fileParser = reader;
 	}
 
+	/**
+	 * Start game phases which will call all phases.
+	 * 
+	 * @throws NumberFormatException
+	 *             number format exception
+	 * @throws IOException
+	 *             Input output exception
+	 */
 	public void startGamePhases() throws NumberFormatException, IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -50,13 +71,17 @@ public class PhaseObservable extends Observable {
 		startUpPhase.allocateArmiesToPlayers();
 		startUpPhase.assignInitialArmiesToCountries();
 		startUpPhase.allocateRemainingArmiesToCountries();
+		startUpPhase.populateDominationPercentage();
+		RiskGameDriver.startStartupPhase(fileParser, startUpPhase.getPlayerList());
 
 		// Players playing in round robin fashion
 		RoundRobinScheduler<Player> robinScheduler = new RoundRobinScheduler<Player>(startUpPhase.getPlayerList());
 		player = robinScheduler.next();
 		currentState = PhaseStates.STATE_STARTUP;
+		playerDominationPhase = PlayerDominationPhase.AFTER_STARTUP.getState();
 		setChanged();
 		notifyObservers();
+
 		// As of now we are only giving 5 rounds , when attack phase will be implemented
 		// then we will end game when player wins.
 		int rounds = 0;
@@ -86,6 +111,8 @@ public class PhaseObservable extends Observable {
 			}
 
 			// Attack phase will be here
+
+			// playerDominationPhase = PlayerDominationPhase.AFTER_ATTACK.getState();
 
 			// Fortification phase
 			System.out.println("\nFortification phase begins.\n");
@@ -129,14 +156,38 @@ public class PhaseObservable extends Observable {
 
 	}
 
+	/**
+	 * Get the player domination phase.
+	 * 
+	 * @return the playerDominationPhase
+	 */
+	public int getPlayerDominationPhase() {
+		return playerDominationPhase;
+	}
+
+	/**
+	 * Get the current state.
+	 * 
+	 * @return Current state.
+	 */
 	public int getCurrentState() {
 		return currentState;
 	}
 
+	/**
+	 * Set the current state.
+	 * 
+	 * @param currentState
+	 */
 	public void setCurrentState(int currentState) {
 		this.currentState = currentState;
 	}
 
+	/**
+	 * Get the player.
+	 * 
+	 * @return Player
+	 */
 	public Player getPlayer() {
 		return player;
 	}
