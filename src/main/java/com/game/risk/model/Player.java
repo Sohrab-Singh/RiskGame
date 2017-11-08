@@ -25,9 +25,26 @@ public class Player {
 	/** Number of armies */
 	private int numberOfArmies;
 
+	private double currentDominationPercentage;
+
 	/** Player Constructor */
 	public Player() {
 		countriesOwned = new ArrayList<>();
+	}
+
+	/**
+	 * @return the currentDominationPercentage
+	 */
+	public double getCurrentDominationPercentage() {
+		return currentDominationPercentage;
+	}
+
+	/**
+	 * @param currentDominationPercentage
+	 *            the currentDominationPercentage to set
+	 */
+	public void setCurrentDominationPercentage(double currentDominationPercentage) {
+		this.currentDominationPercentage = currentDominationPercentage;
 	}
 
 	/**
@@ -107,6 +124,13 @@ public class Player {
 	}
 
 	/**
+	 * @return Nummber of Countries Owned by player
+	 */
+	public int getNumberOfCountriesOwned() {
+		return countriesOwned.size();
+	}
+
+	/**
 	 * Add country to the CountriesOwend list
 	 *
 	 * @param country
@@ -143,6 +167,5 @@ public class Player {
 		return "Player [playerName=" + playerName + ", countriesOwned=" + countriesOwned + ", cardList=" + cardList
 				+ ", numberOfArmies=" + numberOfArmies + "]";
 	}
-	
-	
+
 }

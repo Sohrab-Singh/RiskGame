@@ -14,6 +14,7 @@ import java.util.ArrayList;
  * @author Vida Abdollahi
  * @author sohrab_singh
  * @author Sarthak
+ * @author shubangi_sheel
  */
 public class StartUpPhase {
 
@@ -138,6 +139,16 @@ public class StartUpPhase {
 		for (Player player : playersList) {
 			int number = player.getNumberOfArmies();
 			player.setNumberOfArmies(number - player.getCountriesOwned().size());
+		}
+	}
+	
+	/**
+	 */
+	public void populateDominationPercentage() {
+		for (Player player : playersList) {
+			int countriesOwned = player.getNumberOfCountriesOwned();
+			player.setCurrentDominationPercentage((double)countriesOwned/(mapFileReader.getCountriesHashMap().size()));
+			
 		}
 	}
 
