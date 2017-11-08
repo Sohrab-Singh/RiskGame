@@ -7,15 +7,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 import com.game.risk.RiskGameDriver;
-import com.game.risk.RoundRobinScheduler;
 import com.game.risk.core.MapEditor;
 import com.game.risk.core.MapFileReader;
-import com.game.risk.core.StartUpPhase;
-import com.game.risk.core.util.FortificationPhaseUtil;
-import com.game.risk.core.util.ReinforcementPhaseUtil;
-import com.game.risk.model.Continent;
-import com.game.risk.model.Country;
-import com.game.risk.model.Player;
+import com.game.risk.core.util.LoggingUtil;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -25,9 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * View for the user to choose from loading a map file or creating a new map
@@ -69,13 +61,12 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	 * action
 	 **/
 	private JButton btnNewMap;
-
+	
 	/**
 	 * Create the frame.
 	 */
 	public WelcomeScreenView() {
 		initializeView();
-
 		// Attach Mouse Listeners to the JButton objects
 		btnLoad.addMouseListener(this);
 		btnNewMap.addMouseListener(this);
@@ -135,6 +126,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 					parser = new MapFileReader(filename);
 					if (!parser.checkFileValidation()) {
 						System.out.println("Invalid File Selected!");
+						LoggingUtil.logMessage("Invalid File Selected!");
 						return;
 					}
 					parser.readFile();
@@ -159,7 +151,8 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 			try {
 				implementPhases(parser);
 			} catch (IOException e) {
-				System.out.println("Fucked up");
+				System.out.println("Input Output exception occured.");
+				LoggingUtil.logMessage("Input Output exception occured.");
 				e.printStackTrace();
 			}
 	}

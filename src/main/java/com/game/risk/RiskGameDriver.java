@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import com.game.risk.core.MapFileReader;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Player;
 import com.game.risk.view.AttackPhaseView;
 import com.game.risk.view.PhaseView;
@@ -41,6 +44,13 @@ public class RiskGameDriver {
 			public void run() {
 				WelcomeScreenView frame = new WelcomeScreenView();
 				frame.setVisible(true);
+			}
+		});
+
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new LoggingUtil().showLoggingWindow();
 			}
 		});
 		thread.start();

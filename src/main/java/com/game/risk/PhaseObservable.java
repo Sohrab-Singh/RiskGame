@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Observable;
+import java.util.logging.Logger;
 
 import com.game.risk.cardenum.PlayerDominationPhase;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.StartUpPhase;
 import com.game.risk.core.util.FortificationPhaseUtil;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.core.util.ReinforcementPhaseUtil;
 import com.game.risk.model.Continent;
@@ -64,6 +66,7 @@ public class PhaseObservable extends Observable {
 
 		System.out.println(":: Input the no of players playing ::");
 		int numberOfPlayers = Integer.parseInt(reader.readLine());
+		LoggingUtil.logMessage("Total number of Players playing Risk Game : " + numberOfPlayers);
 
 		// Startup Phase
 		StartUpPhase startUpPhase = new StartUpPhase(fileParser, numberOfPlayers, reader);
@@ -89,6 +92,7 @@ public class PhaseObservable extends Observable {
 
 			// Reinforcement phase
 			System.out.println("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
+			LoggingUtil.logMessage("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
 			Continent continent = fileParser.getContinentHashMap()
 					.get(player.getCountriesOwned().get(0).getContinentName());
 			int reinforcementArmies = ReinforcementPhaseUtil.calculateReinforcementArmies(player, continent);
@@ -149,6 +153,8 @@ public class PhaseObservable extends Observable {
 
 			FortificationPhaseUtil.moveArmiesBetweenCountries(country1, country2, fortificationArmies,
 					fileParser.getCountriesGraph().getAdjListHashMap());
+			LoggingUtil.logMessage(fortificationArmies + " armies has been moved from " + country1 + " to " + country2);
+
 			rounds++;
 			player = robinScheduler.next();
 		}

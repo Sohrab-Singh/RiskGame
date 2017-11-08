@@ -1,5 +1,6 @@
 package com.game.risk.core;
 
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
@@ -58,6 +59,7 @@ public class StartUpPhase {
 				player.setPlayerName(playerName);
 			}
 			playersList.add(player);
+			LoggingUtil.logMessage(player.getPlayerName() + " joined the game");
 
 		}
 	}
@@ -93,6 +95,7 @@ public class StartUpPhase {
 			player.addCountry(mapFileReader.getCountriesHashMap().get(key));
 			mapFileReader.getCountriesHashMap().get(key).setPlayerName(player.getPlayerName());
 			i++;
+			LoggingUtil.logMessage(key + " country has been assigned to " + player.getPlayerName());
 		}
 	}
 
@@ -122,8 +125,10 @@ public class StartUpPhase {
 				break;
 			default:
 				System.out.println("Number of players is more than" + MAXIMUM_NUMBER_PLAYERS);
+				LoggingUtil.logMessage("Number of players is more than " + MAXIMUM_NUMBER_PLAYERS);
 				break;
 			}
+			LoggingUtil.logMessage(player.getPlayerName() + " got " + player.getNumberOfArmies() + " armies");
 		}
 
 	}
@@ -140,15 +145,18 @@ public class StartUpPhase {
 			int number = player.getNumberOfArmies();
 			player.setNumberOfArmies(number - player.getCountriesOwned().size());
 		}
+		LoggingUtil.logMessage("Initial Armies has been assigned to countries by player");
 	}
-	
+
 	/**
 	 */
 	public void populateDominationPercentage() {
 		for (Player player : playersList) {
 			int countriesOwned = player.getNumberOfCountriesOwned();
-			player.setCurrentDominationPercentage((double)countriesOwned/(mapFileReader.getCountriesHashMap().size()));
-			
+			player.setCurrentDominationPercentage(
+					(double) countriesOwned / (mapFileReader.getCountriesHashMap().size()));
+			LoggingUtil.logMessage("Current Domination Percentage of " + player.getPlayerName() + " is"
+					+ player.getCurrentDominationPercentage() * 100);
 		}
 	}
 
