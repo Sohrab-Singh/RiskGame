@@ -3,6 +3,8 @@ package com.game.risk.model;
 import java.util.ArrayList;
 import java.util.List;
 import com.game.risk.core.util.AttackPhaseUtil;
+import com.game.risk.core.util.LoggingUtil;
+import com.game.risk.core.util.ReinforcementPhaseUtil;
 
 /**
  * Player object for populating the data related to player.
@@ -27,8 +29,13 @@ public class Player {
 	/** Current Domination Percentage for Player Domination View */
 	private double currentDominationPercentage;
 
-	/** Indicated the Number of Recent Attack Wins in a turn */
+	/**
+	 * Indicated the Number of Recent Attack Wins to update Card received in a turn
+	 */
 	private int recentAttackWins = 0;
+
+	/** Indicate the exchanged armies for the cards */
+	private int exchangedArmies;
 
 	/** Player Constructor */
 	public Player() {
@@ -194,6 +201,25 @@ public class Player {
 
 	public void setRecentAttackWins(int recentAttackWins) {
 		this.recentAttackWins = recentAttackWins;
+	}
+
+	public int getExchangedArmies() {
+		return exchangedArmies;
+	}
+
+	public void setExchangedArmies(int exchangedArmies) {
+		this.exchangedArmies = exchangedArmies;
+	}
+
+	public int findReinforcementArmies() {
+		System.out.println("\nReinforcement phase begins for " + this.getPlayerName() + "\n");
+		LoggingUtil.logMessage("\nReinforcement phase begins for " + this.getPlayerName() + "\n");
+		int reinforcementArmies = ReinforcementPhaseUtil.calculateReinforcementArmies(this);
+		String message = "Total reinforcement armies available for " + this.getPlayerName() + " : "
+				+ reinforcementArmies;
+		System.out.println(message);
+		LoggingUtil.logMessage(message);
+		return reinforcementArmies;
 	}
 
 }

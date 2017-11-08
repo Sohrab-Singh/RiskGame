@@ -123,10 +123,11 @@ public class RiskGameDriver {
 	/**
 	 * Initiate the Active Game State after Attack
 	 */
-	public static void initiatePostAttackUpdate() {
+	public static void initiatePostAttackUpdate(boolean isCaptured) {
 		phaseObservable.startActiveState();
 		// If 1st Recent Attack win, then update as adding card
-		phaseObservable.updateCard();
+		if (isCaptured)
+			phaseObservable.updateCard();
 	}
 
 	/**
@@ -158,6 +159,18 @@ public class RiskGameDriver {
 	public static void setControlToNewPlayer() {
 		phaseObservable.moveToNextPlayer();
 
+	}
+
+	public static void moveToNextTurn() {
+		phaseObservable.nextPlayer();
+	}
+
+	public static void initFortification(Country start, Country end) {
+		try {
+			phaseObservable.startFortify(start, end);
+		} catch (NumberFormatException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

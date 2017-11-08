@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.game.risk.PhaseObservable;
 import com.game.risk.core.util.CardUtil;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Card;
 import com.game.risk.model.Player;
@@ -22,6 +23,9 @@ import com.game.risk.model.Player;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
@@ -52,6 +56,7 @@ public class CardExchangeView extends JFrame implements Observer {
 
 	/** The card hash map. */
 	private HashMap<Player, List<Card>> cardHashMap;
+	private HashMap<Integer, String> cardTypes;
 
 	/**
 	 * Instantiates a new card exchange view.
@@ -59,6 +64,10 @@ public class CardExchangeView extends JFrame implements Observer {
 	public CardExchangeView() {
 		initializeView();
 		cardHashMap = new HashMap<>();
+		cardTypes = new HashMap<>();
+		cardTypes.put(0, "Infantry");
+		cardTypes.put(1, "Cavalry");
+		cardTypes.put(2, "Artillery");
 	}
 
 	/**
@@ -90,6 +99,13 @@ public class CardExchangeView extends JFrame implements Observer {
 		btnExchange.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnExchange.setBounds(529, 252, 159, 35);
 		contentPane.add(btnExchange);
+		btnExchange.setVisible(false);
+		btnExchange.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				exchangeButtonClicked(e);
+			}
+		});
 
 		JLabel lblInventory = new JLabel("I : Inventory");
 		lblInventory.setHorizontalAlignment(SwingConstants.CENTER);
@@ -129,13 +145,29 @@ public class CardExchangeView extends JFrame implements Observer {
 	 * @param observable
 	 *            the observable
 	 */
+	private void exchangeButtonClicked(MouseEvent e) {
+		currentPlayer.setExchangedArmies(currentPlayer.getExchangedArmies() + 1);
+		removeCards();
+	}
+
+	private void removeCards() {
+		for (int i = 0; i < 3; i++) {
+			cardHashMap.get(currentPlayer).remove(i);
+		}
+	}
+
 	private void addCard(PhaseObservable observable) {
 		currentPlayer = observable.getPlayer();
 		Random random = new Random();
 		int randomCard = random.nextInt(3);
-		if (cardHashMap.containsKey(currentPlayer))
+		if (cardHashMap.containsKey(currentPlayer)) {
 			cardHashMap.get(currentPlayer).add(new Card(randomCard));
-		else {
+			LoggingUtil.logMessage(
+					"Added new " + cardTypes.get(random) + " Card into Player " + currentPlayer.getPlayerName());
+			if (cardHashMap.get(currentPlayer).size() >= 3) {
+				btnExchange.setVisible(true);
+			}
+		} else {
 			List<Card> cardList = new ArrayList<>();
 			cardList.add(new Card(randomCard));
 			cardHashMap.put(currentPlayer, cardList);
@@ -153,15 +185,16 @@ public class CardExchangeView extends JFrame implements Observer {
 		Border border = BorderFactory.createLineBorder(Color.WHITE, 4, true);
 		for (int i = 0; i < cardHashMap.get(currentPlayer).size(); i++) {
 			JLabel jlabel = new JLabel();
-			if (cardHashMap.get(currentPlayer).get(i).getValue() == CardUtil.CARD_INFANTY)
+			if (cardHashMap.get(currentPlayer).get(i).getValue() == CardUtil.CARD_INFANTRY)
 				jlabel.setText("I");
 			else if (cardHashMap.get(currentPlayer).get(i).getValue() == CardUtil.CARD_CAVALRY)
 				jlabel.setText("C");
 			else
 				jlabel.setText("A");
 
-			jlabel.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(5, 25, 5, 25)));
+			jlabel.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(20, 40, 20, 40)));
 			jpanels[i] = new JPanel();
+			jpanels[i].setBackground(Color.BLACK);
 			jpanels[i].add(jlabel);
 			cardsViewPanel.add(jpanels[i]);
 		}

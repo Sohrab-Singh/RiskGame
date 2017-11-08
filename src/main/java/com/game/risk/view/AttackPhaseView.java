@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import com.game.risk.PhaseObservable;
 import com.game.risk.RiskGameDriver;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Country;
 
@@ -377,7 +378,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 		attackerCountry.setCurrentNumberOfArmies(attackerCountry.getCurrentNumberOfArmies() - moveArmies);
 		defenderCountry.setCurrentNumberOfArmies(moveArmies);
 		mainFrame.setVisible(false);
-		RiskGameDriver.initiatePostAttackUpdate();
+		RiskGameDriver.initiatePostAttackUpdate(true);
 	}
 
 	/**
@@ -536,12 +537,15 @@ public class AttackPhaseView extends JFrame implements Observer {
 
 		if (attackerCountry.getCurrentNumberOfArmies() == 1) {
 			observable.setCurrentState(PhaseStates.STATE_ACTIVE);
-			System.out.println(attackerCountry.getCountryName() + " (" + attackerCountry.getPlayerName()
-					+ " ) has lost the battle");
+
+			LoggingUtil.logMessage(attackerCountry.getCountryName() + " (" + attackerCountry.getPlayerName()
+					+ ") has lost the battle");
 			diceAttacker = 0;
 			diceDefender = 0;
 			attackerCountry = null;
 			defenderCountry = null;
+			mainFrame.setVisible(false);
+			RiskGameDriver.initiatePostAttackUpdate(false);
 		} else {
 			setCurrentCountry(attackerCountry);
 		}

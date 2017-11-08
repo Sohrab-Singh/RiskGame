@@ -40,27 +40,46 @@ public class AttackPhaseUtil {
 		// Sort in descending order to find their respective best dice roll
 		Arrays.sort(attackDice, Collections.reverseOrder());
 		Arrays.sort(defendDice, Collections.reverseOrder());
+		String message = "Caclulating the highest dice roll";
+		LoggingUtil.logMessage(message);
 
 		if (attackDiceRoll == 1) {
 			// Comparing the best dice roll
-			if (attackDice[0] > defendDice[0])
+			LoggingUtil.logMessage("1 Attacker Dice Roll Chosen");
+			LoggingUtil.logMessage("Comparing the best dice roll of attacker [" + attackDice[0] + "] vs defender ["
+					+ defendDice[0] + "]");
+			if (attackDice[0] > defendDice[0]) {
+				LoggingUtil.logMessage("Defender Looses an army");
 				defender.looseArmy();
-			else
+			} else {
+				LoggingUtil.logMessage("Attacker looses an army");
 				attacker.looseArmy();
+			}
 		} else if (attackDiceRoll > 1) {
 			// Comparing the best dice roll
-			if (attackDice[0] > defendDice[0])
+			LoggingUtil.logMessage(attackDiceRoll + " Attacker Dice Roll Chosen");
+			LoggingUtil.logMessage("Comparing the best dice roll of attacker [" + attackDice[0] + "] vs defender ["
+					+ defendDice[0] + "]");
+			if (attackDice[0] > defendDice[0]) {
+				LoggingUtil.logMessage("Defender Looses an army");
 				defender.looseArmy();
-			else
+			} else {
+				LoggingUtil.logMessage("Attacker Looses an army");
 				attacker.looseArmy();
-
+			}
 			// If defender rolled 2 dices
 			if (defendDiceRoll == 2) {
+				LoggingUtil.logMessage("Defender has 2 Dice Roll, 2nd Highest Dice Roll is Compared");
+				LoggingUtil.logMessage(
+						"Attack Dice Roll [" + attackDice[1] + "] vs Defender Dice Roll [" + defendDice[1] + "]");
 				// Comparing 2nd best dice roll
-				if (attackDice[1] > defendDice[1])
+				if (attackDice[1] > defendDice[1]) {
+					LoggingUtil.logMessage("Defender looses an army");
 					defender.looseArmy();
-				else
+				} else {
+					LoggingUtil.logMessage("Attacker looses an army");
 					attacker.looseArmy();
+				}
 			}
 		}
 

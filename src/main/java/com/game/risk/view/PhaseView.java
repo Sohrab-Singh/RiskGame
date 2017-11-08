@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import com.game.risk.PhaseObservable;
 import com.game.risk.RiskGameDriver;
 import com.game.risk.core.MapFileReader;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
@@ -93,7 +94,19 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	/** Current Selection of the adjacent country. */
 	private int currentAdjacentCountry;
 
-	/** JFrame variable. */
+	/**
+	 * Country object from where the fortification begins with.
+	 */
+	private Country startCountry;
+
+	/**
+	 * Country object from where the fortification ends.
+	 */
+	private Country moveCountry;
+
+	/**
+	 * JFrame variable
+	 */
 	private JFrame jframe;
 
 	/** JLabel Array object to store the player owned country labels. */
@@ -366,6 +379,9 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 		} else if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_REINFORCEMENT) {
 			lblCurrentPhase.setText("Reinforcement Phase");
 			updatePlayerCountries((PhaseObservable) arg0);
+		} else if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_FORTIFY) {
+			lblCurrentPhase.setText("Fortification Phase");
+			updatePlayerCountries((PhaseObservable) arg0);
 		}
 
 		if (((PhaseObservable) arg0).getPlayerDominationPhase()) {
@@ -453,18 +469,56 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 		panel_6.repaint();
 	}
 
+	private void fortifyAdjacentCountries(Country country) {
+		panel_6.removeAll();
+		LinkedList<Country> adjCountries = fileParser.getCountriesGraph().getAdjListHashMap().get(country);
+		Border border = BorderFactory.createLineBorder(Color.WHITE, 2, true);
+		adjPanels = new ArrayList<>();
+		adjacentPanelHashMap.clear();
+		adjPanels.clear();
+		int adjCount = 0;
+		for (int i = 0; i < adjCountries.size(); i++) {
+
+			// Ignoring the player owned countries and finding the opponnent
+			if (adjCountries.get(i).getPlayerName().equals(currentPlayer.getPlayerName())) {
+				JLabel adjCountryName = new JLabel(adjCountries.get(i).getCountryName());
+				JPanel adjPanel = new JPanel();
+				adjPanel.setBackground(null);
+				adjCountryName.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(5, 5, 5, 5)));
+				adjPanel.setBorder(new EmptyBorder(-2, -2, -1, -1));
+				adjPanel.add(adjCountryName);
+				JPanel armyCount = new JPanel();
+				JLabel adjArmyCountLabel = new JLabel(Integer.toString(adjCountries.get(i).getCurrentNumberOfArmies()));
+				adjArmyCountLabel.setForeground(Color.WHITE);
+				armyCount.setBackground(Color.BLACK);
+				armyCount.add(adjArmyCountLabel);
+				adjPanel.add(armyCount);
+				adjPanel.addMouseListener(this);
+				adjacentPanelHashMap.put(adjPanel, adjCount);
+				adjPanels.add(adjCount++, adjPanel);
+				panel_6.add(adjPanel);
+			}
+
+		}
+		panel_6.validate();
+		panel_6.repaint();
+	}
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
 		if (e.getComponent() == btnAttack) {
 			if (attackingCountry.getCurrentNumberOfArmies() > defendingCountry.getCurrentNumberOfArmies()
-					&& (defendingCountry.getCurrentNumberOfArmies() >= 1))
+					&& (defendingCountry.getCurrentNumberOfArmies() >= 1)) {
 				RiskGameDriver.startAttackPhase(attackingCountry, defendingCountry);
+			} else {
+				LoggingUtil.logMessage("Not Enough Armies to proceed attack.");
+			}
 
 		} else if (e.getComponent() == btnEndTurn) {
-
+			RiskGameDriver.moveToNextTurn();
 		} else if (e.getComponent() == btnFortify) {
-
+			RiskGameDriver.initFortification(startCountry, moveCountry);
 		} else if (panelHashMap.containsKey((JPanel) e.getComponent())) {
 			Integer value = panelHashMap.get((JPanel) e.getComponent());
 			if (currentOwnedCountry != -1)

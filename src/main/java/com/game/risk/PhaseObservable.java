@@ -285,11 +285,7 @@ public class PhaseObservable extends Observable {
 			setChanged();
 			notifyObservers();
 		} else {
-			System.out.println("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
-			LoggingUtil.logMessage("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
-			int reinforcementArmies = ReinforcementPhaseUtil.calculateReinforcementArmies(player);
-			System.out.println(
-					"Total reinforcement armies available for " + player.getPlayerName() + " : " + reinforcementArmies);
+			int reinforcementArmies = player.findReinforcementArmies();
 			player.setNumberOfArmies(player.getNumberOfArmies() + reinforcementArmies);
 			setCurrentState(PhaseStates.STATE_REINFORCEMENT);
 			setChanged();
@@ -302,7 +298,10 @@ public class PhaseObservable extends Observable {
 	 * Next Player
 	 */
 	public void nextPlayer() {
+		player.setRecentAttackWins(0);
 		player = robinScheduler.next();
+		player.setNumberOfArmies(player.getNumberOfArmies() + player.findReinforcementArmies());
+		updateReinforcementArmies();
 	}
 
 	/**
@@ -310,6 +309,30 @@ public class PhaseObservable extends Observable {
 	 */
 	public void updateReinforcementArmies() {
 		setCurrentState(PhaseStates.STATE_REINFORCEMENT);
+		setChanged();
+		notifyObservers();
+	}
+
+	public void startFortify(Country start, Country end) throws NumberFormatException, IOException {
+		int fortificationArmies = 0;
+		boolean countryFlag = true;
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		while (countryFlag) {
+			countryFlag = false;
+			System.out.println("Enter the Number of Armies to Move");
+			fortificationArmies = Integer.parseInt(reader.readLine());
+			if (fortificationArmies > start.getCurrentNumberOfArmies()) {
+				System.out.println("You can not enter more armies than donor country have");
+				System.out.println("Enter again");
+				countryFlag = true;
+			}
+		}
+
+		FortificationPhaseUtil.moveArmiesBetweenCountries(start, end, fortificationArmies,
+				fileParser.getCountriesGraph().getAdjListHashMap());
+		LoggingUtil.logMessage(fortificationArmies + " armies has been moved from " + start.getCountryName() + " to "
+				+ end.getCountryName());
+		setCurrentState(PhaseStates.STATE_ACTIVE);
 		setChanged();
 		notifyObservers();
 	}

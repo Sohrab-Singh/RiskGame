@@ -25,6 +25,8 @@ public class ReinforcementPhaseUtil {
 		int countriesOwned = player.getCountriesOwned().size();
 		int reinfoArmies = (int) Math.floor(countriesOwned / 3);
 
+		if (player.getExchangedArmies() != 0)
+			return reinfoArmies + (5*player.getExchangedArmies());
 		// Minimum number of armies for any player in case reinforcement armies are less
 		// than 3.
 		if (reinfoArmies < 3) {

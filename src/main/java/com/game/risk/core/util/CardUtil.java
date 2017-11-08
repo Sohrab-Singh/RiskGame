@@ -10,7 +10,7 @@ package com.game.risk.core.util;
 public class CardUtil {
 
 	/** Infantry Card */
-	public static int CARD_INFANTY = 0;
+	public static int CARD_INFANTRY = 0;
 
 	/** Cavalry Card */
 	public static int CARD_CAVALRY = 1;
