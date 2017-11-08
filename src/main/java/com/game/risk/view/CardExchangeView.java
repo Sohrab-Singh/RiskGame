@@ -26,30 +26,44 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 /**
- * Observer Class to update the Cards and exchange them for Armies
- * 
- * @author Sarthak
+ * Observer Class to update the Cards and exchange them for Armies.
  *
+ * @author Sarthak
  */
 public class CardExchangeView extends JFrame implements Observer {
 
-	/**
-	 * Serial Version UID
-	 */
+	/** Serial Version UID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The content pane. */
 	private JPanel contentPane;
+
+	/** The cards view panel. */
 	private JPanel cardsViewPanel;
+
+	/** The btn exchange. */
 	private JButton btnExchange;
+
+	/** The label no cards. */
 	private JLabel labelNoCards;
+
+	/** The current player. */
 	private Player currentPlayer;
+
+	/** The card hash map. */
 	private HashMap<Player, List<Card>> cardHashMap;
 
+	/**
+	 * Instantiates a new card exchange view.
+	 */
 	public CardExchangeView() {
 		initializeView();
 		cardHashMap = new HashMap<>();
 	}
 
+	/**
+	 * Initialize view.
+	 */
 	private void initializeView() {
 		setBackground(Color.WHITE);
 		setUndecorated(true);
@@ -109,6 +123,12 @@ public class CardExchangeView extends JFrame implements Observer {
 		}
 	}
 
+	/**
+	 * Adds the card.
+	 *
+	 * @param observable
+	 *            the observable
+	 */
 	private void addCard(PhaseObservable observable) {
 		currentPlayer = observable.getPlayer();
 		Random random = new Random();
@@ -123,6 +143,9 @@ public class CardExchangeView extends JFrame implements Observer {
 		updateCardListView();
 	}
 
+	/**
+	 * Update card list view.
+	 */
 	private void updateCardListView() {
 		labelNoCards.setVisible(false);
 		JPanel[] jpanels = new JPanel[cardHashMap.get(currentPlayer).size()];

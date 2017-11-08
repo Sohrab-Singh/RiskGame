@@ -1,6 +1,5 @@
 package com.game.risk.view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
@@ -17,7 +16,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import com.game.risk.PhaseObservable;
-import com.game.risk.cardenum.PlayerDominationPhase;
 import com.game.risk.RiskGameDriver;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.PhaseStates;
@@ -34,143 +32,116 @@ import javax.swing.JButton;
 import java.awt.FlowLayout;
 
 /**
- * (Observer) View for the user to view represent each Phase run time
- * 
- * @author Sarthak
+ * (Observer) View for the user to view represent each Phase run time.
  *
+ * @author Sarthak
+ * @author sohrab_singh
  */
 public class PhaseView extends JFrame implements Observer, MouseListener {
 
-	/**
-	 * Serial Version UID
-	 */
+	/** Serial Version UID. */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * JPanel object
-	 */
+	/** JPanel object. */
 	private JPanel contentPane;
 
 	/**
 	 * MapFileReader object to read the stored data into Countries Graph Data
-	 * Structure
+	 * Structure.
 	 */
 	private MapFileReader fileParser;
 
 	/**
 	 * HashMap to store the JLabel identifying the country name and its position in
-	 * the JLabel Array
+	 * the JLabel Array.
 	 */
 	private HashMap<JPanel, Integer> panelHashMap;
 
 	/**
 	 * HashMap to store the JLabel indentify adjacent country and its position in
-	 * the adjacent JLabel Array
+	 * the adjacent JLabel Array.
 	 */
 	private HashMap<JPanel, Integer> adjacentPanelHashMap;
 
-	/**
-	 * JPanel to contain the adjacent opponent countries;
-	 */
+	/** JPanel to contain the adjacent opponent countries;. */
 	private JPanel panel_2;
 
-	/**
-	 * JPanel to contain the countries owned text label
-	 */
+	/** JPanel to contain the countries owned text label. */
 	private JPanel panel_3;
 
-	/**
-	 * JPanel to contain the countries adjacent other than self owned
-	 */
+	/** JPanel to contain the countries adjacent other than self owned. */
 	private JPanel panel_4;
 
-	/**
-	 * JPanel to contain the player owned countries JLabel Array
-	 */
+	/** JPanel to contain the player owned countries JLabel Array. */
 	private JPanel panel_5;
 
-	/**
-	 * JPanel to contain the adjacent countries JLabel Array
-	 */
+	/** JPanel to contain the adjacent countries JLabel Array. */
 	private JPanel panel_6;
 
-	/**
-	 * JLabel to show the Current Phase
-	 */
+	/** JLabel to show the Current Phase. */
 	private JLabel lblCurrentPhase;
 
-	/**
-	 * Country Object to maintain the attacking country
-	 */
+	/** Country Object to maintain the attacking country. */
 	private Country attackingCountry;
 
-	/**
-	 * Country object to maintain the defending country
-	 */
+	/** Country object to maintain the defending country. */
 	private Country defendingCountry;
 
-	/**
-	 * Current Selection of the player owned country
-	 */
+	/** Current Selection of the player owned country. */
 	private int currentOwnedCountry;
 
-	/**
-	 * Current Selection of the adjacent country
-	 */
+	/** Current Selection of the adjacent country. */
 	private int currentAdjacentCountry;
 
-	/**
-	 * JFrame variable
-	 */
+	/** JFrame variable. */
 	private JFrame jframe;
 
-	/**
-	 * JLabel Array object to store the player owned country labels
-	 */
+	/** JLabel Array object to store the player owned country labels. */
 	private JPanel jpanels[];
 
+	/** The domination panels. */
 	private JLabel dominationPanels[];
 
-	/**
-	 * JButton object to perform attack phase init
-	 */
+	/** JButton object to perform attack phase init. */
 	private JButton btnAttack;
 
-	/**
-	 * JButton object to perform fortification phase init
-	 */
+	/** JButton object to perform fortification phase init. */
 	private JButton btnFortify;
 
-	/**
-	 * JButton object to end the player's turn
-	 */
+	/** JButton object to end the player's turn. */
 	private JButton btnEndTurn;
 
 	/**
 	 * List to store the Adjacent Countries jlabels with player owned selected
-	 * country
+	 * country.
 	 */
 	private List<JPanel> adjPanels;
 
+	/** The color panel. */
 	private JPanel colorPanel;
 
-	/**
-	 * Current Player playing the game
-	 */
+	/** Current Player playing the game. */
 	private Player currentPlayer;
 
+	/** The players. */
 	private List<Player> players;
 
+	/** The lbl armies count. */
 	private JLabel lblArmiesCount;
+
+	/** The lbl player. */
 	private JLabel lblPlayer;
+
+	/** The current state. */
 	private int currentState;
 
 	/**
-	 * PhaseView Constructor
-	 * 
+	 * PhaseView Constructor.
+	 *
 	 * @param reader
 	 *            MapFileReader object
 	 * @param players
+	 *            the players
 	 */
 	public PhaseView(MapFileReader reader, List<Player> players) {
 		this.fileParser = reader;
@@ -182,7 +153,7 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	}
 
 	/**
-	 * Method to initialize the layout for PhaseView JFrame class
+	 * Method to initialize the layout for PhaseView JFrame class.
 	 */
 	private void initializeView() {
 		setBackground(Color.WHITE);
@@ -344,6 +315,13 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 	}
 
+	/**
+	 * Gets the player color.
+	 *
+	 * @param i
+	 *            the i
+	 * @return the player color
+	 */
 	private Color getPlayerColor(int i) {
 
 		Color color = null;
@@ -389,15 +367,15 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 			lblCurrentPhase.setText("Reinforcement Phase");
 			updatePlayerCountries((PhaseObservable) arg0);
 		}
-		
-		if(((PhaseObservable)arg0).getPlayerDominationPhase()) {
-			
+
+		if (((PhaseObservable) arg0).getPlayerDominationPhase()) {
+
 		}
 	}
 
 	/**
-	 * Update the player owned countries in the JFrame
-	 * 
+	 * Update the player owned countries in the JFrame.
+	 *
 	 * @param observable
 	 *            PhaseObservable type
 	 */
@@ -436,6 +414,12 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 		panel_5.repaint();
 	}
 
+	/**
+	 * Update player adjacent countries.
+	 *
+	 * @param country
+	 *            the country
+	 */
 	private void updatePlayerAdjacentCountries(Country country) {
 		panel_6.removeAll();
 		LinkedList<Country> adjCountries = fileParser.getCountriesGraph().getAdjListHashMap().get(country);
@@ -525,30 +509,25 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
+	 * The main method.
+	 *
 	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
@@ -571,20 +550,37 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 		});
 	}
 
+	/**
+	 * Sets the attacker.
+	 */
 	public void setAttacker() {
 		String countryName = ((JLabel) jpanels[currentOwnedCountry].getComponent(0)).getText();
 		attackingCountry = fileParser.getCountriesHashMap().get(countryName);
 	}
 
+	/**
+	 * Sets the defender.
+	 */
 	public void setDefender() {
 		String countryName = ((JLabel) adjPanels.get(currentAdjacentCountry).getComponent(0)).getText();
 		defendingCountry = fileParser.getCountriesHashMap().get(countryName);
 	}
 
+	/**
+	 * Sets the current state.
+	 *
+	 * @param currentState
+	 *            the new current state
+	 */
 	public void setCurrentState(int currentState) {
 		this.currentState = currentState;
 	}
 
+	/**
+	 * Gets the current state.
+	 *
+	 * @return the current state
+	 */
 	public int getCurrentState() {
 		return currentState;
 	}

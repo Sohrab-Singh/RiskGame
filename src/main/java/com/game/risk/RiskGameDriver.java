@@ -91,6 +91,9 @@ public class RiskGameDriver {
 	/**
 	 * Start the Attack Phase
 	 * 
+	 * @param attackingCountry
+	 * @param defendingCountry
+	 * 
 	 * @param fileParser
 	 *            MapFileReader
 	 */
@@ -103,6 +106,15 @@ public class RiskGameDriver {
 
 	/**
 	 * Start the battle
+	 * 
+	 * @param attacker
+	 *            the attacker
+	 * @param defender
+	 *            the defender
+	 * @param diceAttacker
+	 *            the dice Attacker
+	 * @param diceDefender
+	 *            the dice defender.
 	 */
 	public static void startBattle(Country attacker, Country defender, int diceAttacker, int diceDefender) {
 		phaseObservable.startBattle(attacker, defender, diceAttacker, diceDefender);
@@ -124,6 +136,9 @@ public class RiskGameDriver {
 		phaseObservable.startActiveState();
 	}
 
+	/**
+	 * Re initiate Reinforcement Phase
+	 */
 	public static void reinitiateReinforcement() {
 		phaseObservable.updateReinforcementArmies();
 	}
@@ -137,6 +152,9 @@ public class RiskGameDriver {
 		phaseObservable.addObserver(view);
 	}
 
+	/**
+	 * Send control to next player.
+	 */
 	public static void setControlToNewPlayer() {
 		phaseObservable.moveToNextPlayer();
 

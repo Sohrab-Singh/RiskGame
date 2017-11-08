@@ -29,6 +29,7 @@ import javax.swing.JButton;
  * Observer class to implement the Attack Phase dice roll
  * 
  * @author Sarthak
+ * @author sohrab_singh
  *
  */
 public class AttackPhaseView extends JFrame implements Observer {
@@ -73,8 +74,13 @@ public class AttackPhaseView extends JFrame implements Observer {
 	 */
 	private JLabel labelImage2;
 
+	/** label Dice 1 */
 	private JLabel lblDice1;
+
+	/** Label Dice 2 */
 	private JLabel lblDice2;
+
+	/** Label Dice 3 */
 	private JLabel lblDice3;
 
 	/**
@@ -97,7 +103,10 @@ public class AttackPhaseView extends JFrame implements Observer {
 	 */
 	private int diceDefender;
 
+	/** Defender Armies */
 	private int defenderArmies;
+
+	/** Attacker Armies */
 	private int attackerArmies;
 
 	/**
@@ -105,17 +114,34 @@ public class AttackPhaseView extends JFrame implements Observer {
 	 */
 	private JLabel lblMessage;
 
+	/** Label minus 1 */
 	private JLabel labelMinus1;
+
+	/** Label Plus 1 */
 	private JLabel labelPlus1;
 
+	/** Country 1 armies */
 	private JLabel country1Armies;
+
+	/** Country 2 armies */
 	private JLabel country2Armies;
+
+	/** Label Attack Dice. */
 	private JLabel lblAttackDice;
+
+	/** Label Defend Dice */
 	private JLabel lblDefendDice;
+
+	/** Between Move Armies */
 	private JButton btnMoveArmies;
 
 	/**
 	 * Attack Phase View Constructor
+	 * 
+	 * @param attacker
+	 *            the attacker
+	 * @param defender
+	 *            the defender
 	 * 
 	 * @param reader
 	 *            MapFileReader type
@@ -130,6 +156,9 @@ public class AttackPhaseView extends JFrame implements Observer {
 		initializeControlToAttacker();
 	}
 
+	/**
+	 * Initialize control to attacker.
+	 */
 	private void initializeControlToAttacker() {
 		if (attackerCountry.getCurrentNumberOfArmies() > 3) {
 			lblDice3.setVisible(true);
@@ -321,6 +350,11 @@ public class AttackPhaseView extends JFrame implements Observer {
 		});
 	}
 
+	/***
+	 * Change the current Transfer Armies.
+	 * 
+	 * @param isIncrement
+	 */
 	private void changeTransferArmies(boolean isIncrement) {
 		int moveArmies = Integer.parseInt(lblDice2.getText());
 		if (isIncrement) {
@@ -337,6 +371,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 		}
 	}
 
+	/** Move Armies after the winner is declared */
 	private void moveArmies() {
 		int moveArmies = Integer.parseInt(lblDice2.getText());
 		attackerCountry.setCurrentNumberOfArmies(attackerCountry.getCurrentNumberOfArmies() - moveArmies);
@@ -345,6 +380,12 @@ public class AttackPhaseView extends JFrame implements Observer {
 		RiskGameDriver.initiatePostAttackUpdate();
 	}
 
+	/**
+	 * Mouse Clicked function when user selects 3 dice.
+	 * 
+	 * @param evt
+	 *            the event
+	 */
 	private void mouseClickDice3(MouseEvent evt) {
 		if (currentCountry == attackerCountry) {
 			diceAttacker = 3;
@@ -355,6 +396,12 @@ public class AttackPhaseView extends JFrame implements Observer {
 		}
 	}
 
+	/**
+	 * Mouse Clicked function when user selects 2 dice.
+	 * 
+	 * @param evt
+	 *            the event
+	 */
 	private void mouseClickDice2(MouseEvent evt) {
 		if (currentCountry == attackerCountry) {
 			diceAttacker = 2;
@@ -370,6 +417,12 @@ public class AttackPhaseView extends JFrame implements Observer {
 		}
 	}
 
+	/**
+	 * Mouse Clicked function when user selects 1 dice.
+	 * 
+	 * @param evt
+	 *            the event
+	 */
 	private void mouseClickDice1(MouseEvent evt) {
 		if (currentCountry == attackerCountry) {
 			diceAttacker = 1;
@@ -385,6 +438,9 @@ public class AttackPhaseView extends JFrame implements Observer {
 		}
 	}
 
+	/***
+	 * Give control to defender.
+	 */
 	private void updateControlToDefender() {
 		lblDice3.setVisible(false);
 		if (diceAttacker == 1 || defenderCountry.getCurrentNumberOfArmies() == 1)
@@ -394,10 +450,21 @@ public class AttackPhaseView extends JFrame implements Observer {
 		labelImage2.setVisible(true);
 	}
 
+	/**
+	 * Get the current country
+	 *
+	 * @return Country
+	 */
 	public Country getCurrentCountry() {
 		return currentCountry;
 	}
 
+	/**
+	 * Set the current country.
+	 * 
+	 * @param currentCountry
+	 *            current Country
+	 */
 	public void setCurrentCountry(Country currentCountry) {
 		this.currentCountry = currentCountry;
 	}
@@ -419,6 +486,9 @@ public class AttackPhaseView extends JFrame implements Observer {
 		}
 	}
 
+	/**
+	 * Capture Defender country after attacker won the battle.
+	 */
 	private void captureDefender() {
 		lblDice1.setVisible(false);
 		lblDice2.setVisible(true);
@@ -436,6 +506,12 @@ public class AttackPhaseView extends JFrame implements Observer {
 		lblDice2.setText(Integer.toString(maxArmies));
 	}
 
+	/**
+	 * Update armies after the battle.
+	 * 
+	 * @param observable
+	 *            the phase observable
+	 */
 	private void updateAfterBattle(PhaseObservable observable) {
 		int diffDefenderArmies = defenderArmies - defenderCountry.getCurrentNumberOfArmies();
 		int diffAttackerArmies = attackerArmies - attackerCountry.getCurrentNumberOfArmies();

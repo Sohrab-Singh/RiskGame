@@ -1,6 +1,5 @@
 package com.game.risk.core.util;
 
-import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 

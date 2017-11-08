@@ -59,7 +59,9 @@ public class StartUpPhase {
 				player.setPlayerName(playerName);
 			}
 			playersList.add(player);
-			LoggingUtil.logMessage(player.getPlayerName() + " joined the game");
+			if (player.getPlayerName() != null) {
+				LoggingUtil.logMessage(player.getPlayerName() + " joined the game");
+			}
 
 		}
 	}
@@ -128,7 +130,9 @@ public class StartUpPhase {
 				LoggingUtil.logMessage("Number of players is more than " + MAXIMUM_NUMBER_PLAYERS);
 				break;
 			}
-			LoggingUtil.logMessage(player.getPlayerName() + " got " + player.getNumberOfArmies() + " armies");
+			if(player.getPlayerName() != null) {
+				LoggingUtil.logMessage(player.getPlayerName() + " got " + player.getNumberOfArmies() + " armies");
+			}
 		}
 
 	}
@@ -149,6 +153,7 @@ public class StartUpPhase {
 	}
 
 	/**
+	 * Populate current domination percentage to players.
 	 */
 	public void populateDominationPercentage() {
 		for (Player player : playersList) {

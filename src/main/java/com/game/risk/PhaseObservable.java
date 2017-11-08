@@ -6,25 +6,20 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.logging.Logger;
-
-import com.game.risk.cardenum.PlayerDominationPhase;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.StartUpPhase;
 import com.game.risk.core.util.FortificationPhaseUtil;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.core.util.ReinforcementPhaseUtil;
-import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 /**
- * Phase observable for Phase view and Player World
- * Domination View.
+ * Phase observable for Phase view and Player World Domination View.
  * 
  * @author Sarthak
- * @author sohrab_singh 
+ * @author sohrab_singh
  *
  */
 public class PhaseObservable extends Observable {
@@ -47,8 +42,10 @@ public class PhaseObservable extends Observable {
 	 */
 	private Player player;
 
-	private int playersAvailable;
+	/** Startup Phase */
 	private StartUpPhase startUpPhase;
+
+	/** Round robin scheduler */
 	private RoundRobinScheduler<Player> robinScheduler;
 
 	/**
@@ -87,11 +84,6 @@ public class PhaseObservable extends Observable {
 		// Players playing in round robin fashion
 		robinScheduler = new RoundRobinScheduler<Player>(startUpPhase.getPlayerList());
 		player = robinScheduler.next();
-		for (int i = 0; i < getPlayerList().size(); i++) {
-			if (getPlayerList().get(i).getNumberOfArmies() > 0) {
-				playersAvailable++;
-			}
-		}
 		currentState = PhaseStates.STATE_STARTUP;
 
 		playerDominationPhase = true;
@@ -109,14 +101,6 @@ public class PhaseObservable extends Observable {
 			// Reinforcement phase
 			System.out.println("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
 			LoggingUtil.logMessage("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
-			Continent continent = fileParser.getContinentHashMap()
-					.get(player.getCountriesOwned().get(0).getContinentName());
-			// int reinforcementArmies =
-			// ReinforcementPhaseUtil.calculateReinforcementArmies(player, continent);
-			// System.out.println(
-			// "Total reinforcement armies available for " + player.getPlayerName() + " : "
-			// + reinforcementArmies);
-			// player.setNumberOfArmies(player.getNumberOfArmies() + reinforcementArmies);
 
 			for (Country country : player.getCountriesOwned()) {
 				if (player.getNumberOfArmies() > 0) {
@@ -131,10 +115,6 @@ public class PhaseObservable extends Observable {
 					break;
 				}
 			}
-
-			// Attack phase will be here
-
-			// playerDominationPhase = PlayerDominationPhase.AFTER_ATTACK.getState();
 
 			// Fortification phase
 			System.out.println("\nFortification phase begins.\n");
@@ -251,16 +231,27 @@ public class PhaseObservable extends Observable {
 
 	}
 
+	/**
+	 * Start Active State
+	 */
 	public void startActiveState() {
 		setCurrentState(PhaseStates.STATE_ACTIVE);
 		setChanged();
 		notifyObservers();
 	}
 
+	/**
+	 * Get Player List.
+	 * 
+	 * @return list of players
+	 */
 	public List<Player> getPlayerList() {
 		return startUpPhase.getPlayerList();
 	}
 
+	/**
+	 * Update Card State
+	 */
 	public void updateCard() {
 		if (player.getRecentAttackWins() == 0) {
 			setChanged();
@@ -269,6 +260,9 @@ public class PhaseObservable extends Observable {
 		player.setRecentAttackWins(player.getRecentAttackWins() + 1);
 	}
 
+	/**
+	 * Move to next plaver.
+	 */
 	public void moveToNextPlayer() {
 		boolean isCompleted = true;
 		for (int i = 0; i < getPlayerList().size(); i++) {
@@ -304,10 +298,16 @@ public class PhaseObservable extends Observable {
 
 	}
 
+	/**
+	 * Next Player
+	 */
 	public void nextPlayer() {
 		player = robinScheduler.next();
 	}
 
+	/**
+	 * Update Reinforcement Armies.
+	 */
 	public void updateReinforcementArmies() {
 		setCurrentState(PhaseStates.STATE_REINFORCEMENT);
 		setChanged();

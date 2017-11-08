@@ -69,7 +69,6 @@ public class MapValidationTest {
      * 
      */
     @Test
-
     public void testConnectedGraph() throws Exception {
         assertFalse(mapValidation.checkConnectedGraph(graph));
 

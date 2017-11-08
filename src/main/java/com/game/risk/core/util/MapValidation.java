@@ -33,7 +33,6 @@ public class MapValidation {
 	/**
 	 * This parameter will be true if the given graph is a connected graph
 	 */
-
 	private boolean isConnectedGraph;
 
 	/**
@@ -243,7 +242,6 @@ public class MapValidation {
 	 * @return true if it is a connected graph
 	 *
 	 */
-
 	public boolean checkConnectedGraph(CountriesGraph countriesGraph) {
 
 		HashMap<Country, LinkedList<Country>> countries = countriesGraph.getAdjListHashMap();

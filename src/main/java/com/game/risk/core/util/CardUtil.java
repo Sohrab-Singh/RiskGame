@@ -1,5 +1,12 @@
 package com.game.risk.core.util;
 
+/**
+ * Card utility class for getting three different type of cards
+ * 
+ * @author Sarthak
+ * @author sohrab_singh
+ *
+ */
 public class CardUtil {
 
 	/** Infantry Card */

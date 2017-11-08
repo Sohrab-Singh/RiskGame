@@ -6,8 +6,27 @@ import java.util.Random;
 
 import com.game.risk.model.Country;
 
+/**
+ * Class which contains all the utility methods related to attack phase.
+ * 
+ * @author Sarthak
+ * @author sohrab_singh
+ *
+ */
 public class AttackPhaseUtil {
 
+	/**
+	 * Start the battle.
+	 * 
+	 * @param attacker
+	 *            the attacker
+	 * @param defender
+	 *            the defender
+	 * @param attackDiceRoll
+	 *            the attacker Dice Roll
+	 * @param defendDiceRoll
+	 *            the defender dice Roll
+	 */
 	public static void startBattle(Country attacker, Country defender, int attackDiceRoll, int defendDiceRoll) {
 		Integer[] attackDice = new Integer[attackDiceRoll];
 		Integer[] defendDice = new Integer[defendDiceRoll];
