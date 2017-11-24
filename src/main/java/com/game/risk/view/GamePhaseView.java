@@ -15,8 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import com.game.risk.PhaseObservable;
 import com.game.risk.RiskGameDriver;
+import com.game.risk.RiskGamePhases;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
@@ -38,7 +38,7 @@ import java.awt.FlowLayout;
  * @author Sarthak
  * @author sohrab_singh
  */
-public class PhaseView extends JFrame implements Observer, MouseListener {
+public class GamePhaseView extends JFrame implements Observer, MouseListener {
 
 	/** Serial Version UID. */
 	private static final long serialVersionUID = 1L;
@@ -112,9 +112,6 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	/** JLabel Array object to store the player owned country labels. */
 	private JPanel jpanels[];
 
-	/** The domination panels. */
-	private JLabel dominationPanels[];
-
 	/** JButton object to perform attack phase init. */
 	private JButton btnAttack;
 
@@ -148,25 +145,30 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	/** The current state. */
 	private int currentState;
 
+	private RiskGamePhases gamePhases;
+
 	/**
-	 * PhaseView Constructor.
+	 * GamePhaseView Constructor.
+	 * 
+	 * @param gamePhases
 	 *
 	 * @param reader
 	 *            MapFileReader object
 	 * @param players
 	 *            the players
 	 */
-	public PhaseView(MapFileReader reader, List<Player> players) {
+	public GamePhaseView(RiskGamePhases gamePhases, MapFileReader reader, List<Player> players) {
 		this.fileParser = reader;
 		this.players = players;
 		initializeView();
 		panelHashMap = new HashMap<>();
 		adjacentPanelHashMap = new HashMap<>();
+		this.gamePhases = gamePhases;
 
 	}
 
 	/**
-	 * Method to initialize the layout for PhaseView JFrame class.
+	 * Method to initialize the layout for GamePhaseView JFrame class.
 	 */
 	private void initializeView() {
 		setBackground(Color.WHITE);
@@ -367,24 +369,24 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		setCurrentState(((PhaseObservable) arg0).getCurrentState());
-		if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_STARTUP) {
+		setCurrentState(((RiskGamePhases) arg0).getCurrentState());
+		if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_STARTUP) {
 			jframe.setVisible(true);
 			lblCurrentPhase.setText("StartUp Phase");
 
-			updatePlayerCountries((PhaseObservable) arg0);
-		} else if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_ACTIVE) {
+			updatePlayerCountries((RiskGamePhases) arg0);
+		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_ACTIVE) {
 			lblCurrentPhase.setText("What do you want to perform now?");
-			updatePlayerCountries((PhaseObservable) arg0);
-		} else if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_REINFORCEMENT) {
+			updatePlayerCountries((RiskGamePhases) arg0);
+		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_REINFORCEMENT) {
 			lblCurrentPhase.setText("Reinforcement Phase");
-			updatePlayerCountries((PhaseObservable) arg0);
-		} else if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_FORTIFY) {
+			updatePlayerCountries((RiskGamePhases) arg0);
+		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_FORTIFY) {
 			lblCurrentPhase.setText("Fortification Phase");
-			updatePlayerCountries((PhaseObservable) arg0);
+			updatePlayerCountries((RiskGamePhases) arg0);
 		}
 
-		if (((PhaseObservable) arg0).getPlayerDominationPhase()) {
+		if (((RiskGamePhases) arg0).getPlayerDominationPhase()) {
 
 		}
 	}
@@ -392,12 +394,12 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 	/**
 	 * Update the player owned countries in the JFrame.
 	 *
-	 * @param observable
+	 * @param gamePhases
 	 *            PhaseObservable type
 	 */
-	private void updatePlayerCountries(PhaseObservable observable) {
-		List<Country> countries = observable.getPlayer().getCountriesOwned();
-		currentPlayer = observable.getPlayer();
+	private void updatePlayerCountries(RiskGamePhases gamePhases) {
+		currentPlayer = gamePhases.getPlayer();
+		List<Country> countries = currentPlayer.getCountriesOwned();
 		lblPlayer.setText(currentPlayer.getPlayerName());
 		lblArmiesCount.setText(Integer.toString(currentPlayer.getNumberOfArmies()));
 		jpanels = new JPanel[countries.size()];
@@ -420,8 +422,8 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 			panelHashMap.put(jpanels[i], i);
 			panel_5.add(jpanels[i]);
 		}
-		if (observable.getCurrentState() == PhaseStates.STATE_STARTUP
-				|| observable.getCurrentState() == PhaseStates.STATE_REINFORCEMENT)
+		if (gamePhases.getCurrentState() == PhaseStates.STATE_STARTUP
+				|| gamePhases.getCurrentState() == PhaseStates.STATE_REINFORCEMENT)
 			panel_2.setVisible(false);
 		else
 			panel_2.setVisible(true);
@@ -510,15 +512,15 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 		if (e.getComponent() == btnAttack) {
 			if (attackingCountry.getCurrentNumberOfArmies() > defendingCountry.getCurrentNumberOfArmies()
 					&& (defendingCountry.getCurrentNumberOfArmies() >= 1)) {
-				RiskGameDriver.startAttackPhase(attackingCountry, defendingCountry);
+				gamePhases.startAttackPhase(attackingCountry, defendingCountry);
 			} else {
 				LoggingUtil.logMessage("Not Enough Armies to proceed attack.");
 			}
 
 		} else if (e.getComponent() == btnEndTurn) {
-			RiskGameDriver.moveToNextTurn();
+			gamePhases.nextPlayer();
 		} else if (e.getComponent() == btnFortify) {
-			RiskGameDriver.initFortification(startCountry, moveCountry);
+			gamePhases.startFortificationPhase(startCountry, moveCountry);
 		} else if (panelHashMap.containsKey((JPanel) e.getComponent())) {
 			Integer value = panelHashMap.get((JPanel) e.getComponent());
 			if (currentOwnedCountry != -1)
@@ -532,17 +534,17 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 			if (currentState == PhaseStates.STATE_STARTUP) {
 				country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + 1);
 				currentPlayer.setNumberOfArmies(currentPlayer.getNumberOfArmies() - 1);
-				RiskGameDriver.setControlToNewPlayer();
+				gamePhases.moveToNextPlayer();
 
 			} else if (currentState == PhaseStates.STATE_REINFORCEMENT) {
 				if (currentPlayer.getNumberOfArmies() > 1) {
 					country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + 1);
 					currentPlayer.setNumberOfArmies(currentPlayer.getNumberOfArmies() - 1);
-					RiskGameDriver.reinitiateReinforcement();
+					gamePhases.notifyStateChange(PhaseStates.STATE_REINFORCEMENT);
 				} else if (currentPlayer.getNumberOfArmies() == 1) {
 					country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + 1);
 					currentPlayer.setNumberOfArmies(currentPlayer.getNumberOfArmies() - 1);
-					RiskGameDriver.initiateActiveState();
+					gamePhases.notifyStateChange(PhaseStates.STATE_ACTIVE);
 				}
 			} else if (currentState == PhaseStates.STATE_ACTIVE) {
 				updatePlayerAdjacentCountries(fileParser.getCountriesHashMap().get(countryName));
@@ -599,7 +601,7 @@ public class PhaseView extends JFrame implements Observer, MouseListener {
 				playerss.add(player);
 				playerss.add(player1);
 				playerss.add(player2);
-				new PhaseView(null, playerss).setVisible(true);
+				// new GamePhaseView(phases,null, playerss).setVisible(true);
 			}
 		});
 	}

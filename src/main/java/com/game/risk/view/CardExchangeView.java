@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import com.game.risk.PhaseObservable;
+import com.game.risk.RiskGamePhases;
 import com.game.risk.core.util.CardUtil;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
@@ -56,6 +56,8 @@ public class CardExchangeView extends JFrame implements Observer {
 
 	/** The card hash map. */
 	private HashMap<Player, List<Card>> cardHashMap;
+
+	/** Card Types. */
 	private HashMap<Integer, String> cardTypes;
 
 	/**
@@ -103,7 +105,10 @@ public class CardExchangeView extends JFrame implements Observer {
 		btnExchange.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				exchangeButtonClicked(e);
+				currentPlayer.setExchangedArmies(currentPlayer.getExchangedArmies() + 1);
+				for (int i = 0; i < 3; i++) {
+					cardHashMap.get(currentPlayer).remove(i);
+				}
 			}
 		});
 
@@ -131,46 +136,31 @@ public class CardExchangeView extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		if (arg1 != null) {
-			if (arg1.getClass() == Integer.class) {
-				if (((int) arg1) == PhaseStates.STATE_UPDATE_CARD)
-					addCard((PhaseObservable) arg0);
-			}
+		if ((arg1 != null) && (arg1.getClass() == Integer.class)) {
+			if (((int) arg1) == PhaseStates.STATE_UPDATE_CARD)
+				addCard((Player) arg0);
 		}
 	}
 
 	/**
-	 * Adds the card.
-	 *
-	 * @param observable
-	 *            the observable
+	 * 
+	 * @param player
 	 */
-	private void exchangeButtonClicked(MouseEvent e) {
-		currentPlayer.setExchangedArmies(currentPlayer.getExchangedArmies() + 1);
-		removeCards();
-	}
-
-	private void removeCards() {
-		for (int i = 0; i < 3; i++) {
-			cardHashMap.get(currentPlayer).remove(i);
-		}
-	}
-
-	private void addCard(PhaseObservable observable) {
-		currentPlayer = observable.getPlayer();
+	@SuppressWarnings("unlikely-arg-type")
+	private void addCard(Player player) {
 		Random random = new Random();
 		int randomCard = random.nextInt(3);
-		if (cardHashMap.containsKey(currentPlayer)) {
-			cardHashMap.get(currentPlayer).add(new Card(randomCard));
+		if (cardHashMap.containsKey(player)) {
+			cardHashMap.get(player).add(new Card(randomCard));
 			LoggingUtil.logMessage(
-					"Added new " + cardTypes.get(random) + " Card into Player " + currentPlayer.getPlayerName());
-			if (cardHashMap.get(currentPlayer).size() >= 3) {
+					"Added new " + cardTypes.get(random) + " Card into Player " + player.getPlayerName());
+			if (cardHashMap.get(player).size() >= 3) {
 				btnExchange.setVisible(true);
 			}
 		} else {
 			List<Card> cardList = new ArrayList<>();
 			cardList.add(new Card(randomCard));
-			cardHashMap.put(currentPlayer, cardList);
+			cardHashMap.put(player, cardList);
 		}
 		updateCardListView();
 	}

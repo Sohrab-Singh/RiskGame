@@ -34,7 +34,7 @@ public class AttackPhaseUtilTest {
      * @throws Exception
      */
 
-    @Before
+    //@Before
     public void setUp() throws Exception {
 
         attacker = new Country("Iran");
@@ -52,7 +52,7 @@ public class AttackPhaseUtilTest {
      * @throws Exception
      */
 
-    @Test
+    //@Test
     public void startBattle() throws Exception {
 
         attackPhaseUtil.startBattle(attacker,defender,6 ,1);

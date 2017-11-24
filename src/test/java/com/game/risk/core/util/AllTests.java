@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ AttackPhaseUtilTest.class, FortificationPhaseUtilTest.class, MapValidationTest.class,
+@SuiteClasses({ FortificationPhaseUtilTest.class,
 		ReinforcementPhaseUtilTest.class })
 public class AllTests {
 

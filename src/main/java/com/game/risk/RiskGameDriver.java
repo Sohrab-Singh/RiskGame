@@ -1,6 +1,8 @@
 package com.game.risk;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -9,11 +11,8 @@ import javax.swing.SwingUtilities;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Player;
-import com.game.risk.core.util.PhaseStates;
-import com.game.risk.model.Country;
-import com.game.risk.view.AttackPhaseView;
 import com.game.risk.view.CardExchangeView;
-import com.game.risk.view.PhaseView;
+import com.game.risk.view.GamePhaseView;
 import com.game.risk.view.WelcomeScreenView;
 
 /**
@@ -26,7 +25,7 @@ import com.game.risk.view.WelcomeScreenView;
 public class RiskGameDriver {
 
 	/** Phase Observable. */
-	private static PhaseObservable phaseObservable;
+	private static RiskGamePhases gamePhases;
 
 	/**
 	 * Main method for Risk Game Driver Class
@@ -64,113 +63,17 @@ public class RiskGameDriver {
 	 * 
 	 * @param fileParser
 	 *            parser to read
+	 * @throws IOException
 	 */
-	public static void startGame(MapFileReader fileParser) {
-		phaseObservable = new PhaseObservable(fileParser);
-
-		try {
-			phaseObservable.startGamePhases();
-		} catch (NumberFormatException | IOException e) {
-			e.printStackTrace();
-		}
+	public static void startGame(MapFileReader fileParser) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		gamePhases = new RiskGamePhases(fileParser, reader);
+		List<Player> players = gamePhases.executeStartupPhase();
+		GamePhaseView gamePhaseView = new GamePhaseView(gamePhases,fileParser, players);
+		gamePhases.addObserver(gamePhaseView);
+		gamePhases.initiateGame(players);
+		CardExchangeView cardExchangeView = new CardExchangeView();
+		gamePhases.addObserver(cardExchangeView);
+		cardExchangeView.setVisible(true);
 	}
-
-	/***
-	 * Method to start startup phase.
-	 * 
-	 * @param fileParser
-	 *            parser to read
-	 * @param players
-	 *            number of players
-	 */
-	public static void startStartupPhase(MapFileReader fileParser, List<Player> players) {
-		PhaseView view = new PhaseView(fileParser, players);
-		phaseObservable.addObserver(view);
-	}
-
-	/**
-	 * Start the Attack Phase
-	 * 
-	 * @param attackingCountry
-	 * @param defendingCountry
-	 * 
-	 * @param fileParser
-	 *            MapFileReader
-	 */
-	public static void startAttackPhase(Country attackingCountry, Country defendingCountry) {
-		AttackPhaseView attackView = new AttackPhaseView(attackingCountry, defendingCountry);
-		attackView.setVisible(true);
-		phaseObservable.setCurrentState(PhaseStates.STATE_ATTACK);
-		phaseObservable.addObserver(attackView);
-	}
-
-	/**
-	 * Start the battle
-	 * 
-	 * @param attacker
-	 *            the attacker
-	 * @param defender
-	 *            the defender
-	 * @param diceAttacker
-	 *            the dice Attacker
-	 * @param diceDefender
-	 *            the dice defender.
-	 */
-	public static void startBattle(Country attacker, Country defender, int diceAttacker, int diceDefender) {
-		phaseObservable.startBattle(attacker, defender, diceAttacker, diceDefender);
-	}
-
-	/**
-	 * Initiate the Active Game State after Attack
-	 */
-	public static void initiatePostAttackUpdate(boolean isCaptured) {
-		phaseObservable.startActiveState();
-		// If 1st Recent Attack win, then update as adding card
-		if (isCaptured)
-			phaseObservable.updateCard();
-	}
-
-	/**
-	 * Initiate Active Game State
-	 */
-	public static void initiateActiveState() {
-		phaseObservable.startActiveState();
-	}
-
-	/**
-	 * Re initiate Reinforcement Phase
-	 */
-	public static void reinitiateReinforcement() {
-		phaseObservable.updateReinforcementArmies();
-	}
-
-	/**
-	 * Start Card Exchange View and attach to observable
-	 */
-	public static void startCardExchangeView() {
-		CardExchangeView view = new CardExchangeView();
-		view.setVisible(true);
-		phaseObservable.addObserver(view);
-	}
-
-	/**
-	 * Send control to next player.
-	 */
-	public static void setControlToNewPlayer() {
-		phaseObservable.moveToNextPlayer();
-
-	}
-
-	public static void moveToNextTurn() {
-		phaseObservable.nextPlayer();
-	}
-
-	public static void initFortification(Country start, Country end) {
-		try {
-			phaseObservable.startFortify(start, end);
-		} catch (NumberFormatException | IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 }

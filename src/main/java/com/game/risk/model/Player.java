@@ -1,8 +1,14 @@
 package com.game.risk.model;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+
+import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.AttackPhaseUtil;
+import com.game.risk.core.util.FortificationPhaseUtil;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.ReinforcementPhaseUtil;
 
@@ -12,7 +18,7 @@ import com.game.risk.core.util.ReinforcementPhaseUtil;
  * @author sohrab_singh
  * @author Sarthak
  */
-public class Player {
+public class Player extends Observable {
 
 	/** Player name */
 	private String playerName;
@@ -28,16 +34,22 @@ public class Player {
 
 	/** Current Domination Percentage for Player Domination View */
 	private double currentDominationPercentage;
+	
+	/**
+	 * MapFileReader Object
+	 */
+	private MapFileReader fileParser;
 
 	/**
 	 * Indicated the Number of Recent Attack Wins to update Card received in a turn
 	 */
-	private int recentAttackWins = 0;
+	private boolean isWinner = false;
 
 	/** Indicate the exchanged armies for the cards */
 	private int exchangedArmies;
 
-	/** Player Constructor */
+	/** Player Constructor 
+	 * @param fileParser */
 	public Player() {
 		countriesOwned = new ArrayList<>();
 	}
@@ -159,6 +171,57 @@ public class Player {
 		return countriesOwned.remove(country);
 	}
 
+
+	/**
+	 * @param player
+	 * @param reader
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
+	public void startReinforcementPhase(Player player, BufferedReader reader)
+			throws NumberFormatException, IOException {
+		System.out.println("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
+		LoggingUtil.logMessage("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
+
+		if (player.getNumberOfArmies() > 0) {
+			for (Country country : player.getCountriesOwned()) {
+				System.out.println(
+						"How many armies do you want to assign to your country " + country.getCountryName() + " ?");
+				System.out.println("Current number of armies of " + country.getCountryName() + " is "
+						+ country.getCurrentNumberOfArmies() + " | Available armies : " + player.getNumberOfArmies());
+				int armies = Integer.parseInt(reader.readLine());
+				player.assignArmiesToCountries(country, armies);
+			}
+		}
+	}
+
+	/**
+	 * @param reader
+	 * @param country1 
+	 * @param country2 
+	 * @throws NumberFormatException 
+	 * @throws IOException
+	 */
+	public void startFortificationPhase(BufferedReader reader,Country country1 , Country country2) throws NumberFormatException, IOException {
+		boolean countryFlag = true;
+		int fortificationArmies = 0;
+		while (countryFlag) {
+			countryFlag = false;
+			System.out.println("Enter the Number of Armies to Move");
+			fortificationArmies = Integer.parseInt(reader.readLine());
+			if (fortificationArmies > country1.getCurrentNumberOfArmies()) {
+				System.out.println("You can not enter more armies than donor country have");
+				System.out.println("Enter again");
+				countryFlag = true;
+			}
+		}
+
+		FortificationPhaseUtil.moveArmiesBetweenCountries(country1, country2, fortificationArmies,
+				fileParser.getCountriesGraph().getAdjListHashMap());
+		LoggingUtil.logMessage(fortificationArmies + " armies has been moved from " + country1 + " to " + country2);
+		
+	}
+	
 	/**
 	 * After initializing the armies, remaining armies will be given to countries
 	 * owned by users.
@@ -169,7 +232,7 @@ public class Player {
 	 *            number of armies to assign
 	 */
 	public void assignArmiesToCountries(Country selectedCountry, int numberOfArmies) {
-
+		
 		if ((this.getNumberOfArmies()) > 0 && this.getNumberOfArmies() >= numberOfArmies) {
 			if (this.getCountriesOwned().contains(selectedCountry)) {
 				selectedCountry.setCurrentNumberOfArmies(selectedCountry.getCurrentNumberOfArmies() + numberOfArmies);
@@ -181,36 +244,10 @@ public class Player {
 			System.out.println("You don't have any army!");
 		}
 	}
-
-	@Override
-	public String toString() {
-		return "Player [playerName=" + playerName + ", countriesOwned=" + countriesOwned + ", cardList=" + cardList
-				+ ", numberOfArmies=" + numberOfArmies + "]";
-	}
-
-	public void attackOpponent(Country attacker, Country defender, int diceAttacker, int diceDefender) {
-		System.out.println("\n:: Before Battle Start ::");
-		System.out.println("Attacker Armies: " + attacker.getCurrentNumberOfArmies());
-		System.out.println("Defender Armies: " + defender.getCurrentNumberOfArmies());
-		AttackPhaseUtil.startBattle(attacker, defender, diceAttacker, diceDefender);
-	}
-
-	public int getRecentAttackWins() {
-		return recentAttackWins;
-	}
-
-	public void setRecentAttackWins(int recentAttackWins) {
-		this.recentAttackWins = recentAttackWins;
-	}
-
-	public int getExchangedArmies() {
-		return exchangedArmies;
-	}
-
-	public void setExchangedArmies(int exchangedArmies) {
-		this.exchangedArmies = exchangedArmies;
-	}
-
+	
+	/**
+	 * @return
+	 */
 	public int findReinforcementArmies() {
 		System.out.println("\nReinforcement phase begins for " + this.getPlayerName() + "\n");
 		LoggingUtil.logMessage("\nReinforcement phase begins for " + this.getPlayerName() + "\n");
@@ -222,4 +259,45 @@ public class Player {
 		return reinforcementArmies;
 	}
 
+	/**
+	 * @param attacker
+	 * @param defender
+	 * @param diceAttacker
+	 * @param diceDefender
+	 */
+	public void attackOpponent(Country attacker, Country defender, int diceAttacker, int diceDefender) {
+		System.out.println("\n:: Before Battle Start ::");
+		System.out.println("Attacker Armies: " + attacker.getCurrentNumberOfArmies());
+		System.out.println("Defender Armies: " + defender.getCurrentNumberOfArmies());
+		AttackPhaseUtil.startBattle(attacker, defender, diceAttacker, diceDefender);
+	}
+
+
+	/**
+	 * @return the isWinner
+	 */
+	public boolean isWinner() {
+		return isWinner;
+	}
+
+	/**
+	 * @param isWinner the isWinner to set
+	 */
+	public void setWinner(boolean isWinner) {
+		this.isWinner = isWinner;
+	}
+
+	/**
+	 * @return
+	 */
+	public int getExchangedArmies() {
+		return exchangedArmies;
+	}
+
+	/**
+	 * @param exchangedArmies
+	 */
+	public void setExchangedArmies(int exchangedArmies) {
+		this.exchangedArmies = exchangedArmies;
+	}
 }

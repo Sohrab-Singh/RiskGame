@@ -61,7 +61,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	 * action
 	 **/
 	private JButton btnNewMap;
-	
+
 	/**
 	 * Create the frame.
 	 */
@@ -147,18 +147,13 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				e.printStackTrace();
 			}
 		}
-		if (isSaved)
+		if (isSaved) {
 			try {
-				implementPhases(parser);
+				RiskGameDriver.startGame(parser);
 			} catch (IOException e) {
-				System.out.println("Input Output exception occured.");
-				LoggingUtil.logMessage("Input Output exception occured.");
 				e.printStackTrace();
 			}
-	}
-
-	private void implementPhases(MapFileReader fileParser) throws IOException {
-		RiskGameDriver.startGame(fileParser);
+		}
 	}
 
 	/**

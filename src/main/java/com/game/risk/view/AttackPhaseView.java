@@ -4,8 +4,8 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import com.game.risk.PhaseObservable;
 import com.game.risk.RiskGameDriver;
+import com.game.risk.RiskGamePhases;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Country;
@@ -135,9 +135,12 @@ public class AttackPhaseView extends JFrame implements Observer {
 
 	/** Between Move Armies */
 	private JButton btnMoveArmies;
+	
+	private RiskGamePhases gamePhases;
 
 	/**
 	 * Attack Phase View Constructor
+	 * @param riskGamePhases 
 	 * 
 	 * @param attacker
 	 *            the attacker
@@ -147,9 +150,10 @@ public class AttackPhaseView extends JFrame implements Observer {
 	 * @param reader
 	 *            MapFileReader type
 	 */
-	public AttackPhaseView(Country attacker, Country defender) {
+	public AttackPhaseView(RiskGamePhases gamePhases, Country attacker, Country defender) {
 		this.attackerCountry = attacker;
 		this.defenderCountry = defender;
+		this.gamePhases = gamePhases;
 		initializeView();
 		defenderArmies = defenderCountry.getCurrentNumberOfArmies();
 		attackerArmies = attackerCountry.getCurrentNumberOfArmies();
@@ -378,7 +382,8 @@ public class AttackPhaseView extends JFrame implements Observer {
 		attackerCountry.setCurrentNumberOfArmies(attackerCountry.getCurrentNumberOfArmies() - moveArmies);
 		defenderCountry.setCurrentNumberOfArmies(moveArmies);
 		mainFrame.setVisible(false);
-		RiskGameDriver.initiatePostAttackUpdate(true);
+		gamePhases.notifyStateChange(PhaseStates.STATE_ACTIVE);
+		gamePhases.updateCard();
 	}
 
 	/**
@@ -414,7 +419,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 			diceDefender = 2;
 			lblDefendDice.setVisible(true);
 			lblDefendDice.setText(Integer.toString(diceDefender));
-			RiskGameDriver.startBattle(attackerCountry, defenderCountry, diceAttacker, diceDefender);
+			gamePhases.startBattle(attackerCountry, defenderCountry, diceAttacker, diceDefender);
 		}
 	}
 
@@ -435,7 +440,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 			diceDefender = 1;
 			lblDefendDice.setVisible(true);
 			lblDefendDice.setText(Integer.toString(diceDefender));
-			RiskGameDriver.startBattle(attackerCountry, defenderCountry, diceAttacker, diceDefender);
+			gamePhases.startBattle(attackerCountry, defenderCountry, diceAttacker, diceDefender);
 		}
 	}
 
@@ -475,13 +480,13 @@ public class AttackPhaseView extends JFrame implements Observer {
 		if (arg1 != null) {
 			if (arg1.getClass() == Boolean.class) {
 				if (((boolean) arg1) == true)
-					updateAfterBattle((PhaseObservable) arg0);
+					updateAfterBattle((RiskGamePhases) arg0);
 			}
 		}
 
-		if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_CAPTURE) {
+		if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_CAPTURE) {
 			captureDefender();
-		} else if (((PhaseObservable) arg0).getCurrentState() == PhaseStates.STATE_ATTACK) {
+		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_ATTACK) {
 			// Reinitialize Control to Attacker
 			initializeControlToAttacker();
 		}
@@ -513,7 +518,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 	 * @param observable
 	 *            the phase observable
 	 */
-	private void updateAfterBattle(PhaseObservable observable) {
+	private void updateAfterBattle(RiskGamePhases observable) {
 		int diffDefenderArmies = defenderArmies - defenderCountry.getCurrentNumberOfArmies();
 		int diffAttackerArmies = attackerArmies - attackerCountry.getCurrentNumberOfArmies();
 
@@ -545,7 +550,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 			attackerCountry = null;
 			defenderCountry = null;
 			mainFrame.setVisible(false);
-			RiskGameDriver.initiatePostAttackUpdate(false);
+			gamePhases.notifyStateChange(PhaseStates.STATE_ACTIVE);
 		} else {
 			setCurrentCountry(attackerCountry);
 		}
