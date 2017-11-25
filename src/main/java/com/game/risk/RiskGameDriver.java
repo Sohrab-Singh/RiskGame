@@ -5,11 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
 import javax.swing.SwingUtilities;
-
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
+import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Player;
 import com.game.risk.view.CardExchangeView;
 import com.game.risk.view.GamePhaseView;
@@ -71,9 +70,12 @@ public class RiskGameDriver {
 		List<Player> players = gamePhases.executeStartupPhase();
 		GamePhaseView gamePhaseView = new GamePhaseView(gamePhases,fileParser, players);
 		gamePhases.addObserver(gamePhaseView);
-		gamePhases.initiateGame(players);
+		gamePhases.notifyStateChange(PhaseStates.STATE_STARTUP);
+		Player player = new Player();
 		CardExchangeView cardExchangeView = new CardExchangeView();
-		gamePhases.addObserver(cardExchangeView);
+		player.addObserver(cardExchangeView);
 		cardExchangeView.setVisible(true);
 	}
+	
+
 }

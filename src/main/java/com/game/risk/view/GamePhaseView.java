@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import com.game.risk.RiskGameDriver;
 import com.game.risk.RiskGamePhases;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
@@ -373,22 +372,18 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 		if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_STARTUP) {
 			jframe.setVisible(true);
 			lblCurrentPhase.setText("StartUp Phase");
-
-			updatePlayerCountries((RiskGamePhases) arg0);
 		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_ACTIVE) {
 			lblCurrentPhase.setText("What do you want to perform now?");
-			updatePlayerCountries((RiskGamePhases) arg0);
 		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_REINFORCEMENT) {
 			lblCurrentPhase.setText("Reinforcement Phase");
-			updatePlayerCountries((RiskGamePhases) arg0);
 		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_FORTIFY) {
 			lblCurrentPhase.setText("Fortification Phase");
-			updatePlayerCountries((RiskGamePhases) arg0);
 		}
+		updatePlayerCountries((RiskGamePhases) arg0);
 
-		if (((RiskGamePhases) arg0).getPlayerDominationPhase()) {
-
-		}
+//		if (((RiskGamePhases) arg0).getPlayerDominationPhase()) {
+//
+//		}
 	}
 
 	/**
@@ -448,41 +443,6 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 
 			// Ignoring the player owned countries and finding the opponnent
 			if (!adjCountries.get(i).getPlayerName().equals(currentPlayer.getPlayerName())) {
-				JLabel adjCountryName = new JLabel(adjCountries.get(i).getCountryName());
-				JPanel adjPanel = new JPanel();
-				adjPanel.setBackground(null);
-				adjCountryName.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(5, 5, 5, 5)));
-				adjPanel.setBorder(new EmptyBorder(-2, -2, -1, -1));
-				adjPanel.add(adjCountryName);
-				JPanel armyCount = new JPanel();
-				JLabel adjArmyCountLabel = new JLabel(Integer.toString(adjCountries.get(i).getCurrentNumberOfArmies()));
-				adjArmyCountLabel.setForeground(Color.WHITE);
-				armyCount.setBackground(Color.BLACK);
-				armyCount.add(adjArmyCountLabel);
-				adjPanel.add(armyCount);
-				adjPanel.addMouseListener(this);
-				adjacentPanelHashMap.put(adjPanel, adjCount);
-				adjPanels.add(adjCount++, adjPanel);
-				panel_6.add(adjPanel);
-			}
-
-		}
-		panel_6.validate();
-		panel_6.repaint();
-	}
-
-	private void fortifyAdjacentCountries(Country country) {
-		panel_6.removeAll();
-		LinkedList<Country> adjCountries = fileParser.getCountriesGraph().getAdjListHashMap().get(country);
-		Border border = BorderFactory.createLineBorder(Color.WHITE, 2, true);
-		adjPanels = new ArrayList<>();
-		adjacentPanelHashMap.clear();
-		adjPanels.clear();
-		int adjCount = 0;
-		for (int i = 0; i < adjCountries.size(); i++) {
-
-			// Ignoring the player owned countries and finding the opponnent
-			if (adjCountries.get(i).getPlayerName().equals(currentPlayer.getPlayerName())) {
 				JLabel adjCountryName = new JLabel(adjCountries.get(i).getCountryName());
 				JPanel adjPanel = new JPanel();
 				adjPanel.setBackground(null);

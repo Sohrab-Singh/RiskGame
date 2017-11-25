@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Random;
 
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.AttackPhaseUtil;
@@ -27,14 +28,14 @@ public class Player extends Observable {
 	private List<Country> countriesOwned;
 
 	/** Card List */
-	private List<Card> cardList;
+	private List<CardType> cardList;
 
 	/** Number of armies */
 	private int numberOfArmies;
 
 	/** Current Domination Percentage for Player Domination View */
 	private double currentDominationPercentage;
-	
+
 	/**
 	 * MapFileReader Object
 	 */
@@ -46,10 +47,13 @@ public class Player extends Observable {
 	private boolean isWinner = false;
 
 	/** Indicate the exchanged armies for the cards */
-	private int exchangedArmies;
+	private int exchangeArmiesCount = 5;
 
-	/** Player Constructor 
-	 * @param fileParser */
+	/**
+	 * Player Constructor
+	 * 
+	 * @param fileParser
+	 */
 	public Player() {
 		countriesOwned = new ArrayList<>();
 	}
@@ -112,7 +116,7 @@ public class Player extends Observable {
 	 *
 	 * @return the cardList
 	 */
-	public List<Card> getCardList() {
+	public List<CardType> getCardList() {
 		return cardList;
 	}
 
@@ -122,7 +126,7 @@ public class Player extends Observable {
 	 * @param cardList
 	 *            the cardList to set
 	 */
-	public void setCardList(List<Card> cardList) {
+	public void setCardList(List<CardType> cardList) {
 		this.cardList = cardList;
 	}
 
@@ -171,7 +175,6 @@ public class Player extends Observable {
 		return countriesOwned.remove(country);
 	}
 
-
 	/**
 	 * @param player
 	 * @param reader
@@ -197,12 +200,13 @@ public class Player extends Observable {
 
 	/**
 	 * @param reader
-	 * @param country1 
-	 * @param country2 
-	 * @throws NumberFormatException 
+	 * @param country1
+	 * @param country2
+	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	public void startFortificationPhase(BufferedReader reader,Country country1 , Country country2) throws NumberFormatException, IOException {
+	public void startFortificationPhase(BufferedReader reader, Country country1, Country country2)
+			throws NumberFormatException, IOException {
 		boolean countryFlag = true;
 		int fortificationArmies = 0;
 		while (countryFlag) {
@@ -219,9 +223,9 @@ public class Player extends Observable {
 		FortificationPhaseUtil.moveArmiesBetweenCountries(country1, country2, fortificationArmies,
 				fileParser.getCountriesGraph().getAdjListHashMap());
 		LoggingUtil.logMessage(fortificationArmies + " armies has been moved from " + country1 + " to " + country2);
-		
+
 	}
-	
+
 	/**
 	 * After initializing the armies, remaining armies will be given to countries
 	 * owned by users.
@@ -232,7 +236,7 @@ public class Player extends Observable {
 	 *            number of armies to assign
 	 */
 	public void assignArmiesToCountries(Country selectedCountry, int numberOfArmies) {
-		
+
 		if ((this.getNumberOfArmies()) > 0 && this.getNumberOfArmies() >= numberOfArmies) {
 			if (this.getCountriesOwned().contains(selectedCountry)) {
 				selectedCountry.setCurrentNumberOfArmies(selectedCountry.getCurrentNumberOfArmies() + numberOfArmies);
@@ -244,7 +248,7 @@ public class Player extends Observable {
 			System.out.println("You don't have any army!");
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -272,6 +276,84 @@ public class Player extends Observable {
 		AttackPhaseUtil.startBattle(attacker, defender, diceAttacker, diceDefender);
 	}
 
+	/**
+	 * @param player
+	 */
+	public void addCard() {
+		Random random = new Random();
+		int randomCard = random.nextInt(3);
+		CardType cardType = CardType.values()[randomCard];
+
+		getCardList().add(cardType);
+		LoggingUtil.logMessage("Added new " + cardType + " Card into Player " + getPlayerName());
+		setChanged();
+		if (getCardList().size() >= 3) {
+			notifyObservers(true);
+		} else {
+			notifyObservers(false);
+		}
+	}
+
+	/**
+	 * Removes the cards at the given indices from the hand
+	 * 
+	 * @param index1
+	 * @param index2
+	 * @param index3
+	 **/
+	public void removeCardsFromDeck() {
+
+		if (isSameOrDifferentSort(0, 1, 2) == true) {
+			getCardList().remove(2);
+			getCardList().remove(1);
+			getCardList().remove(0);
+
+		} else {
+			System.out.println("You must exchang three cards of the same sort or different sort.");
+		}
+	}
+
+	/**
+	 * returns true if the player can turn in cards
+	 * 
+	 * @param index1
+	 * @param index2
+	 * @param index3
+	 * @return
+	 **/
+	public boolean isSameOrDifferentSort(int index1, int index2, int index3) {
+
+		boolean condition = false;
+
+		if (getCardList().size() >= 3) {
+			// If all three cards of same type or Different type
+			if (getCardList().get(index1).equals(getCardList().get(index2))
+					&& getCardList().get(index2).equals(getCardList().get(index3))) {
+				condition = true;
+			} else if (!getCardList().get(index1).equals(getCardList().get(index2))
+					&& !getCardList().get(index1).equals(getCardList().get(index3))
+					&& !getCardList().get(index2).equals(getCardList().get(index3))) {
+				// If all three cards have different types
+				condition = true;
+			}
+		}
+		return condition;
+	}
+	
+	/**
+	 * 
+	 */
+	public void exchangeCardsWithArmies() {
+		setNumberOfArmies(getNumberOfArmies() + getExchangeArmiesCount());
+		setExchangeArmiesCount(getExchangeArmiesCount() + 5);
+	}
+	
+	/**
+	 * Player must exchange armiwa
+	 */
+	public void mustExchangeArmies() {
+		
+	}
 
 	/**
 	 * @return the isWinner
@@ -281,23 +363,25 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * @param isWinner the isWinner to set
+	 * @param isWinner
+	 *            the isWinner to set
 	 */
 	public void setWinner(boolean isWinner) {
 		this.isWinner = isWinner;
 	}
 
 	/**
-	 * @return
+	 * @return the exchangeArmiesCount
 	 */
-	public int getExchangedArmies() {
-		return exchangedArmies;
+	public int getExchangeArmiesCount() {
+		return exchangeArmiesCount;
 	}
 
 	/**
-	 * @param exchangedArmies
+	 * @param exchangeArmiesCount the exchangeArmiesCount to set
 	 */
-	public void setExchangedArmies(int exchangedArmies) {
-		this.exchangedArmies = exchangedArmies;
+	public void setExchangeArmiesCount(int exchangeArmiesCount) {
+		this.exchangeArmiesCount = exchangeArmiesCount;
 	}
+
 }

@@ -29,7 +29,10 @@ public class RiskGamePhases extends Observable {
 	 * MapFileReader Object
 	 */
 	private MapFileReader fileParser;
-	
+
+	/**
+	 * Buffer reader
+	 */
 	private BufferedReader reader;
 
 	/**
@@ -41,9 +44,9 @@ public class RiskGamePhases extends Observable {
 	private Boolean playerDominationPhase;
 
 	/**
-	 * Player object indicating the current player playing the game
+	 * Player object indicating the current currentPlayer playing the game
 	 */
-	private Player player;
+	private Player currentPlayer;
 
 	/** Round robin scheduler */
 	private RoundRobinScheduler<Player> robinScheduler;
@@ -52,30 +55,13 @@ public class RiskGamePhases extends Observable {
 	 * Default Constructor
 	 * 
 	 * @param fileParser
-	 * @param reader 
+	 * @param reader
 	 * 
 	 * @return
 	 */
-	public RiskGamePhases(MapFileReader fileParser,BufferedReader reader) {
+	public RiskGamePhases(MapFileReader fileParser, BufferedReader reader) {
 		this.fileParser = fileParser;
 		this.reader = reader;
-	}
-
-	/**
-	 * Start game phases which will call all phases.
-	 * @param players 
-	 * 
-	 * @throws NumberFormatException
-	 *             number format exception
-	 * @throws IOException
-	 *             Input output exception
-	 */
-	public void initiateGame(List<Player> players)  {
-
-		// Players playing in round robin fashion
-		robinScheduler = new RoundRobinScheduler<Player>(players);
-		player = robinScheduler.next();
-		notifyObservers();
 	}
 
 	/**
@@ -84,7 +70,7 @@ public class RiskGamePhases extends Observable {
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	public List<Player> executeStartupPhase() throws IOException  {
+	public List<Player> executeStartupPhase() throws IOException {
 		System.out.println(":: Input the no of players playing ::");
 		int numberOfPlayers = Integer.parseInt(reader.readLine());
 		LoggingUtil.logMessage("Total number of Players playing Risk Game : " + numberOfPlayers);
@@ -95,9 +81,13 @@ public class RiskGamePhases extends Observable {
 		startUpPhase.assignInitialArmiesToCountries();
 		startUpPhase.populateDominationPercentage();
 
-		return startUpPhase.getPlayerList();
+		List<Player> players = startUpPhase.getPlayerList();
+		robinScheduler = new RoundRobinScheduler<Player>(players);
+		currentPlayer = robinScheduler.next();
+
+		return players;
 	}
-	
+
 	/**
 	 * Start the Attack Phase
 	 * 
@@ -108,14 +98,14 @@ public class RiskGamePhases extends Observable {
 	 *            MapFileReader
 	 */
 	public void startAttackPhase(Country attackingCountry, Country defendingCountry) {
-		AttackPhaseView attackView = new AttackPhaseView(this ,attackingCountry, defendingCountry);
+		AttackPhaseView attackView = new AttackPhaseView(this, attackingCountry, defendingCountry);
 		attackView.setVisible(true);
 		setCurrentState(PhaseStates.STATE_ATTACK);
 		this.addObserver(attackView);
 	}
 
 	/**
-	 * Get the player domination phase.
+	 * Get the currentPlayer domination phase.
 	 * 
 	 * @return the playerDominationPhase
 	 */
@@ -142,12 +132,12 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * Get the player.
+	 * Get the currentPlayer.
 	 * 
 	 * @return Player
 	 */
 	public Player getPlayer() {
-		return player;
+		return currentPlayer;
 	}
 
 	/**
@@ -159,10 +149,11 @@ public class RiskGamePhases extends Observable {
 	 * @param diceDefender
 	 */
 	public void startBattle(Country attacker, Country defender, int diceAttacker, int diceDefender) {
-		player.attackOpponent(attacker, defender, diceAttacker, diceDefender);
+		currentPlayer.attackOpponent(attacker, defender, diceAttacker, diceDefender);
 		if (defender.getCurrentNumberOfArmies() == 0) {
 			setCurrentState(PhaseStates.STATE_CAPTURE);
 			updateCountryToPlayer(defender, attacker);
+			currentPlayer.setWinner(true);
 
 		}
 		if (attacker.getCurrentNumberOfArmies() == 0)
@@ -198,11 +189,9 @@ public class RiskGamePhases extends Observable {
 	 * Update Card State
 	 */
 	public void updateCard() {
-		if (player.isWinner()) {
-			setChanged();
-			notifyObservers(PhaseStates.STATE_UPDATE_CARD);
+		if (currentPlayer.isWinner()) {
+			currentPlayer.addCard();
 		}
-		//player.setRecentAttackWins(player.getRecentAttackWins() + 1);
 	}
 
 	/**
@@ -216,9 +205,9 @@ public class RiskGamePhases extends Observable {
 			}
 		}
 		while (true) {
-			player = robinScheduler.next();
+			currentPlayer = robinScheduler.next();
 
-			if (player.getNumberOfArmies() > 0) {
+			if (currentPlayer.getNumberOfArmies() > 0) {
 				break;
 			} else if (isCompleted) {
 				break;
@@ -228,21 +217,25 @@ public class RiskGamePhases extends Observable {
 		if (!isCompleted) {
 			notifyStateChange(PhaseStates.STATE_STARTUP);
 		} else {
-			int reinforcementArmies = player.findReinforcementArmies();
-			player.setNumberOfArmies(player.getNumberOfArmies() + reinforcementArmies);
+			int reinforcementArmies = currentPlayer.findReinforcementArmies();
+			currentPlayer.setNumberOfArmies(currentPlayer.getNumberOfArmies() + reinforcementArmies);
 			notifyStateChange(PhaseStates.STATE_REINFORCEMENT);
 		}
 
 	}
 
-
 	/**
 	 * Next Player
 	 */
 	public void nextPlayer() {
-		player.setWinner(false);
-		player = robinScheduler.next();
-		player.setNumberOfArmies(player.getNumberOfArmies() + player.findReinforcementArmies());
+
+		currentPlayer.setWinner(false);
+		currentPlayer = robinScheduler.next();
+		while (currentPlayer.getCardList().size() >= 5) {
+			currentPlayer.exchangeCardsWithArmies();
+			currentPlayer.removeCardsFromDeck();
+		}
+		currentPlayer.setNumberOfArmies(currentPlayer.getNumberOfArmies() + currentPlayer.findReinforcementArmies());
 		notifyStateChange(PhaseStates.STATE_REINFORCEMENT);
 	}
 
@@ -252,9 +245,9 @@ public class RiskGamePhases extends Observable {
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	public void startFortificationPhase(Country start, Country end)  {
+	public void startFortificationPhase(Country start, Country end) {
 		try {
-			player.startFortificationPhase(reader, start, end);
+			currentPlayer.startFortificationPhase(reader, start, end);
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 		}
@@ -262,7 +255,7 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * @param state 
+	 * @param state
 	 * 
 	 */
 	public void notifyStateChange(int state) {

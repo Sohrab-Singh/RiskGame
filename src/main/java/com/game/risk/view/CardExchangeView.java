@@ -1,23 +1,15 @@
 package com.game.risk.view;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import com.game.risk.RiskGamePhases;
-import com.game.risk.core.util.CardUtil;
-import com.game.risk.core.util.LoggingUtil;
-import com.game.risk.core.util.PhaseStates;
-import com.game.risk.model.Card;
+import com.game.risk.model.CardType;
 import com.game.risk.model.Player;
 
 import javax.swing.BorderFactory;
@@ -54,22 +46,11 @@ public class CardExchangeView extends JFrame implements Observer {
 	/** The current player. */
 	private Player currentPlayer;
 
-	/** The card hash map. */
-	private HashMap<Player, List<Card>> cardHashMap;
-
-	/** Card Types. */
-	private HashMap<Integer, String> cardTypes;
-
 	/**
 	 * Instantiates a new card exchange view.
 	 */
 	public CardExchangeView() {
 		initializeView();
-		cardHashMap = new HashMap<>();
-		cardTypes = new HashMap<>();
-		cardTypes.put(0, "Infantry");
-		cardTypes.put(1, "Cavalry");
-		cardTypes.put(2, "Artillery");
 	}
 
 	/**
@@ -105,10 +86,8 @@ public class CardExchangeView extends JFrame implements Observer {
 		btnExchange.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				currentPlayer.setExchangedArmies(currentPlayer.getExchangedArmies() + 1);
-				for (int i = 0; i < 3; i++) {
-					cardHashMap.get(currentPlayer).remove(i);
-				}
+				currentPlayer.exchangeCardsWithArmies();
+				currentPlayer.removeCardsFromDeck();
 			}
 		});
 
@@ -136,31 +115,13 @@ public class CardExchangeView extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		if ((arg1 != null) && (arg1.getClass() == Integer.class)) {
-			if (((int) arg1) == PhaseStates.STATE_UPDATE_CARD)
-				addCard((Player) arg0);
-		}
-	}
 
-	/**
-	 * 
-	 * @param player
-	 */
-	@SuppressWarnings("unlikely-arg-type")
-	private void addCard(Player player) {
-		Random random = new Random();
-		int randomCard = random.nextInt(3);
-		if (cardHashMap.containsKey(player)) {
-			cardHashMap.get(player).add(new Card(randomCard));
-			LoggingUtil.logMessage(
-					"Added new " + cardTypes.get(random) + " Card into Player " + player.getPlayerName());
-			if (cardHashMap.get(player).size() >= 3) {
+		if (arg1.getClass().equals(Boolean.class)) {
+			if ((boolean) arg1) {
 				btnExchange.setVisible(true);
+			} else {
+				btnExchange.setVisible(false);
 			}
-		} else {
-			List<Card> cardList = new ArrayList<>();
-			cardList.add(new Card(randomCard));
-			cardHashMap.put(player, cardList);
 		}
 		updateCardListView();
 	}
@@ -170,14 +131,14 @@ public class CardExchangeView extends JFrame implements Observer {
 	 */
 	private void updateCardListView() {
 		labelNoCards.setVisible(false);
-		JPanel[] jpanels = new JPanel[cardHashMap.get(currentPlayer).size()];
+		JPanel[] jpanels = new JPanel[currentPlayer.getCardList().size()];
 		cardsViewPanel.removeAll();
 		Border border = BorderFactory.createLineBorder(Color.WHITE, 4, true);
-		for (int i = 0; i < cardHashMap.get(currentPlayer).size(); i++) {
+		for (int i = 0; i < currentPlayer.getCardList().size(); i++) {
 			JLabel jlabel = new JLabel();
-			if (cardHashMap.get(currentPlayer).get(i).getValue() == CardUtil.CARD_INFANTRY)
+			if (currentPlayer.getCardList().get(i).equals(CardType.Infantry))
 				jlabel.setText("I");
-			else if (cardHashMap.get(currentPlayer).get(i).getValue() == CardUtil.CARD_CAVALRY)
+			else if (currentPlayer.getCardList().get(i).equals(CardType.Cavalry))
 				jlabel.setText("C");
 			else
 				jlabel.setText("A");
