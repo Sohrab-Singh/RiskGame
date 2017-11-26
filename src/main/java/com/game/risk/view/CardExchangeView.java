@@ -25,6 +25,7 @@ import javax.swing.SwingConstants;
  * Observer Class to update the Cards and exchange them for Armies.
  *
  * @author Sarthak
+ * @author sohrab_singh
  */
 public class CardExchangeView extends JFrame implements Observer {
 
@@ -122,8 +123,8 @@ public class CardExchangeView extends JFrame implements Observer {
 			} else {
 				btnExchange.setVisible(false);
 			}
+			updateCardListView();
 		}
-		updateCardListView();
 	}
 
 	/**

@@ -12,6 +12,7 @@ import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Player;
 import com.game.risk.view.CardExchangeView;
 import com.game.risk.view.GamePhaseView;
+import com.game.risk.view.PlayerDominationView;
 import com.game.risk.view.WelcomeScreenView;
 
 /**
@@ -68,12 +69,14 @@ public class RiskGameDriver {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		gamePhases = new RiskGamePhases(fileParser, reader);
 		List<Player> players = gamePhases.executeStartupPhase();
-		GamePhaseView gamePhaseView = new GamePhaseView(gamePhases,fileParser, players);
+		GamePhaseView gamePhaseView = new GamePhaseView(gamePhases,fileParser);
 		gamePhases.addObserver(gamePhaseView);
 		gamePhases.notifyStateChange(PhaseStates.STATE_STARTUP);
 		Player player = new Player();
 		CardExchangeView cardExchangeView = new CardExchangeView();
+		PlayerDominationView dominationView = new PlayerDominationView(players);
 		player.addObserver(cardExchangeView);
+		player.addObserver(dominationView);
 		cardExchangeView.setVisible(true);
 	}
 	

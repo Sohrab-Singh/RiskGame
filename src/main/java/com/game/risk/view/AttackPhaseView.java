@@ -4,8 +4,8 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import com.game.risk.RiskGameDriver;
 import com.game.risk.RiskGamePhases;
+import com.game.risk.core.util.AttackPhaseUtil;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Country;
@@ -135,12 +135,14 @@ public class AttackPhaseView extends JFrame implements Observer {
 
 	/** Between Move Armies */
 	private JButton btnMoveArmies;
-	
+
 	private RiskGamePhases gamePhases;
 
 	/**
 	 * Attack Phase View Constructor
-	 * @param riskGamePhases 
+	 * 
+	 * @param gamePhases
+	 * @param riskGamePhases
 	 * 
 	 * @param attacker
 	 *            the attacker
@@ -376,14 +378,16 @@ public class AttackPhaseView extends JFrame implements Observer {
 		}
 	}
 
-	/** Move Armies after the winner is declared */
+	/** Move Armies after the attacker is declared winner after battle */
 	private void moveArmies() {
 		int moveArmies = Integer.parseInt(lblDice2.getText());
 		attackerCountry.setCurrentNumberOfArmies(attackerCountry.getCurrentNumberOfArmies() - moveArmies);
 		defenderCountry.setCurrentNumberOfArmies(moveArmies);
 		mainFrame.setVisible(false);
 		gamePhases.notifyStateChange(PhaseStates.STATE_ACTIVE);
-		gamePhases.updateCard();
+		if (AttackPhaseUtil.isattackEnds(gamePhases.getPlayer())) {
+			gamePhases.notifyAttackEnds();
+		}
 	}
 
 	/**

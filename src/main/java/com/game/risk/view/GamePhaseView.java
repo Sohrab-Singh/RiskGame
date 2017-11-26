@@ -1,7 +1,6 @@
 package com.game.risk.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import java.awt.Font;
 
 import javax.swing.SwingConstants;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 
@@ -103,11 +101,6 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	 */
 	private Country moveCountry;
 
-	/**
-	 * JFrame variable
-	 */
-	private JFrame jframe;
-
 	/** JLabel Array object to store the player owned country labels. */
 	private JPanel jpanels[];
 
@@ -126,14 +119,8 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	 */
 	private List<JPanel> adjPanels;
 
-	/** The color panel. */
-	private JPanel colorPanel;
-
 	/** Current Player playing the game. */
 	private Player currentPlayer;
-
-	/** The players. */
-	private List<Player> players;
 
 	/** The lbl armies count. */
 	private JLabel lblArmiesCount;
@@ -156,9 +143,8 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	 * @param players
 	 *            the players
 	 */
-	public GamePhaseView(RiskGamePhases gamePhases, MapFileReader reader, List<Player> players) {
+	public GamePhaseView(RiskGamePhases gamePhases, MapFileReader reader) {
 		this.fileParser = reader;
-		this.players = players;
 		initializeView();
 		panelHashMap = new HashMap<>();
 		adjacentPanelHashMap = new HashMap<>();
@@ -175,7 +161,6 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 
 		setBounds(100, 100, 850, 781);
 
-		jframe = this;
 		// Initialize JPanel contentPane to hold the JLabel and JButton elements
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -284,95 +269,18 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 		lblCurrentPhase.setForeground(Color.BLACK);
 		lblCurrentPhase.setFont(new Font("Tahoma", Font.BOLD, 18));
 
-		JPanel dominationPanel = new JPanel();
-		dominationPanel.setBackground(Color.WHITE);
-		dominationPanel.setBounds(0, 602, 832, 130);
-		dominationPanel.setLayout(null);
-
-		JPanel playerInitPanel = new JPanel();
-		playerInitPanel.setBackground(Color.WHITE);
-		playerInitPanel.setBounds(0, 0, 197, 130);
-		playerInitPanel.setLayout(new BoxLayout(playerInitPanel, BoxLayout.Y_AXIS));
-
-		JPanel statusPanel = new JPanel();
-		statusPanel.setBackground(Color.WHITE);
-		statusPanel.setBounds(254, 44, 500, 29);
-		statusPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
-
-		int i = 0;
-		for (Player player : players) {
-			JPanel playerColorPanel = new JPanel();
-			playerColorPanel.setLayout(new FlowLayout());
-			playerColorPanel.setBackground(Color.WHITE);
-
-			JLabel labelPlayer = new JLabel(player.getPlayerName());
-			labelPlayer.setFont(new Font("Tahoma", Font.BOLD, 13));
-			labelPlayer.setForeground(Color.BLACK);
-			playerColorPanel.add(labelPlayer);
-
-			JPanel color = new JPanel();
-			color.setBackground(getPlayerColor(i));
-			playerColorPanel.add(color);
-
-			playerInitPanel.add(playerColorPanel);
-
-			colorPanel = new JPanel();
-			colorPanel.setBackground(getPlayerColor(i));
-			colorPanel.setPreferredSize(new Dimension((int) (player.getCurrentDominationPercentage() * 500), 29));
-
-			statusPanel.add(colorPanel);
-			i++;
-		}
-		dominationPanel.add(playerInitPanel);
-		dominationPanel.add(statusPanel);
-		contentPane.add(dominationPanel);
-
-	}
-
-	/**
-	 * Gets the player color.
-	 *
-	 * @param i
-	 *            the i
-	 * @return the player color
-	 */
-	private Color getPlayerColor(int i) {
-
-		Color color = null;
-		// Assign the player color
-
-		switch (i) {
-		case 0:
-			color = Color.RED;
-			break;
-		case 1:
-			color = Color.BLUE;
-			break;
-		case 2:
-			color = Color.YELLOW;
-			break;
-		case 3:
-			color = Color.GREEN;
-			break;
-		case 4:
-			color = Color.PINK;
-			break;
-		case 5:
-			color = Color.ORANGE;
-			break;
-		default:
-			break;
-		}
-		return color;
 	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		setCurrentState(((RiskGamePhases) arg0).getCurrentState());
 		if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_STARTUP) {
-			jframe.setVisible(true);
+			this.setVisible(true);
 			lblCurrentPhase.setText("StartUp Phase");
 		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_ACTIVE) {
+			if (arg1.equals("attack")) {
+				btnAttack.setVisible(false);
+			}
 			lblCurrentPhase.setText("What do you want to perform now?");
 		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_REINFORCEMENT) {
 			lblCurrentPhase.setText("Reinforcement Phase");
@@ -380,10 +288,6 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 			lblCurrentPhase.setText("Fortification Phase");
 		}
 		updatePlayerCountries((RiskGamePhases) arg0);
-
-//		if (((RiskGamePhases) arg0).getPlayerDominationPhase()) {
-//
-//		}
 	}
 
 	/**
@@ -478,8 +382,10 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 			}
 
 		} else if (e.getComponent() == btnEndTurn) {
+			gamePhases.updateCard();
 			gamePhases.nextPlayer();
 		} else if (e.getComponent() == btnFortify) {
+			gamePhases.updateDominationPercentage();
 			gamePhases.startFortificationPhase(startCountry, moveCountry);
 		} else if (panelHashMap.containsKey((JPanel) e.getComponent())) {
 			Integer value = panelHashMap.get((JPanel) e.getComponent());
@@ -561,7 +467,6 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 				playerss.add(player);
 				playerss.add(player1);
 				playerss.add(player2);
-				// new GamePhaseView(phases,null, playerss).setVisible(true);
 			}
 		});
 	}

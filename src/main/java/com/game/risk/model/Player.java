@@ -71,6 +71,8 @@ public class Player extends Observable {
 	 */
 	public void setCurrentDominationPercentage(double currentDominationPercentage) {
 		this.currentDominationPercentage = currentDominationPercentage;
+		setChanged();
+		notifyObservers("domination");
 	}
 
 	/**

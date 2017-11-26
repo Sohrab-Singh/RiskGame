@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Observable;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.StartUpPhase;
+import com.game.risk.core.util.AttackPhaseUtil;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Country;
@@ -154,13 +155,25 @@ public class RiskGamePhases extends Observable {
 			setCurrentState(PhaseStates.STATE_CAPTURE);
 			updateCountryToPlayer(defender, attacker);
 			currentPlayer.setWinner(true);
-
+			setChanged();
+			notifyObservers(true);
 		}
-		if (attacker.getCurrentNumberOfArmies() == 0)
-			setCurrentState(PhaseStates.STATE_ACTIVE);
-		setChanged();
-		notifyObservers(true);
+		if (attacker.getCurrentNumberOfArmies() == 0) {
+			notifyAttackEnds();
+		}
+	}
 
+	/**
+	 * 
+	 */
+	public void notifyAttackEnds() {
+		setCurrentState(PhaseStates.STATE_ACTIVE);
+		setChanged();
+		if (AttackPhaseUtil.isattackEnds(currentPlayer)) {
+			notifyObservers("attack");
+		} else {
+			notifyObservers();
+		}
 	}
 
 	private void updateCountryToPlayer(Country defender, Country attacker) {
@@ -192,6 +205,13 @@ public class RiskGamePhases extends Observable {
 		if (currentPlayer.isWinner()) {
 			currentPlayer.addCard();
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void updateDominationPercentage() {
+		startUpPhase.populateDominationPercentage();
 	}
 
 	/**

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Random;
 
 import com.game.risk.model.Country;
+import com.game.risk.model.Player;
 
 /**
  * Class which contains all the utility methods related to attack phase.
@@ -83,6 +84,19 @@ public class AttackPhaseUtil {
 			}
 		}
 
+	}
+
+	/**
+	 * @param player
+	 * @return
+	 */
+	public static boolean isattackEnds(Player player) {
+		for (Country country : player.getCountriesOwned()) {
+			if (country.getCurrentNumberOfArmies() > 1) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
