@@ -19,7 +19,9 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 /**
  * View for the user to choose from loading a map file or creating a new map
@@ -63,6 +65,21 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	private JButton btnNewMap;
 
 	/**
+	 * JButton object to load a previously saved game
+	 */
+	private JButton btnLoadSaved;
+
+	/**
+	 * Variable to read the serializable object from the file
+	 */
+	private ObjectInputStream objectInputStream;
+
+	/**
+	 * JFileChooser object to select a file
+	 */
+	private JFileChooser fileChooser;
+
+	/**
 	 * Create the frame.
 	 */
 	public WelcomeScreenView() {
@@ -70,12 +87,13 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		// Attach Mouse Listeners to the JButton objects
 		btnLoad.addMouseListener(this);
 		btnNewMap.addMouseListener(this);
+		btnLoadSaved.addMouseListener(this);
 	}
 
 	private void initializeView() {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 400);
 		// Initialize JPanel contentPane to hold the JLabel and JButton elements
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.BLACK);
@@ -106,6 +124,10 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		btnNewMap = new JButton("Create a New Map");
 		btnNewMap.setBounds(135, 169, 166, 47);
 		contentPane.add(btnNewMap);
+
+		btnLoadSaved = new JButton("Load a saved Game");
+		btnLoadSaved.setBounds(135, 229, 166, 47);
+		contentPane.add(btnLoadSaved);
 	}
 
 	@Override
@@ -113,7 +135,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		boolean isSaved = false;
 		if (event.getComponent() == btnLoad) {
 			setVisible(false);
-			JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+			fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 			fileChooser.setDialogTitle("Choose a Map File");
 			fileChooser.setAcceptAllFileFilterUsed(false);
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("Map File Extensions", "map", "MAP");
@@ -136,7 +158,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 					e.printStackTrace();
 				}
 			}
-		} else {
+		} else if (event.getComponent() == btnNewMap) {
 			// Implementing the mouse clicked event for btnNewMap
 			setVisible(false);
 			parser = new MapFileReader();
@@ -145,6 +167,19 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				isSaved = view.readMapEditor(true);
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+		} else {
+			fileChooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Risk Game Save Files", "rgs");
+			fileChooser.setFileFilter(filter);
+
+			if (fileChooser.showOpenDialog(getRootPane()) == JFileChooser.APPROVE_OPTION) {
+				try {
+					objectInputStream = new ObjectInputStream(new FileInputStream(fileChooser.getSelectedFile()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
 			}
 		}
 		if (isSaved) {

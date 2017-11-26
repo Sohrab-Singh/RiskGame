@@ -3,6 +3,8 @@ package com.game.risk.view;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.game.risk.RiskGamePhases;
 import com.game.risk.core.MapFileReader;
@@ -27,6 +30,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.FlowLayout;
 
 /**
@@ -110,6 +115,9 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	/** JButton object to perform fortification phase init. */
 	private JButton btnFortify;
 
+	/** JButton object to save the game */
+	private JButton btnSave;
+
 	/** JButton object to end the player's turn. */
 	private JButton btnEndTurn;
 
@@ -131,6 +139,10 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	/** The current state. */
 	private int currentState;
 
+	/** File Output Stream to write the protobuf generated data structure to the file */
+	private FileOutputStream output;
+
+	/** Observable class for the Game Phase View Observer */
 	private RiskGamePhases gamePhases;
 
 	/**
@@ -165,8 +177,8 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(20, 5, 5, 5));
-		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setContentPane(contentPane);
 
 		JPanel panelMapDetails = new JPanel();
 		panelMapDetails.setBounds(0, 33, 832, 444);
@@ -261,6 +273,12 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 		btnEndTurn.setBounds(598, 13, 106, 25);
 		btnEndTurn.addMouseListener(this);
 		panel.add(btnEndTurn);
+
+		btnSave = new JButton("Save");
+		btnSave.addMouseListener(this);
+		btnSave.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnSave.setBounds(598, 83, 106, 30);
+		panel.add(btnSave);
 
 		lblCurrentPhase = new JLabel("Reinforcement");
 		lblCurrentPhase.setBounds(0, 0, 832, 34);
@@ -373,7 +391,23 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
-		if (e.getComponent() == btnAttack) {
+		if (e.getComponent() == btnSave) {
+			JFileChooser fileChooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Risk Game Save Files", "rgs");
+			fileChooser.setFileFilter(filter);
+
+			if (fileChooser.showSaveDialog(getRootPane()) == JFileChooser.APPROVE_OPTION) {
+
+				try {
+					output = new FileOutputStream(fileChooser.getSelectedFile());
+					
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+
+		} else if (e.getComponent() == btnAttack) {
 			if (attackingCountry.getCurrentNumberOfArmies() > defendingCountry.getCurrentNumberOfArmies()
 					&& (defendingCountry.getCurrentNumberOfArmies() >= 1)) {
 				gamePhases.startAttackPhase(attackingCountry, defendingCountry);

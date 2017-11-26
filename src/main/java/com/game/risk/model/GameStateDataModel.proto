@@ -1,0 +1,65 @@
+syntax = "proto2";
+
+package com.game.risk.model;
+
+option java_package = "com.game.risk.model.autogen";
+option java_outer_classname = "GameStateDataProtos";
+message CountriesGraph {
+	map < string, Continent > continentMap = 1;
+	message CountryLinkedList {
+		repeated Country country = 1;
+	}
+
+	map < string, CountryLinkedList > countryMap = 2;
+	optional int32 countryCount = 3;
+}
+
+message MapFileReader {
+	map < string, Country > countryMap = 1;
+	map < string, Continent > continentMap = 2;
+	required CountriesGraph graphDataStructure = 3;
+}
+
+message Country {
+	required string countryName = 1;
+	optional string xCoordinate = 2;
+	optional string yCoordinate = 3;
+	required string playerName = 4;
+	required int32 currentArmiesCount = 5;
+}
+
+message Continent {
+	required string continentName = 1;
+	message belongingCountries {
+		repeated Country country = 1;
+	}
+
+	required int32 controlValue = 2;
+}
+
+message Player {
+	required string playerName = 1;
+	enum CardType {
+		INFANTRY = 1;
+		CAVALRY = 2;
+		ARTILLERY = 3;
+	}
+
+	message CountriesOwned {
+		repeated Country country = 1;
+	}
+
+	message Cards {
+		repeated CardType card = 1;
+	}
+
+	required int32 numberOfArmies = 2;
+	required double percentageDomination = 3;
+	required bool isAI = 4;
+	repeated Cards cardList = 5;
+}
+
+message GameState {
+	required Player currentPlayer = 1;
+	repeated Player playersList = 2;
+}

@@ -24,7 +24,7 @@ public class MapFileParserTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		mapFileReader = new MapFileReader("//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Quebec.map");
+		mapFileReader = new MapFileReader("C:\\Concordia University\\Study Material\\SOEN 6441 Advanced Programming Practices\\RISK Game - Project\\Québec.MAP");
 	}
 
 	/**

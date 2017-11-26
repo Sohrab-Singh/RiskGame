@@ -66,9 +66,10 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
+	 * Execute Startup Phase
+	 * 
 	 * @param reader
 	 * @return
-	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
 	public List<Player> executeStartupPhase() throws IOException {
@@ -95,8 +96,6 @@ public class RiskGamePhases extends Observable {
 	 * @param attackingCountry
 	 * @param defendingCountry
 	 * 
-	 * @param fileParser
-	 *            MapFileReader
 	 */
 	public void startAttackPhase(Country attackingCountry, Country defendingCountry) {
 		AttackPhaseView attackView = new AttackPhaseView(this, attackingCountry, defendingCountry);

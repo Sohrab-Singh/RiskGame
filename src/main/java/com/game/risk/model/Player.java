@@ -49,13 +49,56 @@ public class Player extends Observable {
 	/** Indicate the exchanged armies for the cards */
 	private int exchangeArmiesCount = 5;
 
+	/** Indicate whether the player is a Human or AI */
+	private boolean isAI;
+
+	/** List of Continents owned entirely by the player **/
+	private List<Continent> continentsOwned;
+
 	/**
 	 * Player Constructor
 	 * 
-	 * @param fileParser
 	 */
 	public Player() {
 		countriesOwned = new ArrayList<>();
+		continentsOwned = new ArrayList<>();
+	}
+
+	/**
+	 * Returns a boolean indicating whether the player is AI or Human
+	 * 
+	 * @return true or false
+	 */
+	public boolean isAI() {
+		return isAI;
+	}
+
+	/**
+	 * Set the isAI variable to true or false
+	 * 
+	 * @param isAI
+	 *            boolean
+	 */
+	public void setAI(boolean isAI) {
+		this.isAI = isAI;
+	}
+
+	/**
+	 * 
+	 * @return list of entire continents owned by the player (if any)
+	 */
+	public List<Continent> getContinentsOwned() {
+		return continentsOwned;
+	}
+
+	/**
+	 * Set the continentsOwned list
+	 * 
+	 * @param continentsOwned
+	 *            list of Continents
+	 */
+	public void setContinentsOwned(List<Continent> continentsOwned) {
+		this.continentsOwned = continentsOwned;
 	}
 
 	/**
@@ -297,11 +340,8 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * Removes the cards at the given indices from the hand
+	 * Removes the cards at the given indices from the deck
 	 * 
-	 * @param index1
-	 * @param index2
-	 * @param index3
 	 **/
 	public void removeCardsFromDeck() {
 
@@ -348,13 +388,6 @@ public class Player extends Observable {
 	public void exchangeCardsWithArmies() {
 		setNumberOfArmies(getNumberOfArmies() + getExchangeArmiesCount());
 		setExchangeArmiesCount(getExchangeArmiesCount() + 5);
-	}
-	
-	/**
-	 * Player must exchange armiwa
-	 */
-	public void mustExchangeArmies() {
-		
 	}
 
 	/**
