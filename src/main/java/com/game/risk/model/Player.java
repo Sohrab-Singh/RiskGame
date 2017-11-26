@@ -50,7 +50,7 @@ public class Player extends Observable {
 	private int exchangeArmiesCount = 5;
 
 	/** Indicate whether the player is a Human or AI */
-	private boolean isAI;
+	private boolean isAI = false;
 
 	/** List of Continents owned entirely by the player **/
 	private List<Continent> continentsOwned;

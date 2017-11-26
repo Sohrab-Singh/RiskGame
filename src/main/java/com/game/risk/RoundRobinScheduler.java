@@ -7,6 +7,7 @@ import java.util.List;
  * Round Robin Scheduler for generic list of objects.
  * 
  * @author sohrab_singh
+ * @author Sarthak
  * @param <T>
  *
  */
@@ -40,6 +41,15 @@ public class RoundRobinScheduler<T> {
 			iterator = list.iterator();
 		}
 		return iterator.next();
+	}
+
+	/**
+	 * Get the list of any type T
+	 * 
+	 * @return list
+	 */
+	public List<T> getList() {
+		return list;
 	}
 
 }

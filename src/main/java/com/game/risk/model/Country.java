@@ -157,7 +157,6 @@ public class Country {
 	}
 
 	/**
-<<<<<<< Updated upstream
 	 * Set the isVisited parameter
 	 * @param visited
 	 */

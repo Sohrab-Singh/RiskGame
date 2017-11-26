@@ -194,7 +194,7 @@ public class RiskGamePhases extends Observable {
 	 * @return list of players
 	 */
 	public List<Player> getPlayerList() {
-		return startUpPhase.getPlayerList();
+		return robinScheduler.getList();
 	}
 
 	/**
