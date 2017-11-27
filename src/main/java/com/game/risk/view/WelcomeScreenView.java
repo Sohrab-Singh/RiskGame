@@ -10,6 +10,8 @@ import com.game.risk.RiskGameDriver;
 import com.game.risk.core.MapEditor;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
+import com.game.risk.model.autogen.GameStateDataProtos.CountriesGraph;
+import com.game.risk.model.autogen.GameStateDataProtos.GameState;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -21,7 +23,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 
 /**
  * View for the user to choose from loading a map file or creating a new map
@@ -70,9 +71,9 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	private JButton btnLoadSaved;
 
 	/**
-	 * Variable to read the serializable object from the file
+	 * Variable to read from the file
 	 */
-	private ObjectInputStream objectInputStream;
+	private FileInputStream input;
 
 	/**
 	 * JFileChooser object to select a file
@@ -169,13 +170,16 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				e.printStackTrace();
 			}
 		} else {
+			// Implementing load saved game functionality
 			fileChooser = new JFileChooser();
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("Risk Game Save Files", "rgs");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Risk Game Saved Files", "rgs");
 			fileChooser.setFileFilter(filter);
 
 			if (fileChooser.showOpenDialog(getRootPane()) == JFileChooser.APPROVE_OPTION) {
 				try {
-					objectInputStream = new ObjectInputStream(new FileInputStream(fileChooser.getSelectedFile()));
+					input = new FileInputStream(fileChooser.getSelectedFile());
+					RiskGameDriver.startLoadedGame(input);
+					input.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

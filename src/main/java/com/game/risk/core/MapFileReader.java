@@ -50,6 +50,14 @@ public class MapFileReader {
 	 */
 	private List<String> mapMetaData = new ArrayList<>();
 
+	/**
+	 * Message MapFileReader Instance
+	 */
+	private com.game.risk.model.autogen.GameStateDataProtos.MapFileReader reader;
+
+	/**
+	 * Name of the file selected
+	 */
 	private String fileName;
 
 	/**
@@ -77,6 +85,37 @@ public class MapFileReader {
 		continentHashMap = new HashMap<String, Continent>();
 		countriesGraph = new CountriesGraph(this);
 		mapFileWriter = new MapFileWriter(this);
+	}
+
+	public MapFileReader(com.game.risk.model.autogen.GameStateDataProtos.MapFileReader reader) {
+		countriesHashMap = new HashMap<>();
+		continentHashMap = new HashMap<>();
+	}
+
+	public void updateCountriesModel() {
+		for (com.game.risk.model.autogen.GameStateDataProtos.Country country : reader.getCountryMapMap().values()) {
+			Country newCountry = new Country(country.getCountryName());
+			newCountry.setContinentName(country.getContinentName());
+			newCountry.setxCoordinate(country.getXCoordinate());
+			newCountry.setyCoordinate(country.getYCoordinate());
+			newCountry.setPlayerName(country.getPlayerName());
+			newCountry.setCurrentNumberOfArmies(country.getCurrentArmiesCount());
+			countriesHashMap.put(country.getCountryName(), newCountry);
+		}
+	}
+
+	public void updateContinentsModel() {
+		for (com.game.risk.model.autogen.GameStateDataProtos.Continent continent : reader.getContinentMapMap()
+				.values()) {
+			Continent newContinent = new Continent(continent.getContinentName(), continent.getControlValue());
+			for (com.game.risk.model.autogen.GameStateDataProtos.Country country : continent.getCountries()
+					.getCountryList()) {
+				if (countriesHashMap.containsKey(country.getCountryName())) {
+					newContinent.addCountry(countriesHashMap.get(country.getCountryName()));
+				}
+			}
+			continentHashMap.put(continent.getContinentName(), newContinent);
+		}
 	}
 
 	/**

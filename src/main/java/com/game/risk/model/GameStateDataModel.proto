@@ -48,7 +48,7 @@ message Player {
 	}
 
 	message Cards {
-		repeated CardType card = 1;
+		required CardType card = 1;
 	}
 
 	required int32 numberOfArmies = 2;

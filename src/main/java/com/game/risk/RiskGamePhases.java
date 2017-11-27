@@ -12,6 +12,8 @@ import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
+import com.game.risk.model.autogen.GameStateDataProtos.Player.CardType;
+import com.game.risk.model.autogen.GameStateDataProtos.Player.Cards;
 import com.game.risk.view.AttackPhaseView;
 
 /**
@@ -63,6 +65,10 @@ public class RiskGamePhases extends Observable {
 	public RiskGamePhases(MapFileReader fileParser, BufferedReader reader) {
 		this.fileParser = fileParser;
 		this.reader = reader;
+	}
+
+	public RiskGamePhases(MapFileReader fileParser) {
+		this.fileParser = fileParser;
 	}
 
 	/**
@@ -138,6 +144,24 @@ public class RiskGamePhases extends Observable {
 	 */
 	public Player getPlayer() {
 		return currentPlayer;
+	}
+
+	/**
+	 * Get the current player
+	 * 
+	 * @return currentPlayer Player
+	 */
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	/**
+	 * Set the current player of the game
+	 * 
+	 * @param currentPlayer
+	 */
+	public void setCurrentPlayer(Player currentPlayer) {
+		this.currentPlayer = currentPlayer;
 	}
 
 	/**
@@ -281,5 +305,51 @@ public class RiskGamePhases extends Observable {
 		setCurrentState(state);
 		setChanged();
 		notifyObservers();
+	}
+
+	/**
+	 * Populate the player list and create a Player Robin Scheduler after game
+	 * reload
+	 */
+	public List<Player> updatePlayerList(List<com.game.risk.model.autogen.GameStateDataProtos.Player> playerList) {
+		List<Player> players = new ArrayList<>();
+		for (com.game.risk.model.autogen.GameStateDataProtos.Player player : playerList) {
+			Player newPlayer = new Player();
+			newPlayer.setPlayerName(player.getPlayerName());
+			for (com.game.risk.model.autogen.GameStateDataProtos.Country country : player.getCountryOwnedList()) {
+				if (fileParser.getCountriesHashMap().containsKey(country.getCountryName())) {
+					newPlayer.addCountry(fileParser.getCountriesHashMap().get(country.getCountryName()));
+				}
+			}
+			List<com.game.risk.model.CardType> cards = new ArrayList<>();
+			for (Cards card : player.getCardListList()) {
+				if (card.getCard().equals(CardType.ARTILLERY)) {
+					cards.add(com.game.risk.model.CardType.values()[3]);
+				} else if (card.getCard().equals(CardType.INFANTRY)) {
+					cards.add(com.game.risk.model.CardType.values()[1]);
+				} else {
+					cards.add(com.game.risk.model.CardType.values()[2]);
+				}
+			}
+			newPlayer.setCardList(cards);
+			newPlayer.setCurrentDominationPercentage(player.getPercentageDomination());
+			newPlayer.setNumberOfArmies(player.getNumberOfArmies());
+			players.add(newPlayer);
+		}
+		return players;
+
+	}
+
+	public void initializeCurrentPlayer(List<Player> players,
+			com.game.risk.model.autogen.GameStateDataProtos.Player messagePlayer) {
+		Player presentPlayer = null;
+		for (Player player : players) {
+			if (player.getPlayerName().equals(messagePlayer.getPlayerName())) {
+				presentPlayer = player;
+				break;
+			}
+		}
+		robinScheduler = new RoundRobinScheduler<Player>(players);
+		currentPlayer = robinScheduler.getUpdateItem(presentPlayer);
 	}
 }

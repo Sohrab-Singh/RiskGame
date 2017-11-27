@@ -44,6 +44,24 @@ public class RoundRobinScheduler<T> {
 	}
 
 	/**
+	 * Update the current position after saved game reload
+	 * 
+	 * @param item
+	 *            T type
+	 * @return current required position T type variable
+	 */
+	public T getUpdateItem(T item) {
+		T value = null;
+		while (iterator.hasNext()) {
+			value = iterator.next();
+			if (item.equals(value)) {
+				break;
+			}
+		}
+		return value;
+	}
+
+	/**
 	 * Get the list of any type T
 	 * 
 	 * @return list

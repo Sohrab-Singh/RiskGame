@@ -6373,17 +6373,13 @@ public final class GameStateDataProtos {
         com.google.protobuf.MessageOrBuilder {
 
       /**
-       * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
+       * <code>required .com.game.risk.model.Player.CardType card = 1;</code>
        */
-      java.util.List<com.game.risk.model.autogen.GameStateDataProtos.Player.CardType> getCardList();
+      boolean hasCard();
       /**
-       * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
+       * <code>required .com.game.risk.model.Player.CardType card = 1;</code>
        */
-      int getCardCount();
-      /**
-       * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
-       */
-      com.game.risk.model.autogen.GameStateDataProtos.Player.CardType getCard(int index);
+      com.game.risk.model.autogen.GameStateDataProtos.Player.CardType getCard();
     }
     /**
      * Protobuf type {@code com.game.risk.model.Player.Cards}
@@ -6398,7 +6394,7 @@ public final class GameStateDataProtos {
         super(builder);
       }
       private Cards() {
-        card_ = java.util.Collections.emptyList();
+        card_ = 1;
       }
 
       @java.lang.Override
@@ -6438,31 +6434,9 @@ public final class GameStateDataProtos {
                 if (value == null) {
                   unknownFields.mergeVarintField(1, rawValue);
                 } else {
-                  if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                    card_ = new java.util.ArrayList<java.lang.Integer>();
-                    mutable_bitField0_ |= 0x00000001;
-                  }
-                  card_.add(rawValue);
+                  bitField0_ |= 0x00000001;
+                  card_ = rawValue;
                 }
-                break;
-              }
-              case 10: {
-                int length = input.readRawVarint32();
-                int oldLimit = input.pushLimit(length);
-                while(input.getBytesUntilLimit() > 0) {
-                  int rawValue = input.readEnum();
-                  com.game.risk.model.autogen.GameStateDataProtos.Player.CardType value = com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.valueOf(rawValue);
-                  if (value == null) {
-                    unknownFields.mergeVarintField(1, rawValue);
-                  } else {
-                    if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                      card_ = new java.util.ArrayList<java.lang.Integer>();
-                      mutable_bitField0_ |= 0x00000001;
-                    }
-                    card_.add(rawValue);
-                  }
-                }
-                input.popLimit(oldLimit);
                 break;
               }
             }
@@ -6473,9 +6447,6 @@ public final class GameStateDataProtos {
           throw new com.google.protobuf.InvalidProtocolBufferException(
               e).setUnfinishedMessage(this);
         } finally {
-          if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-            card_ = java.util.Collections.unmodifiableList(card_);
-          }
           this.unknownFields = unknownFields.build();
           makeExtensionsImmutable();
         }
@@ -6492,35 +6463,21 @@ public final class GameStateDataProtos {
                 com.game.risk.model.autogen.GameStateDataProtos.Player.Cards.class, com.game.risk.model.autogen.GameStateDataProtos.Player.Cards.Builder.class);
       }
 
+      private int bitField0_;
       public static final int CARD_FIELD_NUMBER = 1;
-      private java.util.List<java.lang.Integer> card_;
-      private static final com.google.protobuf.Internal.ListAdapter.Converter<
-          java.lang.Integer, com.game.risk.model.autogen.GameStateDataProtos.Player.CardType> card_converter_ =
-              new com.google.protobuf.Internal.ListAdapter.Converter<
-                  java.lang.Integer, com.game.risk.model.autogen.GameStateDataProtos.Player.CardType>() {
-                public com.game.risk.model.autogen.GameStateDataProtos.Player.CardType convert(java.lang.Integer from) {
-                  com.game.risk.model.autogen.GameStateDataProtos.Player.CardType result = com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.valueOf(from);
-                  return result == null ? com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.INFANTRY : result;
-                }
-              };
+      private int card_;
       /**
-       * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
+       * <code>required .com.game.risk.model.Player.CardType card = 1;</code>
        */
-      public java.util.List<com.game.risk.model.autogen.GameStateDataProtos.Player.CardType> getCardList() {
-        return new com.google.protobuf.Internal.ListAdapter<
-            java.lang.Integer, com.game.risk.model.autogen.GameStateDataProtos.Player.CardType>(card_, card_converter_);
+      public boolean hasCard() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
+       * <code>required .com.game.risk.model.Player.CardType card = 1;</code>
        */
-      public int getCardCount() {
-        return card_.size();
-      }
-      /**
-       * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
-       */
-      public com.game.risk.model.autogen.GameStateDataProtos.Player.CardType getCard(int index) {
-        return card_converter_.convert(card_.get(index));
+      public com.game.risk.model.autogen.GameStateDataProtos.Player.CardType getCard() {
+        com.game.risk.model.autogen.GameStateDataProtos.Player.CardType result = com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.valueOf(card_);
+        return result == null ? com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.INFANTRY : result;
       }
 
       private byte memoizedIsInitialized = -1;
@@ -6529,14 +6486,18 @@ public final class GameStateDataProtos {
         if (isInitialized == 1) return true;
         if (isInitialized == 0) return false;
 
+        if (!hasCard()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
         memoizedIsInitialized = 1;
         return true;
       }
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
-        for (int i = 0; i < card_.size(); i++) {
-          output.writeEnum(1, card_.get(i));
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeEnum(1, card_);
         }
         unknownFields.writeTo(output);
       }
@@ -6546,14 +6507,9 @@ public final class GameStateDataProtos {
         if (size != -1) return size;
 
         size = 0;
-        {
-          int dataSize = 0;
-          for (int i = 0; i < card_.size(); i++) {
-            dataSize += com.google.protobuf.CodedOutputStream
-              .computeEnumSizeNoTag(card_.get(i));
-          }
-          size += dataSize;
-          size += 1 * card_.size();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeEnumSize(1, card_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -6571,7 +6527,10 @@ public final class GameStateDataProtos {
         com.game.risk.model.autogen.GameStateDataProtos.Player.Cards other = (com.game.risk.model.autogen.GameStateDataProtos.Player.Cards) obj;
 
         boolean result = true;
-        result = result && card_.equals(other.card_);
+        result = result && (hasCard() == other.hasCard());
+        if (hasCard()) {
+          result = result && card_ == other.card_;
+        }
         result = result && unknownFields.equals(other.unknownFields);
         return result;
       }
@@ -6583,9 +6542,9 @@ public final class GameStateDataProtos {
         }
         int hash = 41;
         hash = (19 * hash) + getDescriptor().hashCode();
-        if (getCardCount() > 0) {
+        if (hasCard()) {
           hash = (37 * hash) + CARD_FIELD_NUMBER;
-          hash = (53 * hash) + card_.hashCode();
+          hash = (53 * hash) + card_;
         }
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
@@ -6716,7 +6675,7 @@ public final class GameStateDataProtos {
         }
         public Builder clear() {
           super.clear();
-          card_ = java.util.Collections.emptyList();
+          card_ = 1;
           bitField0_ = (bitField0_ & ~0x00000001);
           return this;
         }
@@ -6741,11 +6700,12 @@ public final class GameStateDataProtos {
         public com.game.risk.model.autogen.GameStateDataProtos.Player.Cards buildPartial() {
           com.game.risk.model.autogen.GameStateDataProtos.Player.Cards result = new com.game.risk.model.autogen.GameStateDataProtos.Player.Cards(this);
           int from_bitField0_ = bitField0_;
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            card_ = java.util.Collections.unmodifiableList(card_);
-            bitField0_ = (bitField0_ & ~0x00000001);
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
           }
           result.card_ = card_;
+          result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
         }
@@ -6787,15 +6747,8 @@ public final class GameStateDataProtos {
 
         public Builder mergeFrom(com.game.risk.model.autogen.GameStateDataProtos.Player.Cards other) {
           if (other == com.game.risk.model.autogen.GameStateDataProtos.Player.Cards.getDefaultInstance()) return this;
-          if (!other.card_.isEmpty()) {
-            if (card_.isEmpty()) {
-              card_ = other.card_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureCardIsMutable();
-              card_.addAll(other.card_);
-            }
-            onChanged();
+          if (other.hasCard()) {
+            setCard(other.getCard());
           }
           this.mergeUnknownFields(other.unknownFields);
           onChanged();
@@ -6803,6 +6756,9 @@ public final class GameStateDataProtos {
         }
 
         public final boolean isInitialized() {
+          if (!hasCard()) {
+            return false;
+          }
           return true;
         }
 
@@ -6825,76 +6781,38 @@ public final class GameStateDataProtos {
         }
         private int bitField0_;
 
-        private java.util.List<java.lang.Integer> card_ =
-          java.util.Collections.emptyList();
-        private void ensureCardIsMutable() {
-          if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-            card_ = new java.util.ArrayList<java.lang.Integer>(card_);
-            bitField0_ |= 0x00000001;
-          }
+        private int card_ = 1;
+        /**
+         * <code>required .com.game.risk.model.Player.CardType card = 1;</code>
+         */
+        public boolean hasCard() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
         }
         /**
-         * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
+         * <code>required .com.game.risk.model.Player.CardType card = 1;</code>
          */
-        public java.util.List<com.game.risk.model.autogen.GameStateDataProtos.Player.CardType> getCardList() {
-          return new com.google.protobuf.Internal.ListAdapter<
-              java.lang.Integer, com.game.risk.model.autogen.GameStateDataProtos.Player.CardType>(card_, card_converter_);
+        public com.game.risk.model.autogen.GameStateDataProtos.Player.CardType getCard() {
+          com.game.risk.model.autogen.GameStateDataProtos.Player.CardType result = com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.valueOf(card_);
+          return result == null ? com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.INFANTRY : result;
         }
         /**
-         * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
+         * <code>required .com.game.risk.model.Player.CardType card = 1;</code>
          */
-        public int getCardCount() {
-          return card_.size();
-        }
-        /**
-         * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
-         */
-        public com.game.risk.model.autogen.GameStateDataProtos.Player.CardType getCard(int index) {
-          return card_converter_.convert(card_.get(index));
-        }
-        /**
-         * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
-         */
-        public Builder setCard(
-            int index, com.game.risk.model.autogen.GameStateDataProtos.Player.CardType value) {
+        public Builder setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType value) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureCardIsMutable();
-          card_.set(index, value.getNumber());
+          bitField0_ |= 0x00000001;
+          card_ = value.getNumber();
           onChanged();
           return this;
         }
         /**
-         * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
-         */
-        public Builder addCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType value) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureCardIsMutable();
-          card_.add(value.getNumber());
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
-         */
-        public Builder addAllCard(
-            java.lang.Iterable<? extends com.game.risk.model.autogen.GameStateDataProtos.Player.CardType> values) {
-          ensureCardIsMutable();
-          for (com.game.risk.model.autogen.GameStateDataProtos.Player.CardType value : values) {
-            card_.add(value.getNumber());
-          }
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>repeated .com.game.risk.model.Player.CardType card = 1;</code>
+         * <code>required .com.game.risk.model.Player.CardType card = 1;</code>
          */
         public Builder clearCard() {
-          card_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
+          card_ = 1;
           onChanged();
           return this;
         }
@@ -7122,6 +7040,12 @@ public final class GameStateDataProtos {
       if (!hasPercentageDomination()) {
         memoizedIsInitialized = 0;
         return false;
+      }
+      for (int i = 0; i < getCardListCount(); i++) {
+        if (!getCardList(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       for (int i = 0; i < getCountryOwnedCount(); i++) {
         if (!getCountryOwned(i).isInitialized()) {
@@ -7594,6 +7518,11 @@ public final class GameStateDataProtos {
         }
         if (!hasPercentageDomination()) {
           return false;
+        }
+        for (int i = 0; i < getCardListCount(); i++) {
+          if (!getCardList(i).isInitialized()) {
+            return false;
+          }
         }
         for (int i = 0; i < getCountryOwnedCount(); i++) {
           if (!getCountryOwned(i).isInitialized()) {
@@ -9416,7 +9345,7 @@ public final class GameStateDataProtos {
       "\002(\001\022\014\n\004isAI\030\004 \001(\010\0223\n\010cardList\030\005 \003(\0132!.co" +
       "m.game.risk.model.Player.Cards\0222\n\014countr" +
       "yOwned\030\006 \003(\0132\034.com.game.risk.model.Count" +
-      "ry\032;\n\005Cards\0222\n\004card\030\001 \003(\0162$.com.game.ris" +
+      "ry\032;\n\005Cards\0222\n\004card\030\001 \002(\0162$.com.game.ris" +
       "k.model.Player.CardType\"4\n\010CardType\022\014\n\010I" +
       "NFANTRY\020\001\022\013\n\007CAVALRY\020\002\022\r\n\tARTILLERY\020\003\"q\n" +
       "\tGameState\0222\n\rcurrentPlayer\030\001 \002(\0132\033.com." +

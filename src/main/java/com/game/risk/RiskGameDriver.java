@@ -1,15 +1,19 @@
 package com.game.risk;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
 import javax.swing.SwingUtilities;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
 import com.game.risk.model.Player;
+import com.game.risk.model.autogen.GameStateDataProtos.CountriesGraph;
+import com.game.risk.model.autogen.GameStateDataProtos.GameState;
 import com.game.risk.view.CardExchangeView;
 import com.game.risk.view.GamePhaseView;
 import com.game.risk.view.PlayerDominationView;
@@ -69,16 +73,52 @@ public class RiskGameDriver {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		gamePhases = new RiskGamePhases(fileParser, reader);
 		List<Player> players = gamePhases.executeStartupPhase();
-		GamePhaseView gamePhaseView = new GamePhaseView(gamePhases,fileParser);
+		GamePhaseView gamePhaseView = new GamePhaseView(gamePhases, fileParser);
 		gamePhases.addObserver(gamePhaseView);
 		gamePhases.notifyStateChange(PhaseStates.STATE_STARTUP);
-		Player player = new Player();
 		CardExchangeView cardExchangeView = new CardExchangeView();
 		PlayerDominationView dominationView = new PlayerDominationView(players);
-		player.addObserver(cardExchangeView);
-		player.addObserver(dominationView);
+		for (Player player : players) {
+			player.addObserver(cardExchangeView);
+			player.addObserver(dominationView);
+		}
+		dominationView.setVisible(true);
 		cardExchangeView.setVisible(true);
 	}
-	
 
+	/**
+	 * Function for starting a saved game
+	 * 
+	 * @param input
+	 *            FileInputStream type variable
+	 * @throws IOException
+	 */
+	public static void startLoadedGame(FileInputStream input) throws IOException {
+		CountriesGraph graph = CountriesGraph.parseFrom(input);
+		com.game.risk.model.autogen.GameStateDataProtos.MapFileReader reader = com.game.risk.model.autogen.GameStateDataProtos.MapFileReader
+				.parseFrom(input);
+		MapFileReader fileReader = new MapFileReader(reader);
+		fileReader.updateCountriesModel();
+		fileReader.updateContinentsModel();
+		com.game.risk.core.CountriesGraph countriesGraph = new com.game.risk.core.CountriesGraph(fileReader);
+		countriesGraph.setContinentHashMap(fileReader.getContinentHashMap());
+		countriesGraph.updateAdjacentCountriesModel(graph);
+		countriesGraph.setCountriesCount(graph.getCountryCount());
+		GameState gameState = GameState.parseFrom(input);
+
+		gamePhases = new RiskGamePhases(fileReader);
+		List<Player> players = gamePhases.updatePlayerList(gameState.getPlayersListList());
+		gamePhases.initializeCurrentPlayer(players, gameState.getCurrentPlayer());
+		GamePhaseView gamePhaseView = new GamePhaseView(gamePhases, fileReader);
+		gamePhases.addObserver(gamePhaseView);
+		gamePhases.notifyStateChange(PhaseStates.STATE_REINFORCEMENT);
+		CardExchangeView cardExchangeView = new CardExchangeView();
+		PlayerDominationView dominationView = new PlayerDominationView(players);
+		for (Player player : players) {
+			player.addObserver(cardExchangeView);
+			player.addObserver(dominationView);
+		}
+		dominationView.setVisible(true);
+		cardExchangeView.setVisible(true);
+	}
 }

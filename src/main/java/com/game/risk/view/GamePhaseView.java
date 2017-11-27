@@ -21,6 +21,7 @@ import com.game.risk.RiskGamePhases;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
+import com.game.risk.model.CardType;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 import com.game.risk.model.autogen.GameStateDataProtos.Continent;
@@ -28,6 +29,8 @@ import com.game.risk.model.autogen.GameStateDataProtos.Continent.belongingCountr
 import com.game.risk.model.autogen.GameStateDataProtos.CountriesGraph;
 import com.game.risk.model.autogen.GameStateDataProtos.CountriesGraph.CountryLinkedList;
 import com.game.risk.model.autogen.GameStateDataProtos.GameState;
+import com.game.risk.model.autogen.GameStateDataProtos.Player.Cards;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -398,7 +401,7 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 
 		if (e.getComponent() == btnSave) {
 			JFileChooser fileChooser = new JFileChooser();
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("Risk Game Save Files", "rgs");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Risk Game Saved Files", "rgs");
 			fileChooser.setFileFilter(filter);
 			// Write Protobuf messages to file
 			populateProtobufDataModel(fileChooser);
@@ -573,9 +576,21 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 		for (Country country : currentPlayer.getCountriesOwned()) {
 			list.add(createCountryProtobufInstance(country));
 		}
+		List<Cards> cards = new ArrayList<>();
+		for (CardType cardType : currentPlayer.getCardList()) {
+			Cards.Builder builder = Cards.newBuilder();
+			if (cardType.equals(CardType.Infantry)) {
+				builder.setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.INFANTRY);
+			} else if (cardType.equals(CardType.Artillery)) {
+				builder.setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.ARTILLERY);
+			} else {
+				builder.setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.CAVALRY);
+			}
+			cards.add(builder.build());
+		}
 		com.game.risk.model.autogen.GameStateDataProtos.Player player = com.game.risk.model.autogen.GameStateDataProtos.Player
 				.newBuilder().setPlayerName(currentPlayer.getPlayerName())
-				.setNumberOfArmies(currentPlayer.getNumberOfArmies())
+				.setNumberOfArmies(currentPlayer.getNumberOfArmies()).addAllCardList(cards)
 				.setPercentageDomination(currentPlayer.getCurrentDominationPercentage()).setIsAI(currentPlayer.isAI())
 				.addAllCountryOwned(list).build();
 
@@ -626,10 +641,10 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 				player.setCurrentDominationPercentage(0.002f);
 				Player player1 = new Player();
 				player1.setPlayerName("Sarthak");
-				player1.setCurrentDominationPercentage(0.5);
+				player1.setCurrentDominationPercentage(0.5f);
 				Player player2 = new Player();
 				player2.setPlayerName("Manjot");
-				player2.setCurrentDominationPercentage(0.3);
+				player2.setCurrentDominationPercentage(0.3f);
 				List<Player> playerss = new ArrayList<Player>();
 				playerss.add(player);
 				playerss.add(player1);
