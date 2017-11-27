@@ -84,6 +84,7 @@ public class RiskGameDriver {
 		}
 		dominationView.setVisible(true);
 		cardExchangeView.setVisible(true);
+		
 	}
 
 	/**

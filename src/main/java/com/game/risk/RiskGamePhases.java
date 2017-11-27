@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Observable;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.StartUpPhase;
+import com.game.risk.core.strategy.impl.AgressivePlayerStrategy;
+import com.game.risk.core.strategy.impl.BenevolentPlayerStrategy;
+import com.game.risk.core.strategy.impl.RandomPlayerStrategy;
 import com.game.risk.core.util.AttackPhaseUtil;
 import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.core.util.PhaseStates;
@@ -67,6 +70,9 @@ public class RiskGamePhases extends Observable {
 		this.reader = reader;
 	}
 
+	/**
+	 * @param fileParser
+	 */
 	public RiskGamePhases(MapFileReader fileParser) {
 		this.fileParser = fileParser;
 	}
@@ -308,8 +314,8 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * Populate the player list and create a Player Robin Scheduler after game
-	 * reload
+	 * <<<<<<< Updated upstream Populate the player list and create a Player Robin
+	 * Scheduler after game reload
 	 */
 	public List<Player> updatePlayerList(List<com.game.risk.model.autogen.GameStateDataProtos.Player> playerList) {
 		List<Player> players = new ArrayList<>();
@@ -340,6 +346,10 @@ public class RiskGamePhases extends Observable {
 
 	}
 
+	/**
+	 * @param players
+	 * @param messagePlayer
+	 */
 	public void initializeCurrentPlayer(List<Player> players,
 			com.game.risk.model.autogen.GameStateDataProtos.Player messagePlayer) {
 		Player presentPlayer = null;
@@ -351,5 +361,30 @@ public class RiskGamePhases extends Observable {
 		}
 		robinScheduler = new RoundRobinScheduler<Player>(players);
 		currentPlayer = robinScheduler.getUpdateItem(presentPlayer);
+
+	}
+
+	/**
+	 * @param computerPlayer
+	 * @return
+	 */
+	public void selectComputerPlayer(String computerPlayer) {
+
+		switch (computerPlayer) {
+
+		case "Agressive":
+			currentPlayer.setPlayerStrategy(
+					new AgressivePlayerStrategy(currentPlayer, fileParser.getCountriesGraph(), this));
+			break;
+		case "Benevolent":
+			currentPlayer
+					.setPlayerStrategy(new BenevolentPlayerStrategy(currentPlayer, fileParser.getCountriesGraph()));
+			break;
+		case "Random":
+			currentPlayer
+					.setPlayerStrategy(new RandomPlayerStrategy(currentPlayer, fileParser.getCountriesGraph(), this));
+		default:
+			break;
+		}
 	}
 }

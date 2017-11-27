@@ -8,6 +8,7 @@ import java.util.Observable;
 import java.util.Random;
 
 import com.game.risk.core.MapFileReader;
+import com.game.risk.core.strategy.PlayerStrategy;
 import com.game.risk.core.util.AttackPhaseUtil;
 import com.game.risk.core.util.FortificationPhaseUtil;
 import com.game.risk.core.util.LoggingUtil;
@@ -54,6 +55,17 @@ public class Player extends Observable {
 
 	/** List of Continents owned entirely by the player **/
 	private List<Continent> continentsOwned;
+	
+	/** Player Strategy*/
+	private PlayerStrategy playerStrategy;
+
+	/**
+	 * @param playerStrategy
+	 *            the playerStrategy to set
+	 */
+	public void setPlayerStrategy(PlayerStrategy playerStrategy) {
+		this.playerStrategy = playerStrategy;
+	}
 
 	/**
 	 * Player Constructor
@@ -221,27 +233,21 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * @param player
-	 * @param reader
-	 * @throws NumberFormatException
-	 * @throws IOException
+	 * @return the playerStrategy
 	 */
-	public void startReinforcementPhase(Player player, BufferedReader reader)
-			throws NumberFormatException, IOException {
-		System.out.println("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
-		LoggingUtil.logMessage("\nReinforcement phase begins for " + player.getPlayerName() + "\n");
-
-		if (player.getNumberOfArmies() > 0) {
-			for (Country country : player.getCountriesOwned()) {
-				System.out.println(
-						"How many armies do you want to assign to your country " + country.getCountryName() + " ?");
-				System.out.println("Current number of armies of " + country.getCountryName() + " is "
-						+ country.getCurrentNumberOfArmies() + " | Available armies : " + player.getNumberOfArmies());
-				int armies = Integer.parseInt(reader.readLine());
-				player.assignArmiesToCountries(country, armies);
-			}
-		}
+	public PlayerStrategy getPlayerStrategy() {
+		return playerStrategy;
 	}
+
+	/**
+	 * @param playerStrategy
+	 */
+	public void executePhases() {
+		playerStrategy.reinforce();
+		playerStrategy.attack();
+		playerStrategy.fortify();
+	}
+
 
 	/**
 	 * @param reader
@@ -351,7 +357,7 @@ public class Player extends Observable {
 			getCardList().remove(0);
 
 		} else {
-			System.out.println("You must exchang three cards of the same sort or different sort.");
+			System.out.println("You must exchange three cards of the same sort or different sort.");
 		}
 	}
 
@@ -381,7 +387,7 @@ public class Player extends Observable {
 		}
 		return condition;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -413,7 +419,8 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * @param exchangeArmiesCount the exchangeArmiesCount to set
+	 * @param exchangeArmiesCount
+	 *            the exchangeArmiesCount to set
 	 */
 	public void setExchangeArmiesCount(int exchangeArmiesCount) {
 		this.exchangeArmiesCount = exchangeArmiesCount;

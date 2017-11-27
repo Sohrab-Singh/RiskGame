@@ -1,5 +1,7 @@
 package com.game.risk.model;
 
+import java.util.Comparator;
+
 /**
  * Country object for populating the data related to country.
  *
@@ -41,6 +43,21 @@ public class Country {
 	public Country(String countryName) {
 		this.countryName = countryName;
 	}
+
+	/**
+	 * 
+	 */
+	public static Comparator<Country> ArmyComparator = new Comparator<Country>() {
+
+		public int compare(Country country1, Country country2) {
+			if (country1.getCurrentNumberOfArmies() == country2.getCurrentNumberOfArmies())
+				return 0;
+			else if (country1.getCurrentNumberOfArmies() > country2.getCurrentNumberOfArmies())
+				return 1;
+			else
+				return -1;
+		}
+	};
 
 	/**
 	 * Get the country name.
@@ -158,6 +175,7 @@ public class Country {
 
 	/**
 	 * Set the isVisited parameter
+	 * 
 	 * @param visited
 	 */
 	public void setVisited(boolean visited) {
@@ -166,6 +184,7 @@ public class Country {
 
 	/**
 	 * get the is isVisited parameter
+	 * 
 	 * @return isVisited
 	 */
 
@@ -173,7 +192,7 @@ public class Country {
 		return isVisited;
 	}
 
-	/*
+	/**
 	 * Decrease an army in a battle lost
 	 */
 	public void looseArmy() {
@@ -187,4 +206,3 @@ public class Country {
 		currentNumberOfArmies++;
 	}
 }
-
