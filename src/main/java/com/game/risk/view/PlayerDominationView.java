@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import com.game.risk.model.Player;
 
@@ -48,20 +49,22 @@ public class PlayerDominationView extends JFrame implements Observer, MouseListe
 	private void initializeView() {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setUndecorated(true);
+		setBounds(100, 755, 850, 180);
 
 		JPanel dominationPanel = new JPanel();
-		dominationPanel.setBackground(Color.WHITE);
-		dominationPanel.setBounds(100, 900, 832, 130);
-		setContentPane(dominationPanel);
+		dominationPanel.setBackground(Color.BLACK);
+		dominationPanel.setBorder(new EmptyBorder(20, 5, 5, 5));
 		dominationPanel.setLayout(null);
+		setContentPane(dominationPanel);
 
 		JPanel playerInitPanel = new JPanel();
-		playerInitPanel.setBackground(Color.WHITE);
-		playerInitPanel.setBounds(0, 0, 197, 130);
+		playerInitPanel.setBackground(Color.BLACK);
+		playerInitPanel.setBounds(12, 26, 197, 130);
 		playerInitPanel.setLayout(new BoxLayout(playerInitPanel, BoxLayout.Y_AXIS));
 
 		statusPanel = new JPanel();
-		statusPanel.setBackground(Color.WHITE);
+		statusPanel.setBackground(Color.BLACK);
 		statusPanel.setBounds(254, 44, 500, 29);
 		statusPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
@@ -69,11 +72,12 @@ public class PlayerDominationView extends JFrame implements Observer, MouseListe
 		for (Player player : players) {
 			JPanel playerColorPanel = new JPanel();
 			playerColorPanel.setLayout(new FlowLayout());
-			playerColorPanel.setBackground(Color.WHITE);
+			playerColorPanel.setBackground(Color.BLACK);
 
 			JLabel labelPlayer = new JLabel(player.getPlayerName());
-			labelPlayer.setFont(new Font("Tahoma", Font.BOLD, 13));
-			labelPlayer.setForeground(Color.BLACK);
+			Font font = new Font("Tahoma", Font.BOLD, 13);
+			labelPlayer.setFont(font);
+			labelPlayer.setForeground(Color.WHITE);
 			playerColorPanel.add(labelPlayer);
 
 			JPanel color = new JPanel();
@@ -116,7 +120,7 @@ public class PlayerDominationView extends JFrame implements Observer, MouseListe
 			statusPanel.add(colorPanel);
 			i++;
 		}
-		statusPanel.revalidate();
+		statusPanel.validate();
 		statusPanel.repaint();
 	}
 
@@ -124,7 +128,7 @@ public class PlayerDominationView extends JFrame implements Observer, MouseListe
 	 * Gets the player color.
 	 *
 	 * @param i
-	 *            the i
+	 *            int
 	 * @return the player color
 	 */
 	private Color getPlayerColor(int i) {

@@ -542,8 +542,6 @@ public class AttackPhaseView extends JFrame implements Observer {
 		country1Armies.setText(Integer.toString(attackerCountry.getCurrentNumberOfArmies()));
 		country2Armies.setText(Integer.toString(defenderCountry.getCurrentNumberOfArmies()));
 
-		System.out.println("State: " + observable.getCurrentState());
-
 		if (attackerCountry.getCurrentNumberOfArmies() == 1) {
 			observable.setCurrentState(PhaseStates.STATE_ACTIVE);
 
@@ -553,8 +551,14 @@ public class AttackPhaseView extends JFrame implements Observer {
 			diceDefender = 0;
 			attackerCountry = null;
 			defenderCountry = null;
+			gamePhases.setCurrentState(PhaseStates.STATE_ACTIVE);
+			if (AttackPhaseUtil.isattackEnds(gamePhases.getCurrentPlayer())) {
+				gamePhases.notifyStateChange("attack");
+			} else {
+				gamePhases.notifyStateChange(PhaseStates.STATE_ACTIVE);
+			}
+			mainFrame.dispose();
 			mainFrame.setVisible(false);
-			gamePhases.notifyStateChange(PhaseStates.STATE_ACTIVE);
 		} else {
 			setCurrentCountry(attackerCountry);
 		}

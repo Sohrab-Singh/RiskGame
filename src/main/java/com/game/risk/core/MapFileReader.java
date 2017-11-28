@@ -89,11 +89,13 @@ public class MapFileReader {
 	}
 
 	public MapFileReader(com.game.risk.model.autogen.GameStateDataProtos.MapFileReader reader) {
+		this.reader = reader;
 		countriesHashMap = new HashMap<>();
 		continentHashMap = new HashMap<>();
 	}
 
 	public void updateCountriesModel() {
+		System.out.println(reader.getCountryMapMap().size());
 		for (com.game.risk.model.autogen.GameStateDataProtos.Country country : reader.getCountryMapMap().values()) {
 			Country newCountry = new Country(country.getCountryName());
 			newCountry.setContinentName(country.getContinentName());
@@ -109,8 +111,8 @@ public class MapFileReader {
 		for (com.game.risk.model.autogen.GameStateDataProtos.Continent continent : reader.getContinentMapMap()
 				.values()) {
 			Continent newContinent = new Continent(continent.getContinentName(), continent.getControlValue());
-			for (com.game.risk.model.autogen.GameStateDataProtos.Country country : continent.getCountries()
-					.getCountryList()) {
+			for (com.game.risk.model.autogen.GameStateDataProtos.Country country : continent
+					.getBelongingCountryList()) {
 				if (countriesHashMap.containsKey(country.getCountryName())) {
 					newContinent.addCountry(countriesHashMap.get(country.getCountryName()));
 				}
@@ -236,6 +238,15 @@ public class MapFileReader {
 	 */
 	public CountriesGraph getCountriesGraph() {
 		return countriesGraph;
+	}
+
+	/**
+	 * Set the Countries Graph variable
+	 * 
+	 * @param countriesGraph
+	 */
+	public void setCountriesGraph(CountriesGraph countriesGraph) {
+		this.countriesGraph = countriesGraph;
 	}
 
 	/**

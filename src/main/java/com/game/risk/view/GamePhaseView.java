@@ -25,7 +25,6 @@ import com.game.risk.model.CardType;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 import com.game.risk.model.autogen.GameStateDataProtos.Continent;
-import com.game.risk.model.autogen.GameStateDataProtos.Continent.belongingCountries;
 import com.game.risk.model.autogen.GameStateDataProtos.CountriesGraph;
 import com.game.risk.model.autogen.GameStateDataProtos.CountriesGraph.CountryLinkedList;
 import com.game.risk.model.autogen.GameStateDataProtos.GameState;
@@ -153,6 +152,9 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	/** Observable class for the Game Phase View Observer */
 	private RiskGamePhases gamePhases;
 
+	private HashMap<String, com.game.risk.model.autogen.GameStateDataProtos.Country> countryProtobufMap;
+	private HashMap<String, com.game.risk.model.autogen.GameStateDataProtos.Player> playerProtobufMap;
+
 	/**
 	 * GamePhaseView Constructor.
 	 * 
@@ -168,6 +170,8 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 		initializeView();
 		panelHashMap = new HashMap<>();
 		adjacentPanelHashMap = new HashMap<>();
+		countryProtobufMap = new HashMap<>();
+		playerProtobufMap = new HashMap<>();
 		this.gamePhases = gamePhases;
 
 	}
@@ -179,7 +183,7 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		setBounds(100, 100, 850, 781);
+		setBounds(100, 100, 850, 651);
 
 		// Initialize JPanel contentPane to hold the JLabel and JButton elements
 		contentPane = new JPanel();
@@ -304,8 +308,10 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 			this.setVisible(true);
 			lblCurrentPhase.setText("StartUp Phase");
 		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_ACTIVE) {
-			if (arg1.equals("attack")) {
-				btnAttack.setVisible(false);
+			if (arg1 != null && arg1.getClass().equals(String.class)) {
+				if (arg1.equals("attack")) {
+					btnAttack.setVisible(false);
+				}
 			}
 			lblCurrentPhase.setText("What do you want to perform now?");
 		} else if (((RiskGamePhases) arg0).getCurrentState() == PhaseStates.STATE_REINFORCEMENT) {
@@ -366,6 +372,7 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	private void updatePlayerAdjacentCountries(Country country) {
 		panel_6.removeAll();
 		LinkedList<Country> adjCountries = fileParser.getCountriesGraph().getAdjListHashMap().get(country);
+		System.out.println("AdjCountries: " + adjCountries.size());
 		Border border = BorderFactory.createLineBorder(Color.WHITE, 2, true);
 		adjPanels = new ArrayList<>();
 		int adjCount = 0;
@@ -407,7 +414,7 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 			populateProtobufDataModel(fileChooser);
 
 		} else if (e.getComponent() == btnAttack) {
-			if (attackingCountry.getCurrentNumberOfArmies() > defendingCountry.getCurrentNumberOfArmies()
+			if (attackingCountry.getCurrentNumberOfArmies() >= 2
 					&& (defendingCountry.getCurrentNumberOfArmies() >= 1)) {
 				gamePhases.startAttackPhase(attackingCountry, defendingCountry);
 			} else {
@@ -478,25 +485,34 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 		CountriesGraph.Builder graphBuilder = CountriesGraph.newBuilder();
 		graphBuilder.putAllContinentMap(populateContinentProtobufMapInstance());
 		graphBuilder.setCountryCount(fileParser.getCountriesHashMap().size());
+		System.out.println(fileParser.getCountriesHashMap().size());
 		for (Country country : fileParser.getCountriesHashMap().values()) {
+			System.out.println(country.getCountryName());
 			graphBuilder.putCountryMap(country.getCountryName(), createAdjacentCountriesProtobufInstance(country));
 		}
 		CountriesGraph graph = graphBuilder.build();
 		com.game.risk.model.autogen.GameStateDataProtos.MapFileReader.Builder fileBuilder = com.game.risk.model.autogen.GameStateDataProtos.MapFileReader
 				.newBuilder();
-		fileBuilder.setGraphDataStructure(graph).putAllCountryMap(populateCountryProtobufMapInstance())
+		fileBuilder.setGraphDataStructure(graph);
+		fileBuilder.putAllCountryMap(populateCountryProtobufMapInstance())
 				.putAllContinentMap(populateContinentProtobufMapInstance());
 		com.game.risk.model.autogen.GameStateDataProtos.MapFileReader mapFileReader = fileBuilder.build();
 		if (fileChooser.showSaveDialog(getRootPane()) == JFileChooser.APPROVE_OPTION) {
 
 			try {
 				output = new FileOutputStream(fileChooser.getSelectedFile());
-				mapFileReader.writeTo(output);
-				gameState.writeTo(output);
-				graph.writeTo(output);
-				output.close();
+				graph.writeDelimitedTo(output);
+				mapFileReader.writeDelimitedTo(output);
+				gameState.writeDelimitedTo(output);
+				System.out.println(output.toString());
 			} catch (IOException e1) {
 				e1.printStackTrace();
+			} finally {
+				try {
+					output.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}
@@ -535,7 +551,9 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	 * @return CountryLinkedList object
 	 */
 	private CountryLinkedList createAdjacentCountriesProtobufInstance(Country selectedCountry) {
-		LinkedList<Country> linkedList = fileParser.getCountriesGraph().getAdjListHashMap().get(selectedCountry);
+		LinkedList<Country> linkedList = new LinkedList<>();
+		linkedList.clear();
+		linkedList = fileParser.getCountriesGraph().getAdjListHashMap().get(selectedCountry);
 		List<com.game.risk.model.autogen.GameStateDataProtos.Country> list = new ArrayList<>();
 		for (Country country : linkedList) {
 			list.add(createCountryProtobufInstance(country));
@@ -552,14 +570,10 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	private com.game.risk.model.autogen.GameStateDataProtos.Continent createProtobufContinentInstance(
 			String continent) {
 		Continent.Builder builder = Continent.newBuilder();
-		belongingCountries.Builder countries = belongingCountries.newBuilder();
-		List<com.game.risk.model.autogen.GameStateDataProtos.Country> list = new ArrayList<>();
 		for (Country country : fileParser.getContinentHashMap().get(continent).getCountries()) {
-			list.add(createCountryProtobufInstance(country));
+			builder.addBelongingCountry(createCountryProtobufInstance(country));
 		}
-
-		builder.setCountries(countries.addAllCountry(list).build())
-				.setContinentName(fileParser.getContinentHashMap().get(continent).getContinentName())
+		builder.setContinentName(fileParser.getContinentHashMap().get(continent).getContinentName())
 				.setControlValue(fileParser.getContinentHashMap().get(continent).getControlValue());
 		return builder.build();
 	}
@@ -571,30 +585,36 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	 * @return autogen.GameStateDataProtos.Player object
 	 */
 	private com.game.risk.model.autogen.GameStateDataProtos.Player createProtobufPlayerInstance(Player currentPlayer) {
+		com.game.risk.model.autogen.GameStateDataProtos.Player.Builder playerBuilder = com.game.risk.model.autogen.GameStateDataProtos.Player
+				.newBuilder();
+		System.out.println("CP: " + currentPlayer.getPlayerName());
+		if (playerProtobufMap.containsKey(currentPlayer.getPlayerName())) {
+			return playerProtobufMap.get(currentPlayer.getPlayerName());
+		} else {
+			for (int i = 0; i < currentPlayer.getCountriesOwned().size(); i++) {
 
-		List<com.game.risk.model.autogen.GameStateDataProtos.Country> list = new ArrayList<>();
-		for (Country country : currentPlayer.getCountriesOwned()) {
-			list.add(createCountryProtobufInstance(country));
-		}
-		List<Cards> cards = new ArrayList<>();
-		for (CardType cardType : currentPlayer.getCardList()) {
-			Cards.Builder builder = Cards.newBuilder();
-			if (cardType.equals(CardType.Infantry)) {
-				builder.setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.INFANTRY);
-			} else if (cardType.equals(CardType.Artillery)) {
-				builder.setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.ARTILLERY);
-			} else {
-				builder.setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.CAVALRY);
+				playerBuilder.addCountryOwned(createCountryProtobufInstance(currentPlayer.getCountriesOwned().get(i)));
 			}
-			cards.add(builder.build());
-		}
-		com.game.risk.model.autogen.GameStateDataProtos.Player player = com.game.risk.model.autogen.GameStateDataProtos.Player
-				.newBuilder().setPlayerName(currentPlayer.getPlayerName())
-				.setNumberOfArmies(currentPlayer.getNumberOfArmies()).addAllCardList(cards)
-				.setPercentageDomination(currentPlayer.getCurrentDominationPercentage()).setIsAI(currentPlayer.isAI())
-				.addAllCountryOwned(list).build();
 
-		return player;
+			for (CardType cardType : currentPlayer.getCardList()) {
+				Cards.Builder builder = Cards.newBuilder();
+				if (cardType.equals(CardType.Infantry)) {
+					builder.setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.INFANTRY);
+				} else if (cardType.equals(CardType.Artillery)) {
+					builder.setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.ARTILLERY);
+				} else {
+					builder.setCard(com.game.risk.model.autogen.GameStateDataProtos.Player.CardType.CAVALRY);
+				}
+				playerBuilder.addCardList(builder.build());
+			}
+			com.game.risk.model.autogen.GameStateDataProtos.Player player = playerBuilder
+					.setPlayerName(currentPlayer.getPlayerName()).setNumberOfArmies(currentPlayer.getNumberOfArmies())
+					.setPercentageDomination(currentPlayer.getCurrentDominationPercentage())
+					.setIsAI(currentPlayer.isAI()).build();
+			System.out.println(player.getPlayerName());
+			playerProtobufMap.put(player.getPlayerName(), player);
+			return player;
+		}
 
 	}
 
@@ -605,10 +625,17 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	 * @return autogen.GameStateDataProtos.Country object
 	 */
 	private com.game.risk.model.autogen.GameStateDataProtos.Country createCountryProtobufInstance(Country country) {
-		return com.game.risk.model.autogen.GameStateDataProtos.Country.newBuilder()
-				.setCountryName(country.getCountryName()).setContinentName(country.getContinentName())
-				.setPlayerName(country.getPlayerName()).setCurrentArmiesCount(country.getCurrentNumberOfArmies())
-				.build();
+		if (countryProtobufMap.containsKey(country.getCountryName())) {
+			return countryProtobufMap.get(country.getCountryName());
+		} else {
+			com.game.risk.model.autogen.GameStateDataProtos.Country newCountry = com.game.risk.model.autogen.GameStateDataProtos.Country
+					.newBuilder().setCountryName(country.getCountryName()).setContinentName(country.getContinentName())
+					.setXCoordinate(country.getxCoordinate()).setYCoordinate(country.getyCoordinate())
+					.setPlayerName(country.getPlayerName()).setCurrentArmiesCount(country.getCurrentNumberOfArmies())
+					.build();
+			countryProtobufMap.put(country.getCountryName(), newCountry);
+			return newCountry;
+		}
 	}
 
 	@Override

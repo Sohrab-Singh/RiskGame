@@ -10,7 +10,6 @@ import com.game.risk.RiskGameDriver;
 import com.game.risk.core.MapEditor;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
-
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -178,7 +177,6 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				try {
 					input = new FileInputStream(fileChooser.getSelectedFile());
 					RiskGameDriver.startLoadedGame(input);
-					input.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

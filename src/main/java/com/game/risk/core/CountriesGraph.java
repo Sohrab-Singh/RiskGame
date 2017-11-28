@@ -225,19 +225,19 @@ public class CountriesGraph {
 	}
 
 	/**
+	 * Update Adjacent Countries HashMap in Countries graph
 	 * 
 	 * @param graph
 	 *            CountriesGraph Message Protobuf object
 	 */
 	public void updateAdjacentCountriesModel(com.game.risk.model.autogen.GameStateDataProtos.CountriesGraph graph) {
-		LinkedList<Country> adjCountries = new LinkedList<>();
+
 		for (Country country : mapFileReader.getCountriesHashMap().values()) {
+			LinkedList<Country> adjCountries = new LinkedList<>();
 			adjCountries.clear();
 			for (com.game.risk.model.autogen.GameStateDataProtos.Country adjCountry : graph.getCountryMapMap()
 					.get(country.getCountryName()).getCountryList()) {
-				if (mapFileReader.getCountriesHashMap().containsKey(adjCountry.getCountryName())) {
-					adjCountries.add(mapFileReader.getCountriesHashMap().get(adjCountry.getCountryName()));
-				}
+				adjCountries.add(mapFileReader.getCountriesHashMap().get(adjCountry.getCountryName()));
 			}
 			adjListHashMap.put(country, adjCountries);
 		}

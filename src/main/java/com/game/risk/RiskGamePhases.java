@@ -147,6 +147,7 @@ public class RiskGamePhases extends Observable {
 	 */
 	public void startAttackPhase(Country attackingCountry, Country defendingCountry) {
 		AttackPhaseView attackView = new AttackPhaseView(this, attackingCountry, defendingCountry);
+		LoggingUtil.logMessage("Initialized Attack View: Select Dice Rolls");
 		attackView.setVisible(true);
 		setCurrentState(PhaseStates.STATE_ATTACK);
 		this.addObserver(attackView);
@@ -220,12 +221,10 @@ public class RiskGamePhases extends Observable {
 			setCurrentState(PhaseStates.STATE_CAPTURE);
 			updateCountryToPlayer(defender, attacker);
 			currentPlayer.setWinner(true);
-			setChanged();
-			notifyObservers(true);
+
 		}
-		if (attacker.getCurrentNumberOfArmies() == 0) {
-			notifyAttackEnds();
-		}
+		setChanged();
+		notifyObservers(true);
 	}
 
 	/**
@@ -351,8 +350,9 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * @param state
+	 * Notify State Change
 	 * 
+	 * @param state
 	 */
 	public void notifyStateChange(int state) {
 		setCurrentState(state);
@@ -361,8 +361,18 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * <<<<<<< Updated upstream Populate the player list and create a Player Robin
-	 * Scheduler after game reload
+	 * Notify State Change
+	 * 
+	 * @param state
+	 */
+	public void notifyStateChange(String state) {
+		setChanged();
+		notifyObservers(state);
+	}
+
+	/**
+	 * Populate the player list and create a Player Robin Scheduler after game
+	 * reload
 	 */
 	public List<Player> updatePlayerList(List<com.game.risk.model.autogen.GameStateDataProtos.Player> playerList) {
 		List<Player> players = new ArrayList<>();
@@ -412,8 +422,9 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
+	 * Set Player's Strategy
+	 * 
 	 * @param computerPlayer
-	 * @return
 	 */
 	public void selectComputerPlayer(Player player) {
 
