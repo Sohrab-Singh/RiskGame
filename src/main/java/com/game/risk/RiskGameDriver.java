@@ -1,10 +1,12 @@
 package com.game.risk;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -44,6 +46,7 @@ public class RiskGameDriver {
 	 *             InvoiceTargetException
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException, InvocationTargetException {
+		
 		Thread thread = new Thread(new Runnable() {
 
 			@Override
@@ -59,6 +62,8 @@ public class RiskGameDriver {
 				new LoggingUtil().showLoggingWindow();
 			}
 		});
+		//Thread.sleep(2000);
+		//startTournamentMode();
 		thread.start();
 	}
 
@@ -84,7 +89,7 @@ public class RiskGameDriver {
 		}
 		dominationView.setVisible(true);
 		cardExchangeView.setVisible(true);
-		
+
 	}
 
 	/**
@@ -121,5 +126,65 @@ public class RiskGameDriver {
 		}
 		dominationView.setVisible(true);
 		cardExchangeView.setVisible(true);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unchecked")
+	public static void startTournamentMode() throws IOException {
+		List<String> mapfiles = new ArrayList<>();
+		List<String> computerPlayers = new ArrayList<>();
+		computerPlayers.add("Cheater");
+		computerPlayers.add("Random");
+		computerPlayers.add("Aggressive");
+		computerPlayers.add("Benevolent");
+		mapfiles.add("Quebec.map");
+		int gamesToBePlayed = 3;
+		int mapNumber = 0;
+		for (String fileName : mapfiles) {
+			mapNumber++;
+			String path = RiskGameDriver.class.getClassLoader().getResource(fileName).getFile();
+			File file = new File(path);
+			System.out.println("Game is being played on " + path);
+			
+			
+			MapFileReader parser = new MapFileReader(file);
+			if (!parser.checkFileValidation()) {
+				System.out.println("Invalid File Selected!");
+				LoggingUtil.logMessage("Invalid File Selected!");
+				return;
+			}
+			parser.readFile();
+			for (int i = 0; i < gamesToBePlayed; i++) {
+				gamePhases = new RiskGamePhases(parser);
+				gamePhases.setTournamentMode(true);
+
+				List<Player> players = gamePhases.executeStartupPhase(computerPlayers);
+				String winner = null;
+				for (int turn = 0; turn < 2; turn++) {
+					for (Player player : players) {
+						gamePhases.selectComputerPlayer(player);
+						player.executePhases();
+						if (player.getContinentsOwned().size() == gamePhases.getTotalCountries()) {
+							winner = player.getPlayerName();
+							break;
+						}
+					}
+					if (winner != null) {
+						break;
+					}
+				}
+				if(winner == null) {
+					winner = "Draw";
+					System.out.println("There is Draw between the battle of players for Game" + (i + 1) + " on Map" + mapNumber);
+				}else {
+					System.out.println(winner + " is declared winner for Game" + (i + 1) + " on Map" + mapNumber);
+				}
+
+			}
+
+		}
+
 	}
 }

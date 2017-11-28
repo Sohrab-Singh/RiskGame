@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class to implement Startup Phase
@@ -63,6 +64,24 @@ public class StartUpPhase {
 				LoggingUtil.logMessage(player.getPlayerName() + " joined the game");
 			}
 
+		}
+	}
+
+	/**
+	 * @param mapFileReader
+	 * @param computerPlayers
+	 */
+	public StartUpPhase(MapFileReader mapFileReader, List<String> computerPlayers) {
+		this.mapFileReader = mapFileReader;
+		this.numberOfPlayers = computerPlayers.size();
+		playersList = new ArrayList<Player>();
+		for (String name : computerPlayers) {
+			Player player = new Player();
+			player.setPlayerName(name);
+			playersList.add(player);
+			if (player.getPlayerName() != null) {
+				LoggingUtil.logMessage(player.getPlayerName() + " joined the game");
+			}
 		}
 	}
 
@@ -130,7 +149,7 @@ public class StartUpPhase {
 				LoggingUtil.logMessage("Number of players is more than " + MAXIMUM_NUMBER_PLAYERS);
 				break;
 			}
-			if(player.getPlayerName() != null) {
+			if (player.getPlayerName() != null) {
 				LoggingUtil.logMessage(player.getPlayerName() + " got " + player.getNumberOfArmies() + " armies");
 			}
 		}

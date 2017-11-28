@@ -54,10 +54,16 @@ public class AgressivePlayerStrategy implements PlayerStrategy {
 		LoggingUtil.logMessage(message);
 		player.setNumberOfArmies(player.getNumberOfArmies() + reinforcementArmies);
 		strongestCountry = findStrongestCountry();
-		System.out.println("Agressive player assigned all the armies to the strogest country " + strongestCountry);
-		LoggingUtil.logMessage("Agressive player assigned all the armies to the strogest country " + strongestCountry);
+		System.out.println("Agressive player assigned all the armies to the strogest country "
+				+ strongestCountry.getCountryName());
+		LoggingUtil.logMessage("Agressive player assigned all the armies to the strogest country "
+				+ strongestCountry.getCountryName());
 		strongestCountry
 				.setCurrentNumberOfArmies(strongestCountry.getCurrentNumberOfArmies() + player.getNumberOfArmies());
+		System.out.println(player.getPlayerName() + " assigned all the " + player.getNumberOfArmies()
+				+ " armies to the strongest country " + strongestCountry.getCountryName());
+		LoggingUtil.logMessage("Agressive player assigned all the armies to the strogest country "
+				+ strongestCountry.getCountryName());
 		player.setNumberOfArmies(0);
 
 	}
@@ -73,14 +79,17 @@ public class AgressivePlayerStrategy implements PlayerStrategy {
 
 			int diceAttacker = getRandomDice(attacker, 3);
 			int diceDefender = getRandomDice(attacker, 2);
-
-			AttackPhaseUtil.startBattle(attacker, defender, diceAttacker, diceDefender);
+			while (defender.getCurrentNumberOfArmies() != 0 && attacker.getCurrentNumberOfArmies() != 1) {
+				AttackPhaseUtil.startBattle(attacker, defender, diceAttacker, diceDefender);
+			}
 
 			if (defender.getCurrentNumberOfArmies() == 0) {
+				System.out.println("Aggressive player captured " + defender.getCountryName());
 				updateCountryToPlayer(defender, attacker);
 				player.setWinner(true);
 			}
-			if (attacker.getCurrentNumberOfArmies() == 0) {
+			if (attacker.getCurrentNumberOfArmies() == 1) {
+				System.out.println("Aggressive player  defended" + attacker.getCountryName());
 				break;
 			}
 		}
@@ -124,12 +133,14 @@ public class AgressivePlayerStrategy implements PlayerStrategy {
 	private int getRandomDice(Country attacker, int maxDice) {
 		int attackerArmies = attacker.getCurrentNumberOfArmies();
 		Random random;
+		int diceCount;
 		if (attackerArmies <= maxDice) {
-			random = new Random(attackerArmies);
+			random = new Random();
+			diceCount = 1 + random.nextInt(attackerArmies - 1);
 		} else {
-			random = new Random(maxDice);
+			random = new Random();
+			diceCount = 1 + random.nextInt(maxDice);
 		}
-		int diceCount = random.nextInt();
 		return diceCount;
 	}
 

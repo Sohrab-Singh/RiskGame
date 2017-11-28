@@ -9,6 +9,7 @@ import com.game.risk.core.MapFileReader;
 import com.game.risk.core.StartUpPhase;
 import com.game.risk.core.strategy.impl.AgressivePlayerStrategy;
 import com.game.risk.core.strategy.impl.BenevolentPlayerStrategy;
+import com.game.risk.core.strategy.impl.CheaterPlayerStrategy;
 import com.game.risk.core.strategy.impl.RandomPlayerStrategy;
 import com.game.risk.core.util.AttackPhaseUtil;
 import com.game.risk.core.util.LoggingUtil;
@@ -54,6 +55,8 @@ public class RiskGamePhases extends Observable {
 	 */
 	private Player currentPlayer;
 
+	private boolean tournamentMode;
+
 	/** Round robin scheduler */
 	private RoundRobinScheduler<Player> robinScheduler;
 
@@ -85,11 +88,20 @@ public class RiskGamePhases extends Observable {
 	 * @throws IOException
 	 */
 	public List<Player> executeStartupPhase() throws IOException {
+
 		System.out.println(":: Input the no of players playing ::");
 		int numberOfPlayers = Integer.parseInt(reader.readLine());
 		LoggingUtil.logMessage("Total number of Players playing Risk Game : " + numberOfPlayers);
 
 		startUpPhase = new StartUpPhase(fileParser, numberOfPlayers, reader);
+
+		return executeStartUpProcesses();
+	}
+
+	/**
+	 * @return
+	 */
+	private List<Player> executeStartUpProcesses() {
 		startUpPhase.assignCountries();
 		startUpPhase.allocateArmiesToPlayers();
 		startUpPhase.assignInitialArmiesToCountries();
@@ -98,8 +110,32 @@ public class RiskGamePhases extends Observable {
 		List<Player> players = startUpPhase.getPlayerList();
 		robinScheduler = new RoundRobinScheduler<Player>(players);
 		currentPlayer = robinScheduler.next();
-
 		return players;
+	}
+
+	/**
+	 * @param computerPlayers
+	 * @return
+	 * @throws IOException
+	 */
+	public List<Player> executeStartupPhase(List<String> computerPlayers) throws IOException {
+		startUpPhase = new StartUpPhase(fileParser, computerPlayers);
+		return executeStartUpProcesses();
+	}
+
+	/**
+	 * @return the tournamentMode
+	 */
+	public boolean isTournamentMode() {
+		return tournamentMode;
+	}
+
+	/**
+	 * @param tournamentMode
+	 *            the tournamentMode to set
+	 */
+	public void setTournamentMode(boolean tournamentMode) {
+		this.tournamentMode = tournamentMode;
 	}
 
 	/**
@@ -225,6 +261,17 @@ public class RiskGamePhases extends Observable {
 	 */
 	public List<Player> getPlayerList() {
 		return robinScheduler.getList();
+	}
+
+	/**
+	 * Set Player List.
+	 * 
+	 * @param playerList
+	 * 
+	 * @return list of players
+	 */
+	public void setPlayerList(List<Player> playerList) {
+		robinScheduler.setList(playerList);
 	}
 
 	/**
@@ -368,23 +415,33 @@ public class RiskGamePhases extends Observable {
 	 * @param computerPlayer
 	 * @return
 	 */
-	public void selectComputerPlayer(String computerPlayer) {
+	public void selectComputerPlayer(Player player) {
 
-		switch (computerPlayer) {
+		switch (player.getPlayerName()) {
 
-		case "Agressive":
-			currentPlayer.setPlayerStrategy(
-					new AgressivePlayerStrategy(currentPlayer, fileParser.getCountriesGraph(), this));
+		case "Aggressive":
+			player.setPlayerStrategy(new AgressivePlayerStrategy(currentPlayer, fileParser.getCountriesGraph(), this));
 			break;
 		case "Benevolent":
-			currentPlayer
-					.setPlayerStrategy(new BenevolentPlayerStrategy(currentPlayer, fileParser.getCountriesGraph()));
+			player.setPlayerStrategy(new BenevolentPlayerStrategy(currentPlayer, fileParser.getCountriesGraph()));
 			break;
 		case "Random":
-			currentPlayer
-					.setPlayerStrategy(new RandomPlayerStrategy(currentPlayer, fileParser.getCountriesGraph(), this));
+			player.setPlayerStrategy(new RandomPlayerStrategy(currentPlayer, fileParser.getCountriesGraph(), this));
+			break;
+		case "Cheater":
+			player.setPlayerStrategy(new CheaterPlayerStrategy(currentPlayer, fileParser.getCountriesGraph(), this));
+			break;
 		default:
 			break;
 		}
 	}
+
+	/**
+	 * @return
+	 */
+	public int getTotalCountries() {
+
+		return fileParser.getCountriesHashMap().size();
+	}
+
 }

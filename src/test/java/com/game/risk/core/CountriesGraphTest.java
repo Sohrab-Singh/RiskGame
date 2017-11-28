@@ -7,6 +7,7 @@ import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 
@@ -69,7 +70,7 @@ public class CountriesGraphTest {
 	 */
 	@Before
 	public void setUp() throws FileNotFoundException{
-		mapFileReader = new MapFileReader("./src/main/resources/Canada.map");
+		mapFileReader = new MapFileReader(new File("./src/main/resources/Canada.map"));
 		countriesGraph = new CountriesGraph(mapFileReader);
 
 		continent1 = new Continent("Asia", 7);

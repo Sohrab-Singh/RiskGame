@@ -54,10 +54,7 @@ public class MapValidation {
 	 * @throws IOException
 	 *             input out exception
 	 */
-	public boolean validateFile(String filename) throws IOException {
-		if (filename == null)
-			return false;
-		File file = new File(filename);
+	public boolean validateFile(File file) throws IOException {
 		System.out.println(file.getAbsolutePath());
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 		String line;

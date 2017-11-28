@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.game.risk.core.CountriesGraph;
 import com.game.risk.core.strategy.PlayerStrategy;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
@@ -25,24 +26,32 @@ public class BenevolentPlayerStrategy implements PlayerStrategy {
 	 * @param gamePhases
 	 * 
 	 */
-	public BenevolentPlayerStrategy(Player player, CountriesGraph countriesGraph){
+	public BenevolentPlayerStrategy(Player player, CountriesGraph countriesGraph) {
 		this.player = player;
 		this.countriesGraph = countriesGraph;
 	}
 
 	@Override
 	public void reinforce() {
+		System.out.println("Reinforcement phase begins for Benevolent player");
+		LoggingUtil.logMessage("Reinforcement phase begins for Benevolent player");
 		List<Country> countriesOwned = player.getCountriesOwned();
 		Collections.sort(countriesOwned, Country.ArmyComparator);
+		System.out.println("Total number of reinforcement armies calculated for Benevolent player is " + player.findReinforcementArmies());
 		player.setNumberOfArmies(player.getNumberOfArmies() + player.findReinforcementArmies());
 		Country weakestCountry = countriesOwned.get(0);
+		System.out.println("Benevolent player " + player.getNumberOfArmies() + " armies to weak country "
+				+ weakestCountry.getCountryName());
+		LoggingUtil.logMessage("Benevolent player " + player.getNumberOfArmies() + " armies to weak country "
+				+ weakestCountry.getCountryName());
 		weakestCountry.setCurrentNumberOfArmies(weakestCountry.getCurrentNumberOfArmies() + player.getNumberOfArmies());
 		player.setNumberOfArmies(0);
 	}
 
 	@Override
 	public void attack() {
-		// Benevolent player never attacks
+		System.out.println("Benevolent player never attacks");
+		LoggingUtil.logMessage("Benevolent player never attacks");
 	}
 
 	@Override
@@ -54,8 +63,7 @@ public class BenevolentPlayerStrategy implements PlayerStrategy {
 		if (adjacentStrongCountry != null) {
 			int fortificationArmies = (adjacentStrongCountry.getCurrentNumberOfArmies()
 					- weakestCountry.getCurrentNumberOfArmies()) / 2;
-			weakestCountry
-					.setCurrentNumberOfArmies(weakestCountry.getCurrentNumberOfArmies() + fortificationArmies);
+			weakestCountry.setCurrentNumberOfArmies(weakestCountry.getCurrentNumberOfArmies() + fortificationArmies);
 			adjacentStrongCountry
 					.setCurrentNumberOfArmies(adjacentStrongCountry.getCurrentNumberOfArmies() - fortificationArmies);
 		} else {
@@ -66,16 +74,16 @@ public class BenevolentPlayerStrategy implements PlayerStrategy {
 
 	private Country getStrongestCountryAdjacent(Country weakestCountry, List<Country> countriesOwned) {
 		List<Country> strongCountriesAdjacent = new ArrayList<>();
-		
+
 		for (Country country : countriesOwned) {
 			if (countriesGraph.getAdjListHashMap().get(weakestCountry).contains(country)) {
 				strongCountriesAdjacent.add(country);
 			}
 		}
-		if(strongCountriesAdjacent.isEmpty()) {
+		if (strongCountriesAdjacent.isEmpty()) {
 			return null;
 		}
-		Collections.sort(strongCountriesAdjacent,Country.ArmyComparator);
+		Collections.sort(strongCountriesAdjacent, Country.ArmyComparator);
 		return strongCountriesAdjacent.get(0);
 	}
 

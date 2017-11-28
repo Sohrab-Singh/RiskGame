@@ -2,9 +2,8 @@ package com.game.risk.core;
 
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
-import org.junit.Before;
-import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -51,8 +50,8 @@ public class StartUpPhaseTest {
 
 	//@Before
 	public void setUp() throws Exception {
-		mapFileReader = new MapFileReader(
-				"//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Canada.map");
+		mapFileReader = new MapFileReader(new File(
+				"//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Canada.map"));
 		startUpPhase = new StartUpPhase(mapFileReader, 2, null);
 		numberOfPlayers = 2;
 		p1 = new Player();
@@ -66,9 +65,6 @@ public class StartUpPhaseTest {
 		list2.add(c1);
 		list2.add(c2);
 		p1.setCountriesOwned(list2);
-
-
-
 
 	}
 
@@ -89,12 +85,11 @@ public class StartUpPhaseTest {
 	 *
 	 * @throws Exception
 	 */
-	//@Test
-	public void assignInitialArmiesToCountries() throws Exception
-	{
+	// @Test
+	public void assignInitialArmiesToCountries() throws Exception {
 		startUpPhase.assignInitialArmiesToCountries();
 
-		//Current number of armies - countries owned (2)
+		// Current number of armies - countries owned (2)
 		assertEquals(38, p1.getNumberOfArmies());
 
 	}
@@ -104,23 +99,22 @@ public class StartUpPhaseTest {
 	 *
 	 * @throws Exception
 	 */
-	//@Test
+	// @Test
 	public void allocateArmiesToPlayers() throws Exception {
 		startUpPhase.allocateArmiesToPlayers();
 		assertNotEquals(45, p1.getNumberOfArmies());
 	}
 
-	//@Test
+	// @Test
 
 	/**
 	 * Test method for Domination Percentage
 	 *
 	 * @throws Exception
 	 */
-	public void DominationPercentage() throws Exception
-	{
+	public void DominationPercentage() throws Exception {
 		startUpPhase.populateDominationPercentage();
-		assertNotEquals(10, p1.getCurrentDominationPercentage() );
+		assertNotEquals(10, p1.getCurrentDominationPercentage());
 	}
 
 	/**
@@ -128,7 +122,7 @@ public class StartUpPhaseTest {
 	 *
 	 * @throws Exception
 	 */
-	//@Test
+	// @Test
 	public void getCountOfPlayers() throws Exception {
 
 		startUpPhase.setNumberOfPlayers(2);
@@ -174,4 +168,3 @@ public class StartUpPhaseTest {
 	}
 
 }
-

@@ -5,6 +5,7 @@ import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class MapFileReader {
 	/**
 	 * Name of the file selected
 	 */
-	private String fileName;
+	private File fileName;
 
 	/**
 	 * Map File Parser Default Constructor
@@ -73,14 +74,14 @@ public class MapFileReader {
 	/**
 	 * Map File Parser constructor.
 	 *
-	 * @param filename
+	 * @param file
 	 *            Name of the file containing the Map information
 	 * @throws FileNotFoundException
 	 *             file not found exception
 	 */
-	public MapFileReader(String filename) throws FileNotFoundException {
-		fileReader = new FileReader(filename);
-		this.fileName = filename;
+	public MapFileReader(File file) throws FileNotFoundException {
+		fileReader = new FileReader(file);
+		this.fileName = file;
 		countriesHashMap = new HashMap<String, Country>();
 		continentHashMap = new HashMap<String, Continent>();
 		countriesGraph = new CountriesGraph(this);

@@ -10,8 +10,6 @@ import com.game.risk.RiskGameDriver;
 import com.game.risk.core.MapEditor;
 import com.game.risk.core.MapFileReader;
 import com.game.risk.core.util.LoggingUtil;
-import com.game.risk.model.autogen.GameStateDataProtos.CountriesGraph;
-import com.game.risk.model.autogen.GameStateDataProtos.GameState;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -21,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -146,7 +145,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				String filename = fileChooser.getSelectedFile().getAbsolutePath();
 				System.out.println("Path: " + filename);
 				try {
-					parser = new MapFileReader(filename);
+					parser = new MapFileReader(new File(filename));
 					if (!parser.checkFileValidation()) {
 						System.out.println("Invalid File Selected!");
 						LoggingUtil.logMessage("Invalid File Selected!");

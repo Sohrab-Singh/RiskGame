@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 /**
  * Test class for Map Validation class
  * @author Vida Abdollahi
@@ -34,7 +36,7 @@ public class MapValidationTest {
         str2 = "[Map] [Continents] [Territories]";
         fileName = "//src//main//resources//Canada.map";
         fileName1 = "//src//main//resources//Invalid_Canada.map";
-        mapFileReader = new MapFileReader(fileName1);
+        mapFileReader = new MapFileReader(new File(fileName1));
         graph = mapFileReader.getCountriesGraph();
     }
 
@@ -45,8 +47,8 @@ public class MapValidationTest {
     //@Test
     public void testValidateFile() throws Exception {
 
-        assertTrue(mapValidation.validateFile(fileName));
-        assertFalse(mapValidation.validateFile(fileName1));
+        assertTrue(mapValidation.validateFile(new File(fileName)));
+        assertFalse(mapValidation.validateFile(new File(fileName1)));
     }
 
 

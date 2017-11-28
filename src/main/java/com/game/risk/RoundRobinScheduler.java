@@ -19,6 +19,7 @@ public class RoundRobinScheduler<T> {
 	/** Generic list */
 	private List<T> list;
 
+
 	/**
 	 * Round robin scheduler.
 	 * 
@@ -70,4 +71,10 @@ public class RoundRobinScheduler<T> {
 		return list;
 	}
 
+	/**
+	 * @param list the list to set
+	 */
+	public void setList(List<T> list) {
+		this.list = list;
+	}
 }

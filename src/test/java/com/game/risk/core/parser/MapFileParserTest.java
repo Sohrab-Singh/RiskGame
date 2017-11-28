@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.game.risk.core.MapFileReader;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
@@ -24,7 +25,8 @@ public class MapFileParserTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		mapFileReader = new MapFileReader("C:\\Concordia University\\Study Material\\SOEN 6441 Advanced Programming Practices\\RISK Game - Project\\Québec.MAP");
+		File file = new File("C:\\\\Concordia University\\\\Study Material\\\\SOEN 6441 Advanced Programming Practices\\\\RISK Game - Project\\\\Québec.MAP");
+		mapFileReader = new MapFileReader(file);
 	}
 
 	/**

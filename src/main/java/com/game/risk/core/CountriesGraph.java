@@ -35,6 +35,13 @@ public class CountriesGraph {
 	private HashMap<Country, LinkedList<Country>> adjListHashMap;
 
 	/**
+	 * @param adjListHashMap the adjListHashMap to set
+	 */
+	public void setAdjListHashMap(HashMap<Country, LinkedList<Country>> adjListHashMap) {
+		this.adjListHashMap = adjListHashMap;
+	}
+
+	/**
 	 * Countries Graph constructor
 	 * 
 	 * @param fileParser
