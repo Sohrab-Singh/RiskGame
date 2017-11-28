@@ -29,13 +29,13 @@ public class MapValidationTest {
      * Set up the initial objects
      * @throws Exception
      */
-    //@Before
+    @Before
     public void setUp() throws Exception {
         mapValidation = new MapValidation();
         str1 = " [Continents] [Territories]";
         str2 = "[Map] [Continents] [Territories]";
-        fileName = "//src//main//resources//Canada.map";
-        fileName1 = "//src//main//resources//Invalid_Canada.map";
+        fileName = "src//test//resources//Canada.map";
+        fileName1 = "src//test//resources//Invalid_Canada.map";
         mapFileReader = new MapFileReader(new File(fileName1));
         graph = mapFileReader.getCountriesGraph();
     }
@@ -44,10 +44,20 @@ public class MapValidationTest {
      * Test method for testing validation of a file
      * @throws Exception
      */
-    //@Test
+    @Test
+
     public void testValidateFile() throws Exception {
 
         assertTrue(mapValidation.validateFile(new File(fileName)));
+    }
+    
+    /**
+     * Negative Test method for testing validation of a file
+     * @throws Exception
+     */
+    @Test
+
+    public void testValidateFileNegative() throws Exception {
         assertFalse(mapValidation.validateFile(new File(fileName1)));
     }
 
@@ -56,23 +66,23 @@ public class MapValidationTest {
      * test method for checking mandatory tags like [Map]
      * @throws Exception
      */
-    //@Test
+    @Test
 
     public void testCheckMandatoryTags() throws Exception {
 
-        assertFalse(mapValidation.checkMandatoryTags(str1));
         assertTrue(mapValidation.checkMandatoryTags(str2));
     }
 
+    
     /**
-     * test method for checking the connected graph
+     * Negative test method for checking mandatory tags like [Map]
      * @throws Exception
-     * 
      */
-    //@Test
-    public void testConnectedGraph() throws Exception {
-        assertFalse(mapValidation.checkConnectedGraph(graph));
+    @Test
 
+    public void testCheckMandatoryTagsNegative() throws Exception {
+
+        assertFalse(mapValidation.checkMandatoryTags(str1));
     }
 
 }

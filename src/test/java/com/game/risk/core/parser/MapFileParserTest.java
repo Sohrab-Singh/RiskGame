@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
  * Test Class for MapFileReader class
  *
  * @author Sarthak
+ * @author shubhangi_sheel
  */
 public class MapFileParserTest {
 	private MapFileReader mapFileReader;
@@ -25,8 +26,7 @@ public class MapFileParserTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		File file = new File("C:\\\\Concordia University\\\\Study Material\\\\SOEN 6441 Advanced Programming Practices\\\\RISK Game - Project\\\\Québec.MAP");
-		mapFileReader = new MapFileReader(file);
+		mapFileReader = new MapFileReader(new File("src//test//resources//Quebec.map"));
 	}
 
 	/**
