@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package com.game.risk.model;
 
@@ -11,54 +11,50 @@ message CountriesGraph {
 	}
 
 	map < string, CountryLinkedList > countryMap = 2;
-	optional int32 countryCount = 3;
+	int32 countryCount = 3;
 }
 
 message MapFileReader {
 	map < string, Country > countryMap = 1;
 	map < string, Continent > continentMap = 2;
-	required CountriesGraph graphDataStructure = 3;
+	CountriesGraph graphDataStructure = 3;
 }
 
 message Country {
-	required string countryName = 1;
-	optional string xCoordinate = 2;
-	optional string yCoordinate = 3;
-	required string playerName = 4;
-	required int32 currentArmiesCount = 5;
-	required string continentName = 6;
+	string countryName = 1;
+	string xCoordinate = 2;
+	string yCoordinate = 3;
+	string playerName = 4;
+	int32 currentArmiesCount = 5;
+	string continentName = 6;
 }
 
 message Continent {
-	required string continentName = 1;
-	message belongingCountries {
-		repeated Country country = 1;
-	}
-
-	required belongingCountries countries = 3;
-	required int32 controlValue = 2;
+	string continentName = 1;
+	repeated Country belongingCountry = 2;
+	int32 controlValue = 3;
 }
 
 message Player {
-	required string playerName = 1;
+	string playerName = 1;
 	enum CardType {
-		INFANTRY = 1;
-		CAVALRY = 2;
-		ARTILLERY = 3;
+		INFANTRY = 0;
+		CAVALRY = 1;
+		ARTILLERY = 2;
 	}
 
 	message Cards {
-		required CardType card = 1;
+		CardType card = 1;
 	}
 
-	required int32 numberOfArmies = 2;
-	required double percentageDomination = 3;
-	optional bool isAI = 4;
+	int32 numberOfArmies = 2;
+	double percentageDomination = 3;
+	bool isAI = 4;
 	repeated Cards cardList = 5;
 	repeated Country countryOwned = 6;
 }
 
 message GameState {
-	required Player currentPlayer = 1;
+	Player currentPlayer = 1;
 	repeated Player playersList = 2;
 }

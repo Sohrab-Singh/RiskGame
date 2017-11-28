@@ -95,22 +95,23 @@ public class RiskGameDriver {
 	 * @throws IOException
 	 */
 	public static void startLoadedGame(FileInputStream input) throws IOException {
-		CountriesGraph graph = CountriesGraph.parseFrom(input);
+		CountriesGraph graph = CountriesGraph.parseDelimitedFrom(input);
 		com.game.risk.model.autogen.GameStateDataProtos.MapFileReader reader = com.game.risk.model.autogen.GameStateDataProtos.MapFileReader
-				.parseFrom(input);
+				.parseDelimitedFrom(input);
 		MapFileReader fileReader = new MapFileReader(reader);
 		fileReader.updateCountriesModel();
 		fileReader.updateContinentsModel();
 		com.game.risk.core.CountriesGraph countriesGraph = new com.game.risk.core.CountriesGraph(fileReader);
 		countriesGraph.setContinentHashMap(fileReader.getContinentHashMap());
 		countriesGraph.updateAdjacentCountriesModel(graph);
+		fileReader.setCountriesGraph(countriesGraph);
 		countriesGraph.setCountriesCount(graph.getCountryCount());
-		GameState gameState = GameState.parseFrom(input);
-
+		GameState gameState = GameState.parseDelimitedFrom(input);
 		gamePhases = new RiskGamePhases(fileReader);
 		List<Player> players = gamePhases.updatePlayerList(gameState.getPlayersListList());
 		gamePhases.initializeCurrentPlayer(players, gameState.getCurrentPlayer());
 		GamePhaseView gamePhaseView = new GamePhaseView(gamePhases, fileReader);
+		gamePhaseView.setVisible(true);
 		gamePhases.addObserver(gamePhaseView);
 		gamePhases.notifyStateChange(PhaseStates.STATE_REINFORCEMENT);
 		CardExchangeView cardExchangeView = new CardExchangeView();
