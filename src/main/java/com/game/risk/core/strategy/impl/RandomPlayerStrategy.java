@@ -15,22 +15,31 @@ import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 /**
- * @author sohrab_singh
+ * The Class RandomPlayerStrategy.
  *
+ * @author sohrab_singh
+ * @author Sarthak
  */
 public class RandomPlayerStrategy implements PlayerStrategy {
 
+	/** The player. */
 	Player player;
 
+	/** The countries graph. */
 	private CountriesGraph countriesGraph;
 
+	/** The game phases. */
 	private RiskGamePhases gamePhases;
 
 	/**
+	 * Instantiates a new random player strategy.
+	 *
 	 * @param player
+	 *            the player
 	 * @param countriesGraph
+	 *            the countries graph
 	 * @param gamePhases
-	 * 
+	 *            the game phases
 	 */
 	public RandomPlayerStrategy(Player player, CountriesGraph countriesGraph, RiskGamePhases gamePhases) {
 		this.player = player;
@@ -40,88 +49,133 @@ public class RandomPlayerStrategy implements PlayerStrategy {
 
 	@Override
 	public void reinforce() {
-		System.out.println("\nReinforcement phase begins for random player \n");
-		LoggingUtil.logMessage("\nReinforcement phase begins for random player \n");
+		System.out.println("\n::::: Random Player :::::");
+		System.out.println("\n:: Reinforcement Phase ::\n");
+		LoggingUtil.logMessage("Reinforcement Phase begins for Random Player.");
 		int reinforcementArmies = ReinforcementPhaseUtil.calculateReinforcementArmies(player);
-		String message = "Total reinforcement armies available for random player : " + reinforcementArmies;
+		String message = "Total Reinforcement Armies available for Random Player: " + reinforcementArmies + "\n";
 		System.out.println(message);
 		LoggingUtil.logMessage(message);
 		player.setNumberOfArmies(player.getNumberOfArmies() + reinforcementArmies);
 		while (player.getNumberOfArmies() > 0) {
 			Random random = new Random();
 			int randomArmies = random.nextInt(player.getNumberOfArmies()) + 1;
-			Random random1 = new Random();
-			int randomCountryIndex = random1.nextInt(player.getCountriesOwned().size());
+			Random countryRandom = new Random();
+			int randomCountryIndex = countryRandom.nextInt(player.getCountriesOwned().size());
 			Country country = player.getCountriesOwned().get(randomCountryIndex);
 			country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + randomArmies);
+			System.out.println(country.getCountryName() + " now has " + country.getCurrentNumberOfArmies());
+			LoggingUtil.logMessage(country.getCountryName() + " now has " + country.getCurrentNumberOfArmies());
 			player.setNumberOfArmies(player.getNumberOfArmies() - randomArmies);
 		}
 	}
 
 	@Override
 	public void attack() {
-		Random rounds = new Random();
-		int noOfRounds = 1 + rounds.nextInt(5);
-		while (noOfRounds > 0) {
-			Random random = new Random();
-			Country attacker = player.getCountriesOwned().get(random.nextInt(player.getCountriesOwned().size()));
-			List<Country> defenderList = findingDefenderListToAttack(attacker);
 
-			if (attacker.getCurrentNumberOfArmies() >= 2) {
+		System.out.println("\n:: Attack Phase ::\n");
+		LoggingUtil.logMessage("Attack Phase begins for Random Player.");
 
-				if (defenderList.isEmpty()) {
-					System.out.println("Attack not possible:No adjacent country to attack");
-					LoggingUtil.logMessage("Attack not possible:No adjacent country to attack");
-				} else {
-					Random random1 = new Random();
-					Country defender = defenderList.get(random1.nextInt(defenderList.size()));
-					System.out.println("Attacker Armies: " + attacker.getCurrentNumberOfArmies());
-					System.out.println("Defender Armies: " + defender.getCurrentNumberOfArmies());
+		Random random = new Random();
+		Country attacker = player.getCountriesOwned().get(random.nextInt(player.getCountriesOwned().size()));
+		List<Country> defenderList = new ArrayList<>();
+		defenderList.clear();
+		defenderList = findingDefenderListToAttack(attacker);
+
+		if (attacker.getCurrentNumberOfArmies() >= 2) {
+
+			if (!defenderList.isEmpty()) {
+				Random random1 = new Random();
+				Country defender = defenderList.get(random1.nextInt(defenderList.size()));
+				Random randomAttacks = new Random();
+				int attacksMaxCount = randomAttacks.nextInt(defender.getCurrentNumberOfArmies()) + 1;
+				// Battle b/w Attacker and Defender Starts
+				while (attacker.getCurrentNumberOfArmies() > 1 && defender.getCurrentNumberOfArmies() > 0
+						&& (attacksMaxCount--) > 0) {
+					String attackMessage = "[Attacker] " + attacker.getCountryName() + "("
+							+ attacker.getCurrentNumberOfArmies() + ") vs (" + defender.getCurrentNumberOfArmies()
+							+ ") " + defender.getCountryName() + " [Defender]";
+					System.out.println(attackMessage);
+					LoggingUtil.logMessage(attackMessage);
 
 					int diceAttacker = getRandomDice(attacker, 3);
 					int diceDefender = getRandomDice(attacker, 2);
 
 					AttackPhaseUtil.startBattle(attacker, defender, diceAttacker, diceDefender);
-
-					if (defender.getCurrentNumberOfArmies() == 0) {
-						updateCountryToPlayer(defender, attacker);
-					}
+					System.out.println("\n:: Armies Count after Attack ::");
+					System.out.println("[Attacker] " + attacker.getCountryName() + "("
+							+ attacker.getCurrentNumberOfArmies() + ")");
+					System.out.println("[Defender] " + defender.getCountryName() + "("
+							+ defender.getCurrentNumberOfArmies() + ")\n");
 				}
-				noOfRounds--;
+
+				if (defender.getCurrentNumberOfArmies() == 0) {
+					updateCountryToPlayer(defender, attacker);
+					moveArmiesToDefender(defender, attacker);
+				}
+
 			}
 
 		}
 	}
 
+	/**
+	 * Move armies to defender.
+	 *
+	 * @param defender
+	 *            the defender Country
+	 * @param attacker
+	 *            the attacker Country
+	 */
+	private void moveArmiesToDefender(Country defender, Country attacker) {
+		int randomArmies = new Random().nextInt(attacker.getCurrentNumberOfArmies());
+		if (randomArmies == attacker.getCurrentNumberOfArmies())
+			randomArmies--;
+		int defenderArmies = defender.getCurrentNumberOfArmies() + randomArmies;
+		int attackerArmies = attacker.getCurrentNumberOfArmies() - randomArmies;
+		defender.setCurrentNumberOfArmies(defenderArmies);
+		attacker.setCurrentNumberOfArmies(attackerArmies);
+
+	}
+
 	@Override
 	public void fortify() {
+		System.out.println("\n:: Fortify Phase ::\n");
+		LoggingUtil.logMessage("Fortify Phase begins for Random Player.");
 
 		Random random = new Random();
 		int randomCountry1Index = random.nextInt(player.getCountriesOwned().size());
-		int randomCountry2Index = random.nextInt(player.getCountriesOwned().size());
 		Country country1 = player.getCountriesOwned().get(randomCountry1Index);
-		Country country2 = player.getCountriesOwned().get(randomCountry2Index);
+		List<Country> adjPlayerCountries = findPlayerAdjacentCountries(country1);
+		int randomCountry2Index = random.nextInt(adjPlayerCountries.size());
+
+		Country country2 = adjPlayerCountries.get(randomCountry2Index);
 		Random random1 = new Random();
 		int randomArmies = random1.nextInt(country1.getCurrentNumberOfArmies()) + 1;
 
-		while (!countriesGraph.getAdjListHashMap().get(country1).contains(country2)) {
-			randomCountry2Index = random.nextInt(player.getCountriesOwned().size());
-			country2 = player.getCountriesOwned().get(randomCountry2Index);
-		}
-		country1.setCurrentNumberOfArmies(country1.getCurrentNumberOfArmies() - randomArmies);
-		country2.setCurrentNumberOfArmies(country2.getCurrentNumberOfArmies() + randomArmies);
+		if (randomArmies == country1.getCurrentNumberOfArmies())
+			randomArmies--;
+		String fortifyMessage = randomArmies + " Armies moved from " + country1.getCountryName() + " to "
+				+ country2.getCountryName() + ".";
+		System.out.println(fortifyMessage);
+		LoggingUtil.logMessage(fortifyMessage);
+		country1.setCurrentNumberOfArmies(country1.getCurrentNumberOfArmies() - randomArmies + 1);
+		country2.setCurrentNumberOfArmies(country2.getCurrentNumberOfArmies() + randomArmies - 1);
 	}
 
 	/**
-	 * @param attacker,
-	 *            int maxDice
-	 * @param attackerArmies
-	 * @return
+	 * Gets the random dice.
+	 *
+	 * @param attacker
+	 *            the attacker
+	 * @param maxDice
+	 *            the max dice
+	 * @return the random dice
 	 */
 	private int getRandomDice(Country attacker, int maxDice) {
 		int attackerArmies = attacker.getCurrentNumberOfArmies();
 		Random random;
-		int diceCount ;
+		int diceCount;
 		if (attackerArmies <= maxDice) {
 			random = new Random();
 			diceCount = 1 + random.nextInt(attackerArmies - 1);
@@ -132,6 +186,14 @@ public class RandomPlayerStrategy implements PlayerStrategy {
 		return diceCount;
 	}
 
+	/**
+	 * Update country to player after defender has lost battle
+	 *
+	 * @param defender
+	 *            the defender Country
+	 * @param attacker
+	 *            the attacker Country
+	 */
 	private void updateCountryToPlayer(Country defender, Country attacker) {
 		List<Player> playerList = gamePhases.getPlayerList();
 		for (int i = 0; i < playerList.size(); i++) {
@@ -145,10 +207,16 @@ public class RandomPlayerStrategy implements PlayerStrategy {
 	}
 
 	/**
-	 * 
+	 * Finding defender list to attack.
+	 *
+	 * @param attacker
+	 *            the attacker
+	 * @return the list
 	 */
 	private List<Country> findingDefenderListToAttack(Country attacker) {
-		LinkedList<Country> adjCountries = countriesGraph.getAdjListHashMap().get(attacker);
+		LinkedList<Country> adjCountries = new LinkedList<>();
+		adjCountries.clear();
+		adjCountries = countriesGraph.getAdjListHashMap().get(attacker);
 		List<Country> defenderCountries = new ArrayList<>();
 		for (int i = 0; i < adjCountries.size(); i++) {
 			Country adjacentCountry = adjCountries.get(i);
@@ -158,6 +226,24 @@ public class RandomPlayerStrategy implements PlayerStrategy {
 			}
 		}
 		return defenderCountries;
+	}
+
+	/**
+	 * Find player adjacent countries.
+	 *
+	 * @param country
+	 *            the country
+	 * @return the list
+	 */
+	private List<Country> findPlayerAdjacentCountries(Country country) {
+		LinkedList<Country> adjCountries = countriesGraph.getAdjListHashMap().get(country);
+		List<Country> adjPlayerCountries = new ArrayList<>();
+		for (Country selectedCountry : adjCountries) {
+			if (selectedCountry.getPlayerName().equals(country.getPlayerName())) {
+				adjPlayerCountries.add(selectedCountry);
+			}
+		}
+		return adjPlayerCountries;
 	}
 
 }

@@ -9,10 +9,12 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import com.game.risk.RiskGamePhases;
 import com.game.risk.core.CountriesGraph;
 import com.game.risk.core.strategy.PlayerStrategy;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
@@ -20,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * @author sohrab_singh
- *
+ * @author Sarthak
  */
 public class CheaterPlayerStrategyTest {
 
@@ -77,12 +79,31 @@ public class CheaterPlayerStrategyTest {
 		players.add(player);
 		players.add(player2);
 		countriesGraph = new CountriesGraph();
-		LinkedList<Country> countries = new LinkedList<>();
-		countries.add(country4);
-		countries.add(country2);
-		countries.add(country5);
+		LinkedList<Country> adjCountries1 = new LinkedList<>();
+		adjCountries1.add(country4);
+		adjCountries1.add(country2);
+		adjCountries1.add(country5);
 		HashMap<Country, LinkedList<Country>> adjacencyListHashMap = new HashMap<>();
-		adjacencyListHashMap.put(country1, countries);
+		adjacencyListHashMap.put(country1, adjCountries1);
+		LinkedList<Country> adjCountries3 = new LinkedList<>();
+		adjCountries3.clear();
+		adjCountries3.add(country2);
+		adjCountries3.add(country5);
+		adjacencyListHashMap.put(country3, adjCountries3);
+		LinkedList<Country> adjCountries2 = new LinkedList<>();
+		adjCountries2.clear();
+		adjCountries2.add(country3);
+		adjCountries2.add(country5);
+		adjacencyListHashMap.put(country2, adjCountries2);
+		LinkedList<Country> adjCountries4 = new LinkedList<>();
+		adjCountries4.clear();
+		adjCountries4.add(country1);
+		adjacencyListHashMap.put(country4, adjCountries4);
+		LinkedList<Country> adjCountries5 = new LinkedList<>();
+		adjCountries5.clear();
+		adjCountries5.add(country2);
+		adjCountries5.add(country3);
+		adjacencyListHashMap.put(country5, adjCountries5);
 		countriesGraph.setAdjListHashMap(adjacencyListHashMap);
 		riskGamePhases = new RiskGamePhases(null);
 		riskGamePhases = mock(RiskGamePhases.class);
@@ -95,6 +116,7 @@ public class CheaterPlayerStrategyTest {
 	 */
 	@Test
 	public void testReinforce() {
+		
 		cheaterPlayerStrategy.reinforce();
 		assertEquals(6, country1.getCurrentNumberOfArmies());
 		assertEquals(12, country2.getCurrentNumberOfArmies());
@@ -114,15 +136,17 @@ public class CheaterPlayerStrategyTest {
 		assertEquals("Sohrab", country5.getPlayerName());
 	}
 
+
 	/**
 	 * 
 	 */
 	@Test
 	public void testFortify() {
 		cheaterPlayerStrategy.fortify();
-		assertEquals(14, country4.getCurrentNumberOfArmies());
-		assertEquals(22, country5.getCurrentNumberOfArmies());
-
+		assertEquals(18, country3.getCurrentNumberOfArmies());
+		//Country 5 belongs to Human Player [Sarthak], so no change
+		assertEquals(11, country5.getCurrentNumberOfArmies());
+		assertEquals(6, country1.getCurrentNumberOfArmies());
 	}
 
 }

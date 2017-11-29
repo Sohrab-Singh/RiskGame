@@ -25,34 +25,25 @@ import com.game.risk.view.AttackPhaseView;
  * 
  * @author Sarthak
  * @author sohrab_singh
- *
  */
 public class RiskGamePhases extends Observable {
 
-	/** Startup Phase */
+	/** Startup Phase. */
 	private StartUpPhase startUpPhase;
 
-	/**
-	 * MapFileReader Object
-	 */
+	/** MapFileReader Object. */
 	private MapFileReader fileParser;
 
-	/**
-	 * Buffer reader
-	 */
+	/** Buffer reader. */
 	private BufferedReader reader;
 
-	/**
-	 * Current State of the game
-	 */
+	/** Current State of the game. */
 	private int currentState;
 
-	/** Player Domination phase */
+	/** Player Domination phase. */
 	private Boolean playerDominationPhase;
 
-	/**
-	 * Player object indicating the current currentPlayer playing the game
-	 */
+	/** Player object indicating the current currentPlayer playing the game. */
 	private Player currentPlayer;
 
 	private boolean tournamentMode;
@@ -61,12 +52,12 @@ public class RiskGamePhases extends Observable {
 	private RoundRobinScheduler<Player> robinScheduler;
 
 	/**
-	 * Default Constructor
-	 * 
+	 * Default Constructor.
+	 *
 	 * @param fileParser
+	 *            the file parser
 	 * @param reader
-	 * 
-	 * @return
+	 *            the reader
 	 */
 	public RiskGamePhases(MapFileReader fileParser, BufferedReader reader) {
 		this.fileParser = fileParser;
@@ -74,18 +65,21 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
+	 * Instantiates a new risk game phases.
+	 *
 	 * @param fileParser
+	 *            the file parser
 	 */
 	public RiskGamePhases(MapFileReader fileParser) {
 		this.fileParser = fileParser;
 	}
 
 	/**
-	 * Execute Startup Phase
-	 * 
-	 * @param reader
-	 * @return
+	 * Execute Startup Phase.
+	 *
+	 * @return the list
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public List<Player> executeStartupPhase() throws IOException {
 
@@ -101,7 +95,7 @@ public class RiskGamePhases extends Observable {
 	/**
 	 * @return
 	 */
-	private List<Player> executeStartUpProcesses() {
+	public List<Player> executeStartUpProcesses() {
 		startUpPhase.assignCountries();
 		startUpPhase.allocateArmiesToPlayers();
 		startUpPhase.assignInitialArmiesToCountries();
@@ -114,6 +108,8 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
+	 * <<<<<<< Updated upstream
+	 * 
 	 * @param computerPlayers
 	 * @return
 	 * @throws IOException
@@ -142,8 +138,9 @@ public class RiskGamePhases extends Observable {
 	 * Start the Attack Phase
 	 * 
 	 * @param attackingCountry
+	 *            the attacking country
 	 * @param defendingCountry
-	 * 
+	 *            the defending country
 	 */
 	public void startAttackPhase(Country attackingCountry, Country defendingCountry) {
 		AttackPhaseView attackView = new AttackPhaseView(this, attackingCountry, defendingCountry);
@@ -173,8 +170,9 @@ public class RiskGamePhases extends Observable {
 
 	/**
 	 * Set the current state.
-	 * 
+	 *
 	 * @param currentState
+	 *            the new current state
 	 */
 	public void setCurrentState(int currentState) {
 		this.currentState = currentState;
@@ -190,8 +188,8 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * Get the current player
-	 * 
+	 * Get the current player.
+	 *
 	 * @return currentPlayer Player
 	 */
 	public Player getCurrentPlayer() {
@@ -199,21 +197,26 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * Set the current player of the game
-	 * 
+	 * Set the current player of the game.
+	 *
 	 * @param currentPlayer
+	 *            the new current player
 	 */
 	public void setCurrentPlayer(Player currentPlayer) {
 		this.currentPlayer = currentPlayer;
 	}
 
 	/**
-	 * Start Battle by attacking the opponent
-	 * 
+	 * Start Battle by attacking the opponent.
+	 *
 	 * @param attacker
+	 *            the attacker
 	 * @param defender
+	 *            the defender
 	 * @param diceAttacker
+	 *            the dice attacker
 	 * @param diceDefender
+	 *            the dice defender
 	 */
 	public void startBattle(Country attacker, Country defender, int diceAttacker, int diceDefender) {
 		currentPlayer.attackOpponent(attacker, defender, diceAttacker, diceDefender);
@@ -228,18 +231,27 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * 
+	 * Notify attack ends.
 	 */
 	public void notifyAttackEnds() {
 		setCurrentState(PhaseStates.STATE_ACTIVE);
 		setChanged();
 		if (AttackPhaseUtil.isattackEnds(currentPlayer)) {
 			notifyObservers("attack");
+			LoggingUtil.logMessage(currentPlayer.getPlayerName() + " cannot attack anymore!");
 		} else {
 			notifyObservers();
 		}
 	}
 
+	/**
+	 * Update country to player.
+	 *
+	 * @param defender
+	 *            the defender
+	 * @param attacker
+	 *            the attacker
+	 */
 	private void updateCountryToPlayer(Country defender, Country attacker) {
 		ArrayList<Player> playerList = startUpPhase.getPlayerList();
 		for (int i = 0; i < startUpPhase.getNumberOfPlayers(); i++) {
@@ -283,7 +295,7 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * 
+	 * Update domination percentage.
 	 */
 	public void updateDominationPercentage() {
 		startUpPhase.populateDominationPercentage();
@@ -320,7 +332,7 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * Next Player
+	 * Next Player.
 	 */
 	public void nextPlayer() {
 
@@ -335,10 +347,14 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
+	 * Start fortification phase.
+	 *
 	 * @param start
+	 *            the start
 	 * @param end
+	 *            the end
 	 * @throws NumberFormatException
-	 * @throws IOException
+	 *             the number format exception
 	 */
 	public void startFortificationPhase(Country start, Country end) {
 		try {
@@ -350,9 +366,10 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * Notify State Change
-	 * 
+	 * Notify State Change.
+	 *
 	 * @param state
+	 *            the state
 	 */
 	public void notifyStateChange(int state) {
 		setCurrentState(state);
@@ -361,9 +378,10 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * Notify State Change
-	 * 
+	 * Notify State Change.
+	 *
 	 * @param state
+	 *            the state
 	 */
 	public void notifyStateChange(String state) {
 		setChanged();
@@ -372,7 +390,11 @@ public class RiskGamePhases extends Observable {
 
 	/**
 	 * Populate the player list and create a Player Robin Scheduler after game
-	 * reload
+	 * reload.
+	 *
+	 * @param playerList
+	 *            the player list
+	 * @return the list
 	 */
 	public List<Player> updatePlayerList(List<com.game.risk.model.autogen.GameStateDataProtos.Player> playerList) {
 		List<Player> players = new ArrayList<>();
@@ -404,8 +426,12 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
+	 * Initialize current player.
+	 *
 	 * @param players
+	 *            the players
 	 * @param messagePlayer
+	 *            the message player
 	 */
 	public void initializeCurrentPlayer(List<Player> players,
 			com.game.risk.model.autogen.GameStateDataProtos.Player messagePlayer) {
@@ -422,9 +448,29 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * Set Player's Strategy
-	 * 
+	 * Gets the file parser.
+	 *
+	 * @return the file parser
+	 */
+	public MapFileReader getFileParser() {
+		return fileParser;
+	}
+
+	/**
+	 * Sets the file parser.
+	 *
+	 * @param fileParser
+	 *            the new file parser
+	 */
+	public void setFileParser(MapFileReader fileParser) {
+		this.fileParser = fileParser;
+	}
+
+	/**
+	 * Set Player's Strategy.
+	 *
 	 * @param computerPlayer
+	 *            the computer player
 	 */
 	public void selectComputerPlayer(Player player) {
 

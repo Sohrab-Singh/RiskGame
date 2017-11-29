@@ -1,6 +1,7 @@
 package com.game.risk.core.strategy.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +18,7 @@ import com.game.risk.model.Player;
 
 /**
  * @author sohrab_singh
- *
+ * @author Sarthak
  */
 public class AgressivePlayerStrategy implements PlayerStrategy {
 
@@ -46,34 +47,37 @@ public class AgressivePlayerStrategy implements PlayerStrategy {
 
 	@Override
 	public void reinforce() {
-		System.out.println("\nReinforcement phase begins for aggressive player \n");
-		LoggingUtil.logMessage("\nReinforcement phase begins for aggressive player \n");
+		System.out.println("::::: Aggressive Player :::::");
+		System.out.println("\n:: Reinforcement Phase ::\n");
+		System.out.println("\nReinforcement Phase begins for Aggressive Player \n");
+		LoggingUtil.logMessage("\nReinforcement Phase begins for Aggressive Player \n");
 		int reinforcementArmies = ReinforcementPhaseUtil.calculateReinforcementArmies(player);
-		String message = "Total reinforcement armies available for aggressive player : " + reinforcementArmies;
+		String message = "Total Reinforcement Armies available for Aggressive Player: " + reinforcementArmies;
 		System.out.println(message);
 		LoggingUtil.logMessage(message);
 		player.setNumberOfArmies(player.getNumberOfArmies() + reinforcementArmies);
 		strongestCountry = findStrongestCountry();
-		System.out.println("Agressive player assigned all the armies to the strogest country "
-				+ strongestCountry.getCountryName());
-		LoggingUtil.logMessage("Agressive player assigned all the armies to the strogest country "
-				+ strongestCountry.getCountryName());
 		strongestCountry
 				.setCurrentNumberOfArmies(strongestCountry.getCurrentNumberOfArmies() + player.getNumberOfArmies());
 		System.out.println(player.getPlayerName() + " assigned all the " + player.getNumberOfArmies()
-				+ " armies to the strongest country " + strongestCountry.getCountryName());
-		LoggingUtil.logMessage("Agressive player assigned all the armies to the strogest country "
-				+ strongestCountry.getCountryName());
+				+ " Armies to the Strongest Country [" + strongestCountry.getCountryName() + "]");
+		LoggingUtil.logMessage(player.getPlayerName() + " assigned all the " + player.getNumberOfArmies()
+				+ " Armies to the Strongest Country [" + strongestCountry.getCountryName() + "]");
 		player.setNumberOfArmies(0);
 
 	}
 
 	@Override
 	public void attack() {
+		System.out.println("\n:: Attack Phase ::\n");
+		LoggingUtil.logMessage("Attack Phase begins for Aggressive Player.");
 		List<Country> defenderList = findingDefenderListToAttack();
 		Country attacker = strongestCountry;
+		System.out.println("Attacking with the Strongest Country: " + strongestCountry.getCountryName());
+		LoggingUtil.logMessage("Attacking with the Strongest Country: " + strongestCountry.getCountryName());
 		for (Country defender : defenderList) {
-			System.out.println("\n:: Before Battle Start ::");
+			System.out.println("Defending with Country: " + defender.getCountryName());
+			System.out.println(":: Before Battle Start ::");
 			System.out.println("Attacker Armies: " + attacker.getCurrentNumberOfArmies());
 			System.out.println("Defender Armies: " + defender.getCurrentNumberOfArmies());
 
@@ -84,12 +88,12 @@ public class AgressivePlayerStrategy implements PlayerStrategy {
 			}
 
 			if (defender.getCurrentNumberOfArmies() == 0) {
-				System.out.println("Aggressive player captured " + defender.getCountryName());
+				System.out.println("Aggressive Player captured " + defender.getCountryName());
 				updateCountryToPlayer(defender, attacker);
 				player.setWinner(true);
 			}
 			if (attacker.getCurrentNumberOfArmies() == 1) {
-				System.out.println("Aggressive player  defended" + attacker.getCountryName());
+				System.out.println("Aggressive Player lost the battle to " + defender.getCountryName());
 				break;
 			}
 		}
@@ -97,6 +101,8 @@ public class AgressivePlayerStrategy implements PlayerStrategy {
 
 	@Override
 	public void fortify() {
+		System.out.println("\n:: Fortification Phase ::\n");
+		LoggingUtil.logMessage("Forrification Phase begins for Aggressive Player.");
 		Country secondStrongest = countriesGraph.getAdjListHashMap().get(strongestCountry).get(0);
 		for (Country country : countriesGraph.getAdjListHashMap().get(strongestCountry)) {
 			if (country.getCurrentNumberOfArmies() > secondStrongest.getCurrentNumberOfArmies()) {

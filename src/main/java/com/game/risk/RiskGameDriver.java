@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -46,15 +47,15 @@ public class RiskGameDriver {
 	 *             InvoiceTargetException
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException, InvocationTargetException {
-		
-		Thread thread = new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-				WelcomeScreenView frame = new WelcomeScreenView();
-				frame.setVisible(true);
-			}
-		});
+		 Thread thread = new Thread(new Runnable() {
+		
+		 @Override
+		 public void run() {
+		 WelcomeScreenView frame = new WelcomeScreenView();
+		 frame.setVisible(true);
+		 }
+		 });
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -62,9 +63,9 @@ public class RiskGameDriver {
 				new LoggingUtil().showLoggingWindow();
 			}
 		});
-		//Thread.sleep(2000);
-		//startTournamentMode();
-		thread.start();
+//		Thread.sleep(2000);
+//		startTournamentMode();
+		 thread.start();
 	}
 
 	/**
@@ -74,10 +75,10 @@ public class RiskGameDriver {
 	 *            parser to read
 	 * @throws IOException
 	 */
-	public static void startGame(MapFileReader fileParser) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		gamePhases = new RiskGamePhases(fileParser, reader);
-		List<Player> players = gamePhases.executeStartupPhase();
+	public static void startGame(MapFileReader fileParser, List<String> playerNames) throws IOException {
+		gamePhases = new RiskGamePhases(fileParser);
+		List<Player> players = gamePhases.executeStartupPhase(playerNames);
+		System.out.println(players.size());
 		GamePhaseView gamePhaseView = new GamePhaseView(gamePhases, fileParser);
 		gamePhases.addObserver(gamePhaseView);
 		gamePhases.notifyStateChange(PhaseStates.STATE_STARTUP);
@@ -132,7 +133,6 @@ public class RiskGameDriver {
 	/**
 	 * @throws IOException
 	 */
-	@SuppressWarnings("unchecked")
 	public static void startTournamentMode() throws IOException {
 		List<String> mapfiles = new ArrayList<>();
 		List<String> computerPlayers = new ArrayList<>();
@@ -142,49 +142,63 @@ public class RiskGameDriver {
 		computerPlayers.add("Benevolent");
 		mapfiles.add("Quebec.map");
 		int gamesToBePlayed = 3;
+		HashMap<String, List<String>> gameOutcome = new HashMap<>();
 		int mapNumber = 0;
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		for (String fileName : mapfiles) {
 			mapNumber++;
-			String path = RiskGameDriver.class.getClassLoader().getResource(fileName).getFile();
+			String path = "C:\\Concordia University\\Study Material\\SOEN 6441 Advanced Programming Practices\\RISK Game - Project\\Québec.MAP";
 			File file = new File(path);
 			System.out.println("Game is being played on " + path);
-			
-			
+
 			MapFileReader parser = new MapFileReader(file);
 			if (!parser.checkFileValidation()) {
-				System.out.println("Invalid File Selected!");
-				LoggingUtil.logMessage("Invalid File Selected!");
+				System.out.println("Invalid File Selected.");
+				LoggingUtil.logMessage("Invalid File Selected.");
 				return;
 			}
 			parser.readFile();
+			List<String> list = new ArrayList<>();
+			list.clear();
 			for (int i = 0; i < gamesToBePlayed; i++) {
 				gamePhases = new RiskGamePhases(parser);
 				gamePhases.setTournamentMode(true);
 
 				List<Player> players = gamePhases.executeStartupPhase(computerPlayers);
 				String winner = null;
-				for (int turn = 0; turn < 2; turn++) {
+				for (int turn = 0; turn < 30; turn++) {
 					for (Player player : players) {
 						gamePhases.selectComputerPlayer(player);
 						player.executePhases();
-						if (player.getContinentsOwned().size() == gamePhases.getTotalCountries()) {
+						if (player.getCountriesOwned().size() == gamePhases.getTotalCountries()) {
 							winner = player.getPlayerName();
 							break;
 						}
 					}
 					if (winner != null) {
+						System.out.println("Turn Count: " + turn + 1);
 						break;
 					}
 				}
-				if(winner == null) {
+				if (winner == null) {
 					winner = "Draw";
-					System.out.println("There is Draw between the battle of players for Game" + (i + 1) + " on Map" + mapNumber);
-				}else {
-					System.out.println(winner + " is declared winner for Game" + (i + 1) + " on Map" + mapNumber);
+					System.out.println("\n** There is Draw between the battle of players for Game" + (i + 1) + " on Map"
+							+ mapNumber + " **");
+				} else {
+					System.out.println("\n** " + winner + " is declared winner for Game" + (i + 1) + " on Map"
+							+ mapNumber + " **");
 				}
-
+				list.add(winner);
 			}
+			gameOutcome.put(fileName, list);
 
+		}
+
+		for (String key : gameOutcome.keySet()) {
+			System.out.println("\n\n::::::::::: MAP 1 Outcome :::::::::::");
+			for (int i = 0; i < gameOutcome.get(key).size(); i++) {
+				System.out.println("Game " + (i + 1) + ": " + gameOutcome.get(key).get(i));
+			}
 		}
 
 	}

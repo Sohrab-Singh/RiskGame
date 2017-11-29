@@ -69,6 +69,11 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	private JButton btnLoadSaved;
 
 	/**
+	 * JButton object to start tournament mode game
+	 */
+	private JButton btnStartTournamentMode;
+
+	/**
 	 * Variable to read from the file
 	 */
 	private FileInputStream input;
@@ -92,7 +97,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	private void initializeView() {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 400);
+		setBounds(100, 100, 450, 450);
 		// Initialize JPanel contentPane to hold the JLabel and JButton elements
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.BLACK);
@@ -127,6 +132,10 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		btnLoadSaved = new JButton("Load a saved Game");
 		btnLoadSaved.setBounds(135, 229, 166, 47);
 		contentPane.add(btnLoadSaved);
+
+		btnStartTournamentMode = new JButton("Start Tournament");
+		btnStartTournamentMode.setBounds(135, 289, 166, 47);
+		contentPane.add(btnStartTournamentMode);
 	}
 
 	@Override
@@ -167,7 +176,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else {
+		} else if(event.getComponent() == btnLoadSaved){
 			// Implementing load saved game functionality
 			fileChooser = new JFileChooser();
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("Risk Game Saved Files", "rgs");
@@ -182,13 +191,9 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				}
 
 			}
-		}
+		} 
 		if (isSaved) {
-			try {
-				RiskGameDriver.startGame(parser);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			new PlayerSelectionView(parser).setVisible(true);
 		}
 	}
 
