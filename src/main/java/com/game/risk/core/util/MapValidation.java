@@ -243,7 +243,7 @@ public class MapValidation {
 
 		HashMap<Country, LinkedList<Country>> countries = countriesGraph.getAdjListHashMap();
 		Country parent = (Country) countries.keySet().iterator().next();
-
+		
 		Stack stack = new Stack();
 		stack.push(parent);
 		parent.setVisited(true);
