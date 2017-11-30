@@ -49,7 +49,7 @@ public class RiskGamePhases extends Observable {
 	/** The tournament mode. */
 	private boolean tournamentMode;
 
-	/**  Round robin scheduler. */
+	/** Round robin scheduler. */
 	private RoundRobinScheduler<Player> robinScheduler;
 
 	/**
@@ -113,9 +113,11 @@ public class RiskGamePhases extends Observable {
 	/**
 	 * Execute startup phase.
 	 *
-	 * @param computerPlayers the computer players
+	 * @param computerPlayers
+	 *            the computer players
 	 * @return the list
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public List<Player> executeStartupPhase(List<String> computerPlayers) throws IOException {
 		startUpPhase = new StartUpPhase(fileParser, computerPlayers);
@@ -134,7 +136,8 @@ public class RiskGamePhases extends Observable {
 	/**
 	 * Sets the tournament mode.
 	 *
-	 * @param tournamentMode            the tournamentMode to set
+	 * @param tournamentMode
+	 *            the tournamentMode to set
 	 */
 	public void setTournamentMode(boolean tournamentMode) {
 		this.tournamentMode = tournamentMode;
@@ -143,8 +146,10 @@ public class RiskGamePhases extends Observable {
 	/**
 	 * Start the Attack Phase.
 	 *
-	 * @param attackingCountry            the attacking country
-	 * @param defendingCountry            the defending country
+	 * @param attackingCountry
+	 *            the attacking country
+	 * @param defendingCountry
+	 *            the defending country
 	 */
 	public void startAttackPhase(Country attackingCountry, Country defendingCountry) {
 		AttackPhaseView attackView = new AttackPhaseView(this, attackingCountry, defendingCountry);
@@ -281,7 +286,8 @@ public class RiskGamePhases extends Observable {
 	/**
 	 * Set Player List.
 	 *
-	 * @param playerList the new player list
+	 * @param playerList
+	 *            the new player list
 	 * @return list of players
 	 */
 	public void setPlayerList(List<Player> playerList) {
@@ -341,6 +347,7 @@ public class RiskGamePhases extends Observable {
 
 		currentPlayer.setWinner(false);
 		currentPlayer = robinScheduler.next();
+		currentPlayer.viewCards();
 		while (currentPlayer.getCardList().size() >= 5) {
 			currentPlayer.exchangeCardsWithArmies();
 			currentPlayer.removeCardsFromDeck();
@@ -472,7 +479,8 @@ public class RiskGamePhases extends Observable {
 	/**
 	 * Set Player's Strategy.
 	 *
-	 * @param player the player
+	 * @param player
+	 *            the player
 	 */
 	public void selectComputerPlayer(Player player) {
 
@@ -504,6 +512,5 @@ public class RiskGamePhases extends Observable {
 
 		return fileParser.getCountriesHashMap().size();
 	}
-
 
 }

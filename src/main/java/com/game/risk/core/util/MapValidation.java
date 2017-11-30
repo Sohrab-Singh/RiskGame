@@ -1,11 +1,11 @@
 package com.game.risk.core.util;
 
 import com.game.risk.core.CountriesGraph;
+import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
 import java.io.*;
 import java.util.*;
-
 
 /**
  * Map Validation class is implemented for data validation before loading it
@@ -30,14 +30,23 @@ public class MapValidation {
 	/** This parameter will be true if the given graph is a connected graph. */
 	private CountriesGraph countriesGraph;
 
-	/**
-	 * This parameter will be true if the given graph is a connected graph
-	 */
+	/** This parameter will be true if the given graph is a connected graph. */
 	private boolean isConnectedGraph;
+
+	/** This parameter will be true if it is connected continent. */
+	private boolean isConnectedContinent;
+
+	/**
+	 * The check connected continent method returning true or false indicating
+	 * whether a connected continent is present
+	 */
+	private boolean checkConnectedContinent;
 
 	/**
 	 * Map validation constructor.
-	 * @param countriesGraph 
+	 *
+	 * @param countriesGraph
+	 *            the countries graph
 	 */
 	public MapValidation(CountriesGraph countriesGraph) {
 		continentInContinent = new ArrayList<>();
@@ -97,16 +106,11 @@ public class MapValidation {
 		boolean isValid = true;
 		for (String country : Countries.keySet()) {
 
-			for (Object adjlist : Countries.get(country)) {
-				if ((Countries.get(adjlist.toString()) != null)) {
-					if (Countries.get(adjlist.toString()).contains(country)
-							|| !Countries.get(adjlist.toString()).contains(country)) {
-						// System.out.println("*" + adjlist + ": Adjacents are OK");
+			for (String adjlist : Countries.get(country)) {
+				if ((Countries.get(adjlist) != null)) {
+					if (Countries.get(adjlist).contains(country) || !Countries.get(adjlist).contains(country)) {
 						isValid = true;
 					}
-
-				} else {
-					System.out.println("*" + adjlist + ": Undefined Country ");
 				}
 
 			}
@@ -307,51 +311,14 @@ public class MapValidation {
 
 		while (!queue.isEmpty()) {
 			Country rootCountry = queue.remove();
-			System.out.println(rootCountry.getCountryName() + " da pnaga");
-			for (Country adjacent : countries.get(rootCountry)) {
-				if (!adjacent.isVisited()) {
-					queue.add(adjacent);
-					adjacent.setVisited(true);
-				}
-			}
-
-		}
-
-		for (Country country : countries.keySet()) {
-			if (country.isVisited()) {
-				isConnectedGraph = true;
-			} else {
-				isConnectedGraph = false;
-				break;
-			}
-		}
-		return isConnectedGraph;
-
-	}
-
-	/**
-	 * @param countriesGraph
-	 * @return
-	 */
-	public boolean checkConnectedContinent(CountriesGraph countriesGraph) {
-		HashMap<Country, LinkedList<Country>> countries = countriesGraph.getAdjListHashMap();
-		Country parent = countries.keySet().iterator().next();
-
-		Queue<Country> queue = new LinkedList<Country>();
-		queue.add(parent);
-		parent.setVisited(true);
-
-		while (!queue.isEmpty()) {
-			Country rootCountry = queue.remove();
-			for (Country adjacent : countries.get(rootCountry)) {
-				if(rootCountry.getContinentName().equals(adjacent.getContinentName())) {
+			if (countries.get(rootCountry) != null) {
+				for (Country adjacent : countries.get(rootCountry)) {
 					if (!adjacent.isVisited()) {
 						queue.add(adjacent);
 						adjacent.setVisited(true);
 					}
 				}
 			}
-
 		}
 
 		for (Country country : countries.keySet()) {
@@ -362,9 +329,53 @@ public class MapValidation {
 				break;
 			}
 		}
+		System.out.println("Graph Connected Status: " + isConnectedGraph);
 		return isConnectedGraph;
-		
-		
+
+	}
+
+	/**
+	 * Check connected continent.
+	 *
+	 * @param countriesGraph
+	 *            the countries graph
+	 * @return true, if successful
+	 */
+	public boolean checkConnectedContinent(CountriesGraph countriesGraph) {
+		HashMap<Country, LinkedList<Country>> countries = countriesGraph.getAdjListHashMap();
+
+		for (Continent continent : countriesGraph.getContinentHashMap().values()) {
+			Queue<Country> countryQueue = new LinkedList<Country>();
+			int i = 0;
+			Country parentCountry = continent.getCountries().get(i);
+			countryQueue.add(parentCountry);
+			parentCountry.setVisited(true);
+			while (!countryQueue.isEmpty()) {
+				Country rootCountry = countryQueue.remove();
+				for (Country adjacent : countries.get(rootCountry)) {
+					if (rootCountry.getContinentName().equals(adjacent.getContinentName())) {
+						if (!adjacent.isVisited()) {
+							countryQueue.add(adjacent);
+							adjacent.setVisited(true);
+						}
+					}
+				}
+			}
+
+			for (Country country : continent.getCountries()) {
+				if (country.isVisited()) {
+					isConnectedContinent = true;
+				}
+			}
+
+			if (!isConnectedContinent) {
+				checkConnectedContinent = false;
+			}
+			i++;
+		}
+		System.out.println("Continent Connected Status:" + checkConnectedContinent);
+		return checkConnectedContinent;
+
 	}
 
 }

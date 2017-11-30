@@ -31,8 +31,6 @@ public class RiskGameDriver {
 
 	/** Phase Observable. */
 	private static RiskGamePhases gamePhases;
-	
-	private static LoggingUtil loggingUtil = new LoggingUtil();
 
 	/**
 	 * Main method for Risk Game Driver Class.
@@ -160,7 +158,7 @@ public class RiskGameDriver {
 			MapFileReader parser = new MapFileReader(file);
 			if (!parser.checkFileValidation()) {
 				System.out.println("Invalid File Selected.");
-				loggingUtil.logMessage("Invalid File Selected.");
+				LoggingUtil.logMessage("Invalid File Selected.");
 				return;
 			}
 			parser.readFile();

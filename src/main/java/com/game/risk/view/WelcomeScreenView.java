@@ -77,6 +77,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		btnLoad.addMouseListener(this);
 		btnNewMap.addMouseListener(this);
 		btnLoadSaved.addMouseListener(this);
+		btnStartTournamentMode.addMouseListener(this);
 	}
 
 	/**

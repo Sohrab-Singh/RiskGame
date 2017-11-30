@@ -454,6 +454,8 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 			} else {
 				if (attackingCountry.getCurrentNumberOfArmies() >= 2
 						&& (defendingCountry.getCurrentNumberOfArmies() >= 1)) {
+					LoggingUtil.logMessage("Country [1]: " + attackingCountry.getCountryName());
+					LoggingUtil.logMessage("Country [2]: " + defendingCountry.getCountryName());
 					gamePhases.startAttackPhase(attackingCountry, defendingCountry);
 				} else {
 					LoggingUtil.logMessage("Not Enough Armies to proceed Attack.");
@@ -465,6 +467,8 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 			gamePhases.nextPlayer();
 		} else if (e.getComponent() == btnFortify) {
 			lblCurrentPhase.setText("Fortification Phase");
+			LoggingUtil.logMessage("Country [1]: " + attackingCountry.getCountryName());
+			LoggingUtil.logMessage("Country [2]: " + defendingCountry.getCountryName());
 			gamePhases.startFortificationPhase(attackingCountry, defendingCountry);
 
 			gamePhases.updateDominationPercentage();
