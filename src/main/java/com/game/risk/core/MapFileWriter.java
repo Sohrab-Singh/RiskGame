@@ -20,17 +20,15 @@ import com.game.risk.model.Country;
  */
 public class MapFileWriter {
 
-	/** Map File parser used for getting the current map data */
+	/** Map File parser used for getting the current map data. */
 	private MapFileReader fileParser;
 
-	/** COMMA Separator */
+	/** COMMA Separator. */
 	private static final String COMMA_SEPERATOR = ",";
 
 	/**
 	 * Map File Writer Constructor.
-	 * 
-	 * @param fileName
-	 *            Name of file
+	 *
 	 * @param fileParser
 	 *            file Parser
 	 */

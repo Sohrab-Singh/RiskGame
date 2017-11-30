@@ -23,64 +23,49 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
- * View for the user to choose from loading a map file or creating a new map
- * 
+ * View for the user to choose from loading a map file or creating a new map.
+ *
  * @author Sarthak
  * @author sohrab_singh
- *
  */
 public class WelcomeScreenView extends JFrame implements MouseListener {
 
-	/**
-	 * Serial Version UID
-	 */
+	/** Serial Version UID. */
 	private static final long serialVersionUID = -5774732089402932902L;
 
-	/**
-	 * Map File Parser
-	 */
+	/** Map File Parser. */
 	private MapFileReader parser;
 
 	/**
-	 * Map Editor View to create a new Map or make changes to the existing map file
+	 * Map Editor View to create a new Map or make changes to the existing map file.
 	 */
 	private MapEditor view;
 
-	/**
-	 * JPanel object to
-	 */
+	/** JPanel object to. */
 	private JPanel contentPane;
 
 	/**
 	 * JButton object to load the existing Map file via JFileChooser, store the data
-	 * and edit the map
-	 **/
+	 * and edit the map.
+	 */
 	private JButton btnLoad;
 
 	/**
 	 * JButton object to create a new Map calling the MapEditorView on mouse clicked
-	 * action
-	 **/
+	 * action.
+	 */
 	private JButton btnNewMap;
 
-	/**
-	 * JButton object to load a previously saved game
-	 */
+	/** JButton object to load a previously saved game. */
 	private JButton btnLoadSaved;
 
-	/**
-	 * JButton object to start tournament mode game
-	 */
+	/** JButton object to start tournament mode game. */
 	private JButton btnStartTournamentMode;
 
-	/**
-	 * Variable to read from the file
-	 */
+	/** Variable to read from the file. */
 	private FileInputStream input;
 
-	/**
-	 * JFileChooser object to select a file
-	 */
+	/** JFileChooser object to select a file. */
 	private JFileChooser fileChooser;
 
 	/**
@@ -94,6 +79,9 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 		btnLoadSaved.addMouseListener(this);
 	}
 
+	/**
+	 * Initialize view.
+	 */
 	private void initializeView() {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -176,7 +164,7 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else if(event.getComponent() == btnLoadSaved){
+		} else if (event.getComponent() == btnLoadSaved) {
 			// Implementing load saved game functionality
 			fileChooser = new JFileChooser();
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("Risk Game Saved Files", "rgs");
@@ -191,15 +179,21 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				}
 
 			}
-		} 
+		} else {
+			try {
+				RiskGameDriver.startTournamentMode();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		if (isSaved) {
 			new PlayerSelectionView(parser).setVisible(true);
 		}
 	}
 
 	/**
-	 * Get Map File Parser
-	 * 
+	 * Get Map File Parser.
+	 *
 	 * @return parser MapFileReader object
 	 */
 	public MapFileReader getParser() {
@@ -207,8 +201,8 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	}
 
 	/**
-	 * Set the MapFileReader object to the private class variable
-	 * 
+	 * Set the MapFileReader object to the private class variable.
+	 *
 	 * @param parser
 	 *            MapFileReader object
 	 */
@@ -217,8 +211,8 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	}
 
 	/**
-	 * Get the Map Editor View object
-	 * 
+	 * Get the Map Editor View object.
+	 *
 	 * @return MapEditorView object reference
 	 */
 	public MapEditor getView() {
@@ -226,8 +220,8 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 	}
 
 	/**
-	 * Set the MapEditorView object to the private class variable
-	 * 
+	 * Set the MapEditorView object to the private class variable.
+	 *
 	 * @param view
 	 *            MapEditorView object reference
 	 */

@@ -8,14 +8,14 @@ import com.game.risk.model.Continent;
 import com.game.risk.model.Country;
 
 /**
- * Editor View Class to update the map or create a new map
- * 
+ * Editor View Class to update the map or create a new map.
+ *
  * @author Sarthak
  * @author sohrab_singh
  */
 public class MapEditor {
 
-	/*** Hyphen seperator */
+	/** * Hyphen seperator. */
 	private static final String SEPERATOR = " - ";
 
 	/** Comma seperator. */
@@ -28,25 +28,23 @@ public class MapEditor {
 	private MapFileReader mapFileReader;
 
 	/**
-	 * Constructor
-	 * 
+	 * Constructor.
+	 *
 	 * @param mapFileReader
 	 *            reference to the Map File Parser object
-	 * @param mapFileWriter
-	 *            reference to the Map File Writer object
 	 */
 	public MapEditor(MapFileReader mapFileReader) {
 		this.mapFileReader = mapFileReader;
 	}
 
 	/**
-	 * Method to print the adjacency Matrix representation and edit the map
-	 * 
+	 * Method to print the adjacency Matrix representation and edit the map.
+	 *
 	 * @param isNewMap
 	 *            true if new map and false if user want to edit old map.
 	 * @return true if properly read.
-	 * 
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public boolean readMapEditor(boolean isNewMap) throws IOException {
 
@@ -193,11 +191,12 @@ public class MapEditor {
 	}
 
 	/**
-	 * Check whether the User wants to move to the new line
-	 * 
+	 * Check whether the User wants to move to the new line.
+	 *
 	 * @param reader
 	 *            BufferedReader object reference
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void askForNewLineInput(BufferedReader reader) throws IOException {
 		while (reader.readLine().equalsIgnoreCase("\n")) {
@@ -207,8 +206,8 @@ public class MapEditor {
 
 	/**
 	 * Check whether the continent is present in the Continent HashMap in
-	 * CountriesGraph
-	 * 
+	 * CountriesGraph.
+	 *
 	 * @param continentName
 	 *            Name of the continent
 	 * @return true if the continent is present in the continent HashMap else false
@@ -222,8 +221,8 @@ public class MapEditor {
 	}
 
 	/**
-	 * Check whether the country is present in the Country HashMap in MapFileReader
-	 * 
+	 * Check whether the country is present in the Country HashMap in MapFileReader.
+	 *
 	 * @param countryName
 	 *            Name of the country
 	 * @return true if the country is present in the countries HashMap else false
@@ -237,7 +236,7 @@ public class MapEditor {
 	}
 
 	/**
-	 * Print the countries and their adjacent countries stored in graph
+	 * Print the countries and their adjacent countries stored in graph.
 	 */
 	private void printMapElements() {
 		StringBuilder builder = new StringBuilder();

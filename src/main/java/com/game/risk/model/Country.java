@@ -12,13 +12,13 @@ public class Country {
 	/** Country Name. */
 	private String countryName;
 
-	/** X coordinate */
+	/** X coordinate. */
 	private String xCoordinate;
 
-	/** Y coordinate */
+	/** Y coordinate. */
 	private String yCoordinate;
 
-	/** Owner of this country */
+	/** Owner of this country. */
 	private String playerName;
 
 	/**
@@ -26,27 +26,24 @@ public class Country {
 	 */
 	private int currentNumberOfArmies;
 
-	/**
-	 * Name of the continent it belongs to
-	 */
+	/** Name of the continent it belongs to. */
 	private String continentName;
 
-	/**
-	 * if the node is visited during DFS
-	 */
+	/** if the node is visited during DFS. */
 
 	private boolean isVisited;
 
 	/**
+	 * Instantiates a new country.
+	 *
 	 * @param countryName
+	 *            the country name
 	 */
 	public Country(String countryName) {
 		this.countryName = countryName;
 	}
 
-	/**
-	 * 
-	 */
+	/** The Army comparator. */
 	public static Comparator<Country> ArmyComparator = new Comparator<Country>() {
 
 		public int compare(Country country1, Country country2) {
@@ -98,7 +95,7 @@ public class Country {
 	}
 
 	/**
-	 * Get the Continent Name it belongs to
+	 * Get the Continent Name it belongs to.
 	 *
 	 * @return continentName
 	 */
@@ -107,7 +104,7 @@ public class Country {
 	}
 
 	/**
-	 * Set the Continent Name
+	 * Set the Continent Name.
 	 *
 	 * @param continentName
 	 *            name of continent
@@ -174,17 +171,18 @@ public class Country {
 	}
 
 	/**
-	 * Set the isVisited parameter
-	 * 
+	 * Set the isVisited parameter.
+	 *
 	 * @param visited
+	 *            the new visited
 	 */
 	public void setVisited(boolean visited) {
 		isVisited = visited;
 	}
 
 	/**
-	 * get the is isVisited parameter
-	 * 
+	 * get the is isVisited parameter.
+	 *
 	 * @return isVisited
 	 */
 
@@ -193,14 +191,14 @@ public class Country {
 	}
 
 	/**
-	 * Decrease an army in a battle lost
+	 * Decrease an army in a battle lost.
 	 */
 	public void looseArmy() {
 		currentNumberOfArmies--;
 	}
 
 	/**
-	 * Increase an army in a battle won
+	 * Increase an army in a battle won.
 	 */
 	public void addArmy() {
 		currentNumberOfArmies++;

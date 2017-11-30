@@ -1,10 +1,8 @@
 package com.game.risk;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,8 +33,8 @@ public class RiskGameDriver {
 	private static RiskGamePhases gamePhases;
 
 	/**
-	 * Main method for Risk Game Driver Class
-	 * 
+	 * Main method for Risk Game Driver Class.
+	 *
 	 * @param args
 	 *            String[] type argument
 	 * @throws IOException
@@ -48,14 +46,14 @@ public class RiskGameDriver {
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException, InvocationTargetException {
 
-		 Thread thread = new Thread(new Runnable() {
-		
-		 @Override
-		 public void run() {
-		 WelcomeScreenView frame = new WelcomeScreenView();
-		 frame.setVisible(true);
-		 }
-		 });
+		Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				WelcomeScreenView frame = new WelcomeScreenView();
+				frame.setVisible(true);
+			}
+		});
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -63,17 +61,19 @@ public class RiskGameDriver {
 				new LoggingUtil().showLoggingWindow();
 			}
 		});
-//		Thread.sleep(2000);
-//		startTournamentMode();
-		 thread.start();
+
+		thread.start();
 	}
 
 	/**
 	 * Main function for starting game.
-	 * 
+	 *
 	 * @param fileParser
 	 *            parser to read
+	 * @param playerNames
+	 *            the player names
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static void startGame(MapFileReader fileParser, List<String> playerNames) throws IOException {
 		gamePhases = new RiskGamePhases(fileParser);
@@ -94,11 +94,12 @@ public class RiskGameDriver {
 	}
 
 	/**
-	 * Function for starting a saved game
-	 * 
+	 * Function for starting a saved game.
+	 *
 	 * @param input
 	 *            FileInputStream type variable
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static void startLoadedGame(FileInputStream input) throws IOException {
 		CountriesGraph graph = CountriesGraph.parseDelimitedFrom(input);
@@ -131,7 +132,10 @@ public class RiskGameDriver {
 	}
 
 	/**
+	 * Start tournament mode.
+	 *
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static void startTournamentMode() throws IOException {
 		List<String> mapfiles = new ArrayList<>();
@@ -140,14 +144,15 @@ public class RiskGameDriver {
 		computerPlayers.add("Random");
 		computerPlayers.add("Aggressive");
 		computerPlayers.add("Benevolent");
-		mapfiles.add("Quebec.map");
 		int gamesToBePlayed = 3;
 		HashMap<String, List<String>> gameOutcome = new HashMap<>();
 		int mapNumber = 0;
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		String path = "C:\\Concordia University\\Study Material\\SOEN 6441 Advanced Programming Practices\\RISK Game - Project\\Québec.MAP";
+		String path2 = "C:\\Concordia University\\Study Material\\SOEN 6441 Advanced Programming Practices\\RISK Game - Project\\Annys Piratenwelt.map";
+		mapfiles.add(path);
+		mapfiles.add(path2);
 		for (String fileName : mapfiles) {
 			mapNumber++;
-			String path = "C:\\Concordia University\\Study Material\\SOEN 6441 Advanced Programming Practices\\RISK Game - Project\\Québec.MAP";
 			File file = new File(path);
 			System.out.println("Game is being played on " + path);
 
@@ -166,7 +171,7 @@ public class RiskGameDriver {
 
 				List<Player> players = gamePhases.executeStartupPhase(computerPlayers);
 				String winner = null;
-				for (int turn = 0; turn < 30; turn++) {
+				for (int turn = 0; turn < 20; turn++) {
 					for (Player player : players) {
 						gamePhases.selectComputerPlayer(player);
 						player.executePhases();
@@ -194,10 +199,17 @@ public class RiskGameDriver {
 
 		}
 
+		int mapCount = 0;
 		for (String key : gameOutcome.keySet()) {
-			System.out.println("\n\n::::::::::: MAP 1 Outcome :::::::::::");
+			String message = "\n\n::::::::::: MAP " + (++mapCount) + " Outcome :::::::::::";
+			System.out.println(message);
+			System.out.println("Map Selected: " + key);
+			LoggingUtil.logMessage(message);
+			LoggingUtil.logMessage("Map Selected: " + key);
 			for (int i = 0; i < gameOutcome.get(key).size(); i++) {
-				System.out.println("Game " + (i + 1) + ": " + gameOutcome.get(key).get(i));
+				String winMessage = "Game " + (i + 1) + ": " + gameOutcome.get(key).get(i);
+				LoggingUtil.logMessage(winMessage);
+				System.out.println(winMessage);
 			}
 		}
 

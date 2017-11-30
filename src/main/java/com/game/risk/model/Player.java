@@ -22,44 +22,44 @@ import com.game.risk.core.util.ReinforcementPhaseUtil;
  */
 public class Player extends Observable {
 
-	/** Player name */
+	/** Player name. */
 	private String playerName;
 
-	/** Countries owned by the player */
+	/** Countries owned by the player. */
 	private List<Country> countriesOwned;
 
-	/** Card List */
+	/** Card List. */
 	private List<CardType> cardList;
 
-	/** Number of armies */
+	/** Number of armies. */
 	private int numberOfArmies;
 
-	/** Current Domination Percentage for Player Domination View */
+	/** Current Domination Percentage for Player Domination View. */
 	private double currentDominationPercentage;
 
-	/**
-	 * MapFileReader Object
-	 */
+	/** MapFileReader Object. */
 	private MapFileReader fileParser;
 
 	/**
-	 * Indicated the Number of Recent Attack Wins to update Card received in a turn
+	 * Indicated the Number of Recent Attack Wins to update Card received in a turn.
 	 */
 	private boolean isWinner = false;
 
-	/** Indicate the exchanged armies for the cards */
+	/** Indicate the exchanged armies for the cards. */
 	private int exchangeArmiesCount = 5;
 
-	/** Indicate whether the player is a Human or AI */
+	/** Indicate whether the player is a Human or AI. */
 	private boolean isAI;
 
-	/** List of Continents owned entirely by the player **/
+	/** List of Continents owned entirely by the player *. */
 	private List<Continent> continentsOwned;
-	
-	/** Player Strategy*/
+
+	/** Player Strategy. */
 	private PlayerStrategy playerStrategy;
 
 	/**
+	 * Sets the player strategy.
+	 *
 	 * @param playerStrategy
 	 *            the playerStrategy to set
 	 */
@@ -68,8 +68,7 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * Player Constructor
-	 * 
+	 * Player Constructor.
 	 */
 	public Player() {
 		countriesOwned = new ArrayList<>();
@@ -78,8 +77,8 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * Returns a boolean indicating whether the player is AI or Human
-	 * 
+	 * Returns a boolean indicating whether the player is AI or Human.
+	 *
 	 * @return true or false
 	 */
 	public boolean isAI() {
@@ -87,8 +86,8 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * Set the isAI variable to true or false
-	 * 
+	 * Set the isAI variable to true or false.
+	 *
 	 * @param isAI
 	 *            boolean
 	 */
@@ -97,7 +96,8 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * 
+	 * Gets the continents owned.
+	 *
 	 * @return list of entire continents owned by the player (if any)
 	 */
 	public List<Continent> getContinentsOwned() {
@@ -105,8 +105,8 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * Set the continentsOwned list
-	 * 
+	 * Set the continentsOwned list.
+	 *
 	 * @param continentsOwned
 	 *            list of Continents
 	 */
@@ -115,6 +115,8 @@ public class Player extends Observable {
 	}
 
 	/**
+	 * Gets the current domination percentage.
+	 *
 	 * @return the currentDominationPercentage
 	 */
 	public double getCurrentDominationPercentage() {
@@ -122,6 +124,8 @@ public class Player extends Observable {
 	}
 
 	/**
+	 * Sets the current domination percentage.
+	 *
 	 * @param currentDominationPercentage
 	 *            the currentDominationPercentage to set
 	 */
@@ -208,6 +212,8 @@ public class Player extends Observable {
 	}
 
 	/**
+	 * Gets the number of countries owned.
+	 *
 	 * @return Nummber of Countries Owned by player
 	 */
 	public int getNumberOfCountriesOwned() {
@@ -215,18 +221,20 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * Add country to the CountriesOwend list
+	 * Add country to the CountriesOwend list.
 	 *
 	 * @param country
+	 *            the country
 	 */
 	public void addCountry(Country country) {
 		this.countriesOwned.add(country);
 	}
 
 	/**
-	 * Remove a country from the CountriesOwned list
-	 * 
+	 * Remove a country from the CountriesOwned list.
+	 *
 	 * @param country
+	 *            the country
 	 * @return true or false
 	 */
 	public boolean removeCountry(Country country) {
@@ -234,6 +242,8 @@ public class Player extends Observable {
 	}
 
 	/**
+	 * Gets the player strategy.
+	 *
 	 * @return the playerStrategy
 	 */
 	public PlayerStrategy getPlayerStrategy() {
@@ -241,7 +251,7 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * @param playerStrategy
+	 * Execute phases.
 	 */
 	public void executePhases() {
 		playerStrategy.reinforce();
@@ -249,13 +259,19 @@ public class Player extends Observable {
 		playerStrategy.fortify();
 	}
 
-
 	/**
+	 * Start fortification phase.
+	 *
 	 * @param reader
+	 *            the reader
 	 * @param country1
+	 *            the country 1
 	 * @param country2
+	 *            the country 2
 	 * @throws NumberFormatException
+	 *             the number format exception
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void startFortificationPhase(BufferedReader reader, Country country1, Country country2)
 			throws NumberFormatException, IOException {
@@ -302,7 +318,9 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * @return
+	 * Find reinforcement armies.
+	 *
+	 * @return the int
 	 */
 	public int findReinforcementArmies() {
 		System.out.println("\nReinforcement phase begins for " + this.getPlayerName() + "\n");
@@ -316,10 +334,16 @@ public class Player extends Observable {
 	}
 
 	/**
+	 * Attack opponent.
+	 *
 	 * @param attacker
+	 *            the attacker
 	 * @param defender
+	 *            the defender
 	 * @param diceAttacker
+	 *            the dice attacker
 	 * @param diceDefender
+	 *            the dice defender
 	 */
 	public void attackOpponent(Country attacker, Country defender, int diceAttacker, int diceDefender) {
 		System.out.println("\n:: Before Battle Start ::");
@@ -329,7 +353,7 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * @param player
+	 * Adds the card.
 	 */
 	public void addCard() {
 		Random random = new Random();
@@ -347,9 +371,19 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * Removes the cards at the given indices from the deck
-	 * 
-	 **/
+	 * View the cards available with the player.
+	 */
+	public void viewCards() {
+		if (getCardList().size() >= 3) {
+			notifyObservers(true);
+		} else {
+			notifyObservers(false);
+		}
+	}
+
+	/**
+	 * Removes the cards at the given indices from the deck.
+	 */
 	public void removeCardsFromDeck() {
 
 		if (isSameOrDifferentSort(0, 1, 2) == true) {
@@ -363,13 +397,16 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * returns true if the player can turn in cards
-	 * 
+	 * returns true if the player can turn in cards.
+	 *
 	 * @param index1
+	 *            the index 1
 	 * @param index2
+	 *            the index 2
 	 * @param index3
-	 * @return
-	 **/
+	 *            the index 3
+	 * @return true, if is same or different sort
+	 */
 	public boolean isSameOrDifferentSort(int index1, int index2, int index3) {
 
 		boolean condition = false;
@@ -390,7 +427,7 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * 
+	 * Exchange cards with armies.
 	 */
 	public void exchangeCardsWithArmies() {
 		setNumberOfArmies(getNumberOfArmies() + getExchangeArmiesCount());
@@ -398,6 +435,8 @@ public class Player extends Observable {
 	}
 
 	/**
+	 * Checks if is winner.
+	 *
 	 * @return the isWinner
 	 */
 	public boolean isWinner() {
@@ -405,6 +444,8 @@ public class Player extends Observable {
 	}
 
 	/**
+	 * Sets the winner.
+	 *
 	 * @param isWinner
 	 *            the isWinner to set
 	 */
@@ -413,6 +454,8 @@ public class Player extends Observable {
 	}
 
 	/**
+	 * Gets the exchange armies count.
+	 *
 	 * @return the exchangeArmiesCount
 	 */
 	public int getExchangeArmiesCount() {
@@ -420,6 +463,8 @@ public class Player extends Observable {
 	}
 
 	/**
+	 * Sets the exchange armies count.
+	 *
 	 * @param exchangeArmiesCount
 	 *            the exchangeArmiesCount to set
 	 */

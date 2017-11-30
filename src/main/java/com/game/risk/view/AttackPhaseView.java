@@ -27,130 +27,105 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 
 /**
- * Observer class to implement the Attack Phase dice roll
- * 
+ * Observer class to implement the Attack Phase dice roll.
+ *
  * @author Sarthak
  * @author sohrab_singh
- *
  */
 public class AttackPhaseView extends JFrame implements Observer {
 
-	/**
-	 * Serial Version UID
-	 */
+	/** Serial Version UID. */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Main JFrame Object
-	 */
+	/** Main JFrame Object. */
 	private JFrame mainFrame;
 
-	/**
-	 * JPanel object
-	 */
+	/** JPanel object. */
 	private JPanel contentPane;
 
-	/**
-	 * Country object to store the attacker
-	 */
+	/** Country object to store the attacker. */
 	private Country attackerCountry;
 
-	/**
-	 * Coutry object to store the defenders
-	 */
+	/** Coutry object to store the defenders. */
 	private Country defenderCountry;
 
-	/**
-	 * Country object to store the current country
-	 */
+	/** Country object to store the current country. */
 	private Country currentCountry;
 
-	/**
-	 * JLabel object to show image icon indicating attacker
-	 */
+	/** JLabel object to show image icon indicating attacker. */
 	private JLabel labelImage1;
 
-	/**
-	 * JLabel object to show image icon indicating defender
-	 */
+	/** JLabel object to show image icon indicating defender. */
 	private JLabel labelImage2;
 
-	/** label Dice 1 */
+	/** label Dice 1. */
 	private JLabel lblDice1;
 
-	/** Label Dice 2 */
+	/** Label Dice 2. */
 	private JLabel lblDice2;
 
-	/** Label Dice 3 */
+	/** Label Dice 3. */
 	private JLabel lblDice3;
 
-	/**
-	 * Max Armies allowed to move after capturing defender
-	 */
+	/** Label Attack. */
+	private JLabel lblAttacks;
+
+	/** Max Armies allowed to move after capturing defender. */
 	private int maxArmies;
 
-	/**
-	 * Min armies allowed to move after capturing defender
-	 */
+	/** Min armies allowed to move after capturing defender. */
 	private int minArmies;
 
-	/**
-	 * No of dice selected by attacker
-	 */
+	/** No of dice selected by attacker. */
 	private int diceAttacker;
 
-	/**
-	 * No of dice selected by defender
-	 */
+	/** No of dice selected by defender. */
 	private int diceDefender;
 
-	/** Defender Armies */
+	/** Defender Armies. */
 	private int defenderArmies;
 
-	/** Attacker Armies */
+	/** Attacker Armies. */
 	private int attackerArmies;
 
 	/**
-	 * Label Message to describe update the control from attack to moving armies
+	 * Label Message to describe update the control from attack to moving armies.
 	 */
 	private JLabel lblMessage;
 
-	/** Label minus 1 */
+	/** Label minus 1. */
 	private JLabel labelMinus1;
 
-	/** Label Plus 1 */
+	/** Label Plus 1. */
 	private JLabel labelPlus1;
 
-	/** Country 1 armies */
+	/** Country 1 armies. */
 	private JLabel country1Armies;
 
-	/** Country 2 armies */
+	/** Country 2 armies. */
 	private JLabel country2Armies;
 
 	/** Label Attack Dice. */
 	private JLabel lblAttackDice;
 
-	/** Label Defend Dice */
+	/** Label Defend Dice. */
 	private JLabel lblDefendDice;
 
-	/** Between Move Armies */
+	/** Between Move Armies. */
 	private JButton btnMoveArmies;
 
+	/** The game phases. */
 	private RiskGamePhases gamePhases;
 
 	/**
-	 * Attack Phase View Constructor
-	 * 
+	 * Attack Phase View Constructor.
+	 *
 	 * @param gamePhases
-	 * @param riskGamePhases
-	 * 
+	 *            the game phases
 	 * @param attacker
 	 *            the attacker
 	 * @param defender
 	 *            the defender
-	 * 
-	 * @param reader
-	 *            MapFileReader type
 	 */
 	public AttackPhaseView(RiskGamePhases gamePhases, Country attacker, Country defender) {
 		this.attackerCountry = attacker;
@@ -160,7 +135,12 @@ public class AttackPhaseView extends JFrame implements Observer {
 		defenderArmies = defenderCountry.getCurrentNumberOfArmies();
 		attackerArmies = attackerCountry.getCurrentNumberOfArmies();
 		currentCountry = attackerCountry;
-		initializeControlToAttacker();
+
+		if (gamePhases.getCurrentState() == PhaseStates.STATE_FORTIFY) {
+			captureDefender();
+		} else {
+			initializeControlToAttacker();
+		}
 	}
 
 	/**
@@ -185,7 +165,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 	}
 
 	/**
-	 * Initialize view of the Attack Phase view with jframe, jpanel and jlabel
+	 * Initialize view of the Attack Phase view with jframe, jpanel and jlabel.
 	 */
 	private void initializeView() {
 		setBackground(Color.BLACK);
@@ -226,7 +206,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 		country2Armies.setBounds(471, 53, 109, 40);
 		contentPane.add(country2Armies);
 
-		JLabel lblAttacks = new JLabel("attacks");
+		lblAttacks = new JLabel("attacks");
 		lblAttacks.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblAttacks.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAttacks.setForeground(Color.WHITE);
@@ -357,10 +337,11 @@ public class AttackPhaseView extends JFrame implements Observer {
 		});
 	}
 
-	/***
-	 * Change the current Transfer Armies.
-	 * 
+	/**
+	 * * Change the current Transfer Armies.
+	 *
 	 * @param isIncrement
+	 *            the is increment
 	 */
 	private void changeTransferArmies(boolean isIncrement) {
 		int moveArmies = Integer.parseInt(lblDice2.getText());
@@ -378,16 +359,19 @@ public class AttackPhaseView extends JFrame implements Observer {
 		}
 	}
 
-	/** Move Armies after the attacker is declared winner after battle */
+	/**
+	 * Move Armies after the attacker is declared winner after battle.
+	 */
 	private void moveArmies() {
 		int moveArmies = Integer.parseInt(lblDice2.getText());
 		attackerCountry.setCurrentNumberOfArmies(attackerCountry.getCurrentNumberOfArmies() - moveArmies);
-		defenderCountry.setCurrentNumberOfArmies(moveArmies);
-		mainFrame.setVisible(false);
+		defenderCountry.setCurrentNumberOfArmies(defenderCountry.getCurrentNumberOfArmies() + moveArmies);
 		gamePhases.notifyStateChange(PhaseStates.STATE_ACTIVE);
 		if (AttackPhaseUtil.isattackEnds(gamePhases.getPlayer())) {
 			gamePhases.notifyAttackEnds();
 		}
+		mainFrame.setVisible(false);
+		mainFrame.dispose();
 	}
 
 	/**
@@ -461,7 +445,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 	}
 
 	/**
-	 * Get the current country
+	 * Get the current country.
 	 *
 	 * @return Country
 	 */
@@ -479,6 +463,11 @@ public class AttackPhaseView extends JFrame implements Observer {
 		this.currentCountry = currentCountry;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if (arg1 != null) {
@@ -512,6 +501,7 @@ public class AttackPhaseView extends JFrame implements Observer {
 		labelPlus1.setVisible(true);
 		maxArmies = attackerCountry.getCurrentNumberOfArmies() - 1;
 		minArmies = 1;
+		lblAttacks.setVisible(false);
 		btnMoveArmies.setVisible(true);
 		lblDice2.setText(Integer.toString(maxArmies));
 	}
@@ -533,24 +523,18 @@ public class AttackPhaseView extends JFrame implements Observer {
 			System.out.println(attackerCountry.getCountryName() + " (" + attackerCountry.getPlayerName() + ") has lost "
 					+ ((diffAttackerArmies > 1) ? diffAttackerArmies + " armies" : "an army"));
 
-		System.out.println(":: Update after Battle ::");
 		// Updating attacker and defender armies
 		attackerArmies = attackerCountry.getCurrentNumberOfArmies();
 		defenderArmies = defenderCountry.getCurrentNumberOfArmies();
-		System.out.println("Attacker Armies: " + attackerArmies);
-		System.out.println("Defender Armies: " + defenderArmies);
 		country1Armies.setText(Integer.toString(attackerCountry.getCurrentNumberOfArmies()));
 		country2Armies.setText(Integer.toString(defenderCountry.getCurrentNumberOfArmies()));
 
 		if (attackerCountry.getCurrentNumberOfArmies() == 1) {
 			observable.setCurrentState(PhaseStates.STATE_ACTIVE);
 
-			LoggingUtil.logMessage(attackerCountry.getCountryName() + " (" + attackerCountry.getPlayerName()
-					+ ") has lost the battle");
+			LoggingUtil.logMessage(attackerCountry.getPlayerName() + " has lost the battle");
 			diceAttacker = 0;
 			diceDefender = 0;
-			attackerCountry = null;
-			defenderCountry = null;
 			gamePhases.setCurrentState(PhaseStates.STATE_ACTIVE);
 			if (AttackPhaseUtil.isattackEnds(gamePhases.getCurrentPlayer())) {
 				gamePhases.notifyStateChange("attack");

@@ -25,9 +25,10 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PlayerSelectionView.
+ * 
+ * @author Sarthak
  */
 public class PlayerSelectionView extends JFrame implements MouseListener {
 
@@ -103,6 +104,9 @@ public class PlayerSelectionView extends JFrame implements MouseListener {
 
 	/**
 	 * Instantiates a new player selection view.
+	 *
+	 * @param fileReader
+	 *            the file reader
 	 */
 	public PlayerSelectionView(MapFileReader fileReader) {
 		this.fileReader = fileReader;
@@ -209,6 +213,9 @@ public class PlayerSelectionView extends JFrame implements MouseListener {
 		contentPane.add(btnStartGame);
 	}
 
+	/**
+	 * On start button pressed.
+	 */
 	protected void onStartButtonPressed() {
 		List<String> playerNames = new ArrayList<>();
 		int playersCount = Integer.parseInt(playerCountTypes[comboBox1.getSelectedIndex()]);

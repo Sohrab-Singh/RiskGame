@@ -11,20 +11,25 @@ import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 /**
- * @author sohrab_singh
+ * The Class BenevolentPlayerStrategy.
  *
+ * @author sohrab_singh
  */
 public class BenevolentPlayerStrategy implements PlayerStrategy {
 
+	/** The player. */
 	Player player;
 
+	/** The countries graph. */
 	private CountriesGraph countriesGraph;
 
 	/**
+	 * Instantiates a new benevolent player strategy.
+	 *
 	 * @param player
+	 *            the player
 	 * @param countriesGraph
-	 * @param gamePhases
-	 * 
+	 *            the countries graph
 	 */
 	public BenevolentPlayerStrategy(Player player, CountriesGraph countriesGraph) {
 		this.player = player;
@@ -37,7 +42,8 @@ public class BenevolentPlayerStrategy implements PlayerStrategy {
 		LoggingUtil.logMessage("Reinforcement phase begins for Benevolent player");
 		List<Country> countriesOwned = player.getCountriesOwned();
 		Collections.sort(countriesOwned, Country.ArmyComparator);
-		System.out.println("Total number of reinforcement armies calculated for Benevolent player is " + player.findReinforcementArmies());
+		System.out.println("Total number of reinforcement armies calculated for Benevolent player is "
+				+ player.findReinforcementArmies());
 		player.setNumberOfArmies(player.getNumberOfArmies() + player.findReinforcementArmies());
 		Country weakestCountry = countriesOwned.get(0);
 		System.out.println("Benevolent player " + player.getNumberOfArmies() + " armies to weak country "
@@ -72,6 +78,15 @@ public class BenevolentPlayerStrategy implements PlayerStrategy {
 
 	}
 
+	/**
+	 * Gets the strongest country adjacent.
+	 *
+	 * @param weakestCountry
+	 *            the weakest country
+	 * @param countriesOwned
+	 *            the countries owned
+	 * @return the strongest country adjacent
+	 */
 	private Country getStrongestCountryAdjacent(Country weakestCountry, List<Country> countriesOwned) {
 		List<Country> strongCountriesAdjacent = new ArrayList<>();
 

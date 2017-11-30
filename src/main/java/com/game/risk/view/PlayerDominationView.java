@@ -19,14 +19,13 @@ import javax.swing.border.EmptyBorder;
 import com.game.risk.model.Player;
 
 /**
- * @author sohrab_singh
+ * The Class PlayerDominationView.
  *
+ * @author sohrab_singh
  */
 public class PlayerDominationView extends JFrame implements Observer, MouseListener {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 2150623152505948331L;
 
 	/** The color panel. */
@@ -35,17 +34,23 @@ public class PlayerDominationView extends JFrame implements Observer, MouseListe
 	/** The players. */
 	private List<Player> players;
 
+	/** The status panel. */
 	private JPanel statusPanel;
 
 	/**
+	 * Instantiates a new player domination view.
+	 *
 	 * @param players
-	 * 
+	 *            the players
 	 */
 	public PlayerDominationView(List<Player> players) {
 		this.players = players;
 		initializeView();
 	}
 
+	/**
+	 * Initialize view.
+	 */
 	private void initializeView() {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,6 +113,9 @@ public class PlayerDominationView extends JFrame implements Observer, MouseListe
 		}
 	}
 
+	/**
+	 * Update player domination panel.
+	 */
 	private void updatePlayerDominationPanel() {
 		statusPanel.removeAll();
 		int i = 0;

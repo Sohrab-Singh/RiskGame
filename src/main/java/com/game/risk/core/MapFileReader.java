@@ -21,48 +21,32 @@ import java.util.List;
  */
 public class MapFileReader {
 
-	/**
-	 * FileReader class variable
-	 */
+	/** FileReader class variable. */
 	private FileReader fileReader;
 
-	/**
-	 * HashMap to store searched countries through the map file
-	 */
+	/** HashMap to store searched countries through the map file. */
 	private HashMap<String, Country> countriesHashMap;
 
-	/**
-	 * HashMap to store searched continents through the map file
-	 */
+	/** HashMap to store searched continents through the map file. */
 	private HashMap<String, Continent> continentHashMap;
 
-	/**
-	 * Countries Graph to store adjacent countries
-	 */
+	/** Countries Graph to store adjacent countries. */
 	private CountriesGraph countriesGraph;
 
-	/**
-	 * Map file writer
-	 */
+	/** Map file writer. */
 	private MapFileWriter mapFileWriter;
 
-	/**
-	 * Map meta deta
-	 */
+	/** Map meta deta. */
 	private List<String> mapMetaData = new ArrayList<>();
 
-	/**
-	 * Message MapFileReader Instance
-	 */
+	/** Message MapFileReader Instance. */
 	private com.game.risk.model.autogen.GameStateDataProtos.MapFileReader reader;
 
-	/**
-	 * Name of the file selected
-	 */
+	/** Name of the file selected. */
 	private File fileName;
 
 	/**
-	 * Map File Parser Default Constructor
+	 * Map File Parser Default Constructor.
 	 */
 	public MapFileReader() {
 		countriesHashMap = new HashMap<>();
@@ -88,12 +72,21 @@ public class MapFileReader {
 		mapFileWriter = new MapFileWriter(this);
 	}
 
+	/**
+	 * Instantiates a new map file reader.
+	 *
+	 * @param reader
+	 *            the reader
+	 */
 	public MapFileReader(com.game.risk.model.autogen.GameStateDataProtos.MapFileReader reader) {
 		this.reader = reader;
 		countriesHashMap = new HashMap<>();
 		continentHashMap = new HashMap<>();
 	}
 
+	/**
+	 * Update countries model.
+	 */
 	public void updateCountriesModel() {
 		System.out.println(reader.getCountryMapMap().size());
 		for (com.game.risk.model.autogen.GameStateDataProtos.Country country : reader.getCountryMapMap().values()) {
@@ -107,6 +100,9 @@ public class MapFileReader {
 		}
 	}
 
+	/**
+	 * Update continents model.
+	 */
 	public void updateContinentsModel() {
 		for (com.game.risk.model.autogen.GameStateDataProtos.Continent continent : reader.getContinentMapMap()
 				.values()) {
@@ -195,9 +191,10 @@ public class MapFileReader {
 
 	/**
 	 * Check File Validation.
-	 * 
+	 *
 	 * @return true if file is valid
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public boolean checkFileValidation() throws IOException {
 
@@ -214,7 +211,7 @@ public class MapFileReader {
 	}
 
 	/**
-	 * Get the continent HashMap
+	 * Get the continent HashMap.
 	 *
 	 * @return Continent hashmap
 	 */
@@ -223,7 +220,7 @@ public class MapFileReader {
 	}
 
 	/**
-	 * Get the countries HashMap
+	 * Get the countries HashMap.
 	 *
 	 * @return Countries hashmap
 	 */
@@ -241,9 +238,10 @@ public class MapFileReader {
 	}
 
 	/**
-	 * Set the Countries Graph variable
-	 * 
+	 * Set the Countries Graph variable.
+	 *
 	 * @param countriesGraph
+	 *            the new countries graph
 	 */
 	public void setCountriesGraph(CountriesGraph countriesGraph) {
 		this.countriesGraph = countriesGraph;

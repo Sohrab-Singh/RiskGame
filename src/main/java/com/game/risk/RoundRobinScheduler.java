@@ -5,20 +5,19 @@ import java.util.List;
 
 /**
  * Round Robin Scheduler for generic list of objects.
- * 
+ *
  * @author sohrab_singh
  * @author Sarthak
  * @param <T>
- *
+ *            the generic type
  */
 public class RoundRobinScheduler<T> {
 
 	/** Iterator for list. */
 	private Iterator<T> iterator;
 
-	/** Generic list */
+	/** Generic list. */
 	private List<T> list;
-
 
 	/**
 	 * Round robin scheduler.
@@ -45,8 +44,8 @@ public class RoundRobinScheduler<T> {
 	}
 
 	/**
-	 * Update the current position after saved game reload
-	 * 
+	 * Update the current position after saved game reload.
+	 *
 	 * @param item
 	 *            T type
 	 * @return current required position T type variable
@@ -63,8 +62,8 @@ public class RoundRobinScheduler<T> {
 	}
 
 	/**
-	 * Get the list of any type T
-	 * 
+	 * Get the list of any type T.
+	 *
 	 * @return list
 	 */
 	public List<T> getList() {
@@ -72,7 +71,10 @@ public class RoundRobinScheduler<T> {
 	}
 
 	/**
-	 * @param list the list to set
+	 * Sets the list.
+	 *
+	 * @param list
+	 *            the list to set
 	 */
 	public void setList(List<T> list) {
 		this.list = list;

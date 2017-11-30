@@ -97,7 +97,7 @@ public class Continent {
 	}
 
 	/**
-	 * Add a country to the countries ArrayList
+	 * Add a country to the countries ArrayList.
 	 *
 	 * @param country
 	 *            country to be added to the continent
@@ -107,7 +107,7 @@ public class Continent {
 	}
 
 	/**
-	 * Remove a country from the countries ArrayList
+	 * Remove a country from the countries ArrayList.
 	 *
 	 * @param country
 	 *            country to be removed from the continent.
@@ -116,11 +116,15 @@ public class Continent {
 		countries.remove(country);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Continent [continentName=" + continentName + ", countries=" + countries + ", controlValue="
 				+ controlValue + "]";
 	}
-	
-	
+
 }

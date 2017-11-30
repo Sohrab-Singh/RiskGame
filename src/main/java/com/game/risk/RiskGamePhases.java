@@ -46,9 +46,10 @@ public class RiskGamePhases extends Observable {
 	/** Player object indicating the current currentPlayer playing the game. */
 	private Player currentPlayer;
 
+	/** The tournament mode. */
 	private boolean tournamentMode;
 
-	/** Round robin scheduler */
+	/**  Round robin scheduler. */
 	private RoundRobinScheduler<Player> robinScheduler;
 
 	/**
@@ -93,7 +94,9 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * @return
+	 * Execute start up processes.
+	 *
+	 * @return the list
 	 */
 	public List<Player> executeStartUpProcesses() {
 		startUpPhase.assignCountries();
@@ -108,11 +111,11 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * <<<<<<< Updated upstream
-	 * 
-	 * @param computerPlayers
-	 * @return
-	 * @throws IOException
+	 * Execute startup phase.
+	 *
+	 * @param computerPlayers the computer players
+	 * @return the list
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public List<Player> executeStartupPhase(List<String> computerPlayers) throws IOException {
 		startUpPhase = new StartUpPhase(fileParser, computerPlayers);
@@ -120,6 +123,8 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
+	 * Checks if is tournament mode.
+	 *
 	 * @return the tournamentMode
 	 */
 	public boolean isTournamentMode() {
@@ -127,24 +132,23 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * @param tournamentMode
-	 *            the tournamentMode to set
+	 * Sets the tournament mode.
+	 *
+	 * @param tournamentMode            the tournamentMode to set
 	 */
 	public void setTournamentMode(boolean tournamentMode) {
 		this.tournamentMode = tournamentMode;
 	}
 
 	/**
-	 * Start the Attack Phase
-	 * 
-	 * @param attackingCountry
-	 *            the attacking country
-	 * @param defendingCountry
-	 *            the defending country
+	 * Start the Attack Phase.
+	 *
+	 * @param attackingCountry            the attacking country
+	 * @param defendingCountry            the defending country
 	 */
 	public void startAttackPhase(Country attackingCountry, Country defendingCountry) {
 		AttackPhaseView attackView = new AttackPhaseView(this, attackingCountry, defendingCountry);
-		LoggingUtil.logMessage("Initialized Attack View: Select Dice Rolls");
+		LoggingUtil.logMessage("\nSelect Dice Rolls to begin Attack.");
 		attackView.setVisible(true);
 		setCurrentState(PhaseStates.STATE_ATTACK);
 		this.addObserver(attackView);
@@ -276,9 +280,8 @@ public class RiskGamePhases extends Observable {
 
 	/**
 	 * Set Player List.
-	 * 
-	 * @param playerList
-	 * 
+	 *
+	 * @param playerList the new player list
 	 * @return list of players
 	 */
 	public void setPlayerList(List<Player> playerList) {
@@ -286,7 +289,7 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * Update Card State
+	 * Update Card State.
 	 */
 	public void updateCard() {
 		if (currentPlayer.isWinner()) {
@@ -357,12 +360,12 @@ public class RiskGamePhases extends Observable {
 	 *             the number format exception
 	 */
 	public void startFortificationPhase(Country start, Country end) {
-		try {
-			currentPlayer.startFortificationPhase(reader, start, end);
-		} catch (NumberFormatException | IOException e) {
-			e.printStackTrace();
-		}
-		notifyStateChange(PhaseStates.STATE_ACTIVE);
+		LoggingUtil.logMessage("Fortification Phase starts");
+		setCurrentState(PhaseStates.STATE_FORTIFY);
+		AttackPhaseView view = new AttackPhaseView(this, start, end);
+		LoggingUtil.logMessage("\nSelect the Number of Armies to Fortify.");
+		view.setVisible(true);
+		this.addObserver(view);
 	}
 
 	/**
@@ -469,8 +472,7 @@ public class RiskGamePhases extends Observable {
 	/**
 	 * Set Player's Strategy.
 	 *
-	 * @param computerPlayer
-	 *            the computer player
+	 * @param player the player
 	 */
 	public void selectComputerPlayer(Player player) {
 
@@ -494,11 +496,14 @@ public class RiskGamePhases extends Observable {
 	}
 
 	/**
-	 * @return
+	 * Gets the total countries.
+	 *
+	 * @return the total countries
 	 */
 	public int getTotalCountries() {
 
 		return fileParser.getCountriesHashMap().size();
 	}
+
 
 }

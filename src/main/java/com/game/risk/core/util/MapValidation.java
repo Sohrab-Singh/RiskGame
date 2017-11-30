@@ -8,37 +8,30 @@ import java.util.*;
 
 /**
  * Map Validation class is implemented for data validation before loading it
- * with map file parser
+ * with map file parser.
  *
  * @author Vida Abdollahi
  * @author sohrab_singh
  */
 public class MapValidation {
 
-	/**
-	 * Array List to store continents which will be found in [Continents] tag
-	 */
+	/** Array List to store continents which will be found in [Continents] tag. */
 	private ArrayList<String> continentInContinent;
 
-	/**
-	 * Array List to store continents which will be found in [Territories] tag
-	 */
+	/** Array List to store continents which will be found in [Territories] tag. */
 	private ArrayList<String> continentInTerritory;
 
 	/**
-	 * Hash Map to store each country and its adjacent countries as an array list
+	 * Hash Map to store each country and its adjacent countries as an array list.
 	 */
 	private HashMap<String, ArrayList<String>> Countries;
 
-	/**
-	 * This parameter will be true if the given graph is a connected graph
-	 */
+	/** This parameter will be true if the given graph is a connected graph. */
 	private boolean isConnectedGraph;
 
 	/**
-	 * Map validation constructor
+	 * Map validation constructor.
 	 */
-
 	public MapValidation() {
 		continentInContinent = new ArrayList<>();
 		continentInTerritory = new ArrayList<>();
@@ -48,8 +41,8 @@ public class MapValidation {
 	/**
 	 * Method to check whether file is valid or not.
 	 *
-	 * @param filename
-	 *            file name to be validated.
+	 * @param file
+	 *            the file
 	 * @return true if file is valid otherwise false.
 	 * @throws IOException
 	 *             input out exception
@@ -57,7 +50,6 @@ public class MapValidation {
 	public boolean validateFile(File file) throws IOException {
 
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-		String line;
 		boolean isValid = true;
 		FileInputStream fis = new FileInputStream(file);
 		byte[] data = new byte[(int) file.length()];
@@ -84,6 +76,11 @@ public class MapValidation {
 		return isValid;
 	}
 
+	/**
+	 * Check country adjacent one way.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean checkCountryAdjacentOneWay() {
 		boolean isValid = true;
 		for (String country : Countries.keySet()) {
@@ -105,6 +102,11 @@ public class MapValidation {
 		return isValid;
 	}
 
+	/**
+	 * Check atleast one country in continent.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean checkAtleastOneCountryInContinent() {
 		boolean isValid = true;
 		for (Object continent : continentInContinent) {
@@ -116,6 +118,11 @@ public class MapValidation {
 		return isValid;
 	}
 
+	/**
+	 * Check continents valid.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean checkContinentsValid() {
 		if (continentInContinent.size() != continentInTerritory.size()) {
 			System.out.println(
@@ -126,6 +133,15 @@ public class MapValidation {
 		return true;
 	}
 
+	/**
+	 * Check file format valid.
+	 *
+	 * @param bufferedReader
+	 *            the buffered reader
+	 * @return true, if successful
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	private boolean checkFileFormatValid(BufferedReader bufferedReader) throws IOException {
 		String line;
 		boolean isValid = true;
@@ -158,6 +174,7 @@ public class MapValidation {
 	 *            previous line
 	 * @return true, if format is valid
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public boolean checkContinentFormat(BufferedReader bufferedReader, String line) throws IOException {
 		boolean isValid = true;
@@ -194,6 +211,7 @@ public class MapValidation {
 	 *            current read line
 	 * @return true if format is valid otherwise false
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public boolean checkCountriesFormat(BufferedReader bufferedReader, String line) throws IOException {
 		boolean isValid = true;
@@ -260,11 +278,11 @@ public class MapValidation {
 	}
 
 	/**
-	 * Check to see whether the garph is a connected graph (DFS)
-	 * 
-	 * @param countriesGraph
-	 * @return true if it is a connected graph
+	 * Check to see whether the garph is a connected graph (DFS).
 	 *
+	 * @param countriesGraph
+	 *            the countries graph
+	 * @return true if it is a connected graph
 	 */
 	public boolean checkConnectedGraph(CountriesGraph countriesGraph) {
 
@@ -296,6 +314,7 @@ public class MapValidation {
 				isConnectedGraph = true;
 			} else {
 				isConnectedGraph = false;
+				break;
 			}
 		}
 

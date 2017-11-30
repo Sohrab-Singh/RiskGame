@@ -12,22 +12,30 @@ import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 /**
- * @author sohrab_singh
+ * The Class CheaterPlayerStrategy.
  *
+ * @author sohrab_singh
  */
 public class CheaterPlayerStrategy implements PlayerStrategy {
 
+	/** The player. */
 	Player player;
 
+	/** The countries graph. */
 	private CountriesGraph countriesGraph;
 
+	/** The game phases. */
 	private RiskGamePhases gamePhases;
 
 	/**
+	 * Instantiates a new cheater player strategy.
+	 *
 	 * @param player
+	 *            the player
 	 * @param countriesGraph
+	 *            the countries graph
 	 * @param gamePhases
-	 * 
+	 *            the game phases
 	 */
 	public CheaterPlayerStrategy(Player player, CountriesGraph countriesGraph, RiskGamePhases gamePhases) {
 		this.player = player;
@@ -35,6 +43,11 @@ public class CheaterPlayerStrategy implements PlayerStrategy {
 		this.gamePhases = gamePhases;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.game.risk.core.strategy.PlayerStrategy#reinforce()
+	 */
 	@Override
 	public void reinforce() {
 		for (Country country : player.getCountriesOwned()) {
@@ -42,6 +55,11 @@ public class CheaterPlayerStrategy implements PlayerStrategy {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.game.risk.core.strategy.PlayerStrategy#attack()
+	 */
 	@Override
 	public void attack() {
 		List<Country> countries = new ArrayList<>();
@@ -58,19 +76,31 @@ public class CheaterPlayerStrategy implements PlayerStrategy {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.game.risk.core.strategy.PlayerStrategy#fortify()
+	 */
 	@Override
 	public void fortify() {
 		for (Country country : player.getCountriesOwned()) {
 			List<Country> defenderList = findingNeighboursOfOtherPlayers(country);
 			if (!defenderList.isEmpty()) {
-				for (Country country2 : defenderList) {
-					country2.setCurrentNumberOfArmies(2 * country2.getCurrentNumberOfArmies());
-				}
+				country.setCurrentNumberOfArmies(2 * country.getCurrentNumberOfArmies());
+
 			}
 		}
 
 	}
 
+	/**
+	 * Update country to player.
+	 *
+	 * @param defender
+	 *            the defender
+	 * @param attacker
+	 *            the attacker
+	 */
 	private void updateCountryToPlayer(Country defender, Country attacker) {
 		List<Player> playerList = gamePhases.getPlayerList();
 		Iterator<Player> playerIterator = playerList.iterator();
@@ -86,7 +116,11 @@ public class CheaterPlayerStrategy implements PlayerStrategy {
 	}
 
 	/**
-	 * 
+	 * Finding neighbours of other players.
+	 *
+	 * @param attacker
+	 *            the attacker
+	 * @return the list
 	 */
 	private List<Country> findingNeighboursOfOtherPlayers(Country attacker) {
 		LinkedList<Country> adjCountries = countriesGraph.getAdjListHashMap().get(attacker);

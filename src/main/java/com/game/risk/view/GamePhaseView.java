@@ -101,16 +101,6 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	/** Current Selection of the adjacent country. */
 	private int currentAdjacentCountry;
 
-	/**
-	 * Country object from where the fortification begins with.
-	 */
-	private Country startCountry;
-
-	/**
-	 * Country object from where the fortification ends.
-	 */
-	private Country moveCountry;
-
 	/** JLabel Array object to store the player owned country labels. */
 	private JPanel jpanels[];
 
@@ -120,7 +110,7 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	/** JButton object to perform fortification phase init. */
 	private JButton btnFortify;
 
-	/** JButton object to save the game */
+	/** JButton object to save the game. */
 	private JButton btnSave;
 
 	/** JButton object to end the player's turn. */
@@ -145,25 +135,27 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	private int currentState;
 
 	/**
-	 * File Output Stream to write the protobuf generated data structure to the file
+	 * File Output Stream to write the protobuf generated data structure to the
+	 * file.
 	 */
 	private FileOutputStream output;
 
-	/** Observable class for the Game Phase View Observer */
+	/** Observable class for the Game Phase View Observer. */
 	private RiskGamePhases gamePhases;
 
+	/** The country protobuf map. */
 	private HashMap<String, com.game.risk.model.autogen.GameStateDataProtos.Country> countryProtobufMap;
+
+	/** The player protobuf map. */
 	private HashMap<String, com.game.risk.model.autogen.GameStateDataProtos.Player> playerProtobufMap;
 
 	/**
 	 * GamePhaseView Constructor.
-	 * 
-	 * @param gamePhases
 	 *
+	 * @param gamePhases
+	 *            the game phases
 	 * @param reader
 	 *            MapFileReader object
-	 * @param players
-	 *            the players
 	 */
 	public GamePhaseView(RiskGamePhases gamePhases, MapFileReader reader) {
 		this.fileParser = reader;
@@ -270,26 +262,26 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 
 		btnAttack = new JButton("Attack");
 		btnAttack.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAttack.setBounds(356, 13, 97, 25);
+		btnAttack.setBounds(279, 13, 142, 25);
 		btnAttack.addMouseListener(this);
 		panel.add(btnAttack);
 
 		btnFortify = new JButton("Fortify");
 		btnFortify.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnFortify.setBounds(476, 13, 97, 25);
+		btnFortify.setBounds(433, 13, 140, 25);
 		btnFortify.addMouseListener(this);
 		panel.add(btnFortify);
 
 		btnEndTurn = new JButton("End Turn");
 		btnEndTurn.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnEndTurn.setBounds(598, 13, 106, 25);
+		btnEndTurn.setBounds(598, 13, 147, 25);
 		btnEndTurn.addMouseListener(this);
 		panel.add(btnEndTurn);
 
 		btnSave = new JButton("Save");
 		btnSave.addMouseListener(this);
 		btnSave.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnSave.setBounds(598, 83, 106, 30);
+		btnSave.setBounds(639, 83, 106, 30);
 		panel.add(btnSave);
 
 		lblCurrentPhase = new JLabel("Reinforcement");
@@ -364,7 +356,48 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	}
 
 	/**
-	 * Update player adjacent countries.
+	 * Update player owned adjacent countries.
+	 *
+	 * @param country
+	 *            the country
+	 */
+	private void updatePlayerOwnedAdjacentCountries(Country country) {
+		panel_6.removeAll();
+		LinkedList<Country> adjCountries = fileParser.getCountriesGraph().getAdjListHashMap().get(country);
+		System.out.println("AdjCountries: " + adjCountries.size());
+		Border border = BorderFactory.createLineBorder(Color.WHITE, 2, true);
+		adjPanels = new ArrayList<>();
+		adjPanels.clear();
+		int adjCount = 0;
+		adjacentPanelHashMap.clear();
+		for (int i = 0; i < adjCountries.size(); i++) {
+
+			if (adjCountries.get(i).getPlayerName().equals(currentPlayer.getPlayerName())) {
+				JLabel adjCountryName = new JLabel(adjCountries.get(i).getCountryName());
+				JPanel adjPanel = new JPanel();
+				adjPanel.setBackground(null);
+				adjCountryName.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(5, 5, 5, 5)));
+				adjPanel.setBorder(new EmptyBorder(-2, -2, -1, -1));
+				adjPanel.add(adjCountryName);
+				JPanel armyCount = new JPanel();
+				JLabel adjArmyCountLabel = new JLabel(Integer.toString(adjCountries.get(i).getCurrentNumberOfArmies()));
+				adjArmyCountLabel.setForeground(Color.WHITE);
+				armyCount.setBackground(Color.BLACK);
+				armyCount.add(adjArmyCountLabel);
+				adjPanel.add(armyCount);
+				adjPanel.addMouseListener(this);
+				adjacentPanelHashMap.put(adjPanel, adjCount);
+				adjPanels.add(adjCount++, adjPanel);
+				panel_6.add(adjPanel);
+			}
+
+		}
+		panel_6.validate();
+		panel_6.repaint();
+	}
+
+	/**
+	 * Update player adjacent countries that are its opponents.
 	 *
 	 * @param country
 	 *            the country
@@ -372,9 +405,9 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	private void updatePlayerAdjacentCountries(Country country) {
 		panel_6.removeAll();
 		LinkedList<Country> adjCountries = fileParser.getCountriesGraph().getAdjListHashMap().get(country);
-		System.out.println("AdjCountries: " + adjCountries.size());
 		Border border = BorderFactory.createLineBorder(Color.WHITE, 2, true);
 		adjPanels = new ArrayList<>();
+		adjPanels.clear();
 		int adjCount = 0;
 		for (int i = 0; i < adjCountries.size(); i++) {
 
@@ -414,19 +447,28 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 			populateProtobufDataModel(fileChooser);
 
 		} else if (e.getComponent() == btnAttack) {
-			if (attackingCountry.getCurrentNumberOfArmies() >= 2
-					&& (defendingCountry.getCurrentNumberOfArmies() >= 1)) {
-				gamePhases.startAttackPhase(attackingCountry, defendingCountry);
+
+			if (btnAttack.getText().equals("End Attack")) {
+				updatePlayerOwnedAdjacentCountries(attackingCountry);
+				btnAttack.setVisible(false);
 			} else {
-				LoggingUtil.logMessage("Not Enough Armies to proceed attack.");
+				if (attackingCountry.getCurrentNumberOfArmies() >= 2
+						&& (defendingCountry.getCurrentNumberOfArmies() >= 1)) {
+					gamePhases.startAttackPhase(attackingCountry, defendingCountry);
+				} else {
+					LoggingUtil.logMessage("Not Enough Armies to proceed Attack.");
+				}
 			}
 
 		} else if (e.getComponent() == btnEndTurn) {
 			gamePhases.updateCard();
 			gamePhases.nextPlayer();
 		} else if (e.getComponent() == btnFortify) {
+			lblCurrentPhase.setText("Fortification Phase");
+			gamePhases.startFortificationPhase(attackingCountry, defendingCountry);
+
 			gamePhases.updateDominationPercentage();
-			gamePhases.startFortificationPhase(startCountry, moveCountry);
+
 		} else if (panelHashMap.containsKey((JPanel) e.getComponent())) {
 			Integer value = panelHashMap.get((JPanel) e.getComponent());
 			if (currentOwnedCountry != -1)
@@ -437,6 +479,7 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 			// Find country name from the jlabel object wrapped in selected country jpanel
 			String countryName = ((JLabel) jpanels[currentOwnedCountry].getComponent(0)).getText();
 			Country country = fileParser.getCountriesHashMap().get(countryName);
+			System.out.println("Country [1]: " + country.getCountryName());
 			if (currentState == PhaseStates.STATE_STARTUP) {
 				country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + 1);
 				currentPlayer.setNumberOfArmies(currentPlayer.getNumberOfArmies() - 1);
@@ -453,25 +496,31 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 					gamePhases.notifyStateChange(PhaseStates.STATE_ACTIVE);
 				}
 			} else if (currentState == PhaseStates.STATE_ACTIVE) {
-				updatePlayerAdjacentCountries(fileParser.getCountriesHashMap().get(countryName));
 				setAttacker();
-				btnAttack.setVisible(false);
+				if (btnAttack.isVisible()) {
+					updatePlayerAdjacentCountries(fileParser.getCountriesHashMap().get(countryName));
+					btnAttack.setText("End Attack");
+				} else {
+					updatePlayerOwnedAdjacentCountries(fileParser.getCountriesHashMap().get(countryName));
+				}
 			}
 
 		} else if (adjacentPanelHashMap.containsKey((JPanel) e.getComponent())) {
 			Integer value = adjacentPanelHashMap.get((JPanel) e.getComponent());
-			if (currentAdjacentCountry != -1)
+			if (currentAdjacentCountry != -1 && adjPanels.get(currentAdjacentCountry) != null)
 				adjPanels.get(currentAdjacentCountry).setBackground(null);
 			currentAdjacentCountry = value;
+
 			adjPanels.get(currentAdjacentCountry).setBackground(Color.WHITE);
 			setDefender();
-			btnAttack.setVisible(true);
+			if (btnAttack.isVisible())
+				btnAttack.setText("Attack");
 		}
 	}
 
 	/**
-	 * Populate the Data Model classes generated by protoc compiler on Messages
-	 * 
+	 * Populate the Data Model classes generated by protoc compiler on Messages.
+	 *
 	 * @param fileChooser
 	 *            JFileChooser type variable
 	 */
@@ -520,8 +569,8 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	}
 
 	/**
-	 * Populate Continent Protobuf objects to a Map
-	 * 
+	 * Populate Continent Protobuf objects to a Map.
+	 *
 	 * @return Continent Protobuf Map object
 	 */
 	private Map<String, Continent> populateContinentProtobufMapInstance() {
@@ -533,8 +582,8 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	}
 
 	/**
-	 * Populate Country Protobuf objects to a Map
-	 * 
+	 * Populate Country Protobuf objects to a Map.
+	 *
 	 * @return Country Protobuf Map object
 	 */
 	private Map<String, com.game.risk.model.autogen.GameStateDataProtos.Country> populateCountryProtobufMapInstance() {
@@ -546,8 +595,10 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	}
 
 	/**
-	 * Create an Adjacent Countries protobuf instance
-	 * 
+	 * Create an Adjacent Countries protobuf instance.
+	 *
+	 * @param selectedCountry
+	 *            the selected country
 	 * @return CountryLinkedList object
 	 */
 	private CountryLinkedList createAdjacentCountriesProtobufInstance(Country selectedCountry) {
@@ -563,8 +614,10 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 
 	/**
 	 * Creating a Continent protobuf instance and returning it to be writen to file
-	 * output stream
-	 * 
+	 * output stream.
+	 *
+	 * @param continent
+	 *            the continent
 	 * @return autogen.GameStateDataProtos.Country object
 	 */
 	private com.game.risk.model.autogen.GameStateDataProtos.Continent createProtobufContinentInstance(
@@ -580,8 +633,10 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 
 	/**
 	 * Creating a Player protobuf instance and returning it to be written to file
-	 * output stream
-	 * 
+	 * output stream.
+	 *
+	 * @param currentPlayer
+	 *            the current player
 	 * @return autogen.GameStateDataProtos.Player object
 	 */
 	private com.game.risk.model.autogen.GameStateDataProtos.Player createProtobufPlayerInstance(Player currentPlayer) {
@@ -619,9 +674,10 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	}
 
 	/**
-	 * Create Country protobuf instance
-	 * 
+	 * Create Country protobuf instance.
+	 *
 	 * @param country
+	 *            the country
 	 * @return autogen.GameStateDataProtos.Country object
 	 */
 	private com.game.risk.model.autogen.GameStateDataProtos.Country createCountryProtobufInstance(Country country) {
@@ -694,6 +750,7 @@ public class GamePhaseView extends JFrame implements Observer, MouseListener {
 	public void setDefender() {
 		String countryName = ((JLabel) adjPanels.get(currentAdjacentCountry).getComponent(0)).getText();
 		defendingCountry = fileParser.getCountriesHashMap().get(countryName);
+		System.out.println("Country [2]: " + defendingCountry.getCountryName());
 	}
 
 	/**

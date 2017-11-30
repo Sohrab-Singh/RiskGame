@@ -6,44 +6,41 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * Graph class to hold the countries and its adjacent countries
+ * Graph class to hold the countries and its adjacent countries.
  *
  * @author Sarthak
  * @author sohrab_singh
  */
 public class CountriesGraph {
 
-	/**
-	 * Vertices count for the CountriesGraph
-	 */
+	/** Vertices count for the CountriesGraph. */
 	private int countriesCount;
 
-	/**
-	 * MapFileReader class variable
-	 */
+	/** MapFileReader class variable. */
 	private MapFileReader mapFileReader;
 
-	/**
-	 * List to store continents
-	 */
+	/** List to store continents. */
 	private HashMap<String, Continent> continentHashMap;
 
 	/**
 	 * Store a HashMap of Countries having adjacent countries stored in LinkedList,
-	 * representing adjacency list for graph
+	 * representing adjacency list for graph.
 	 */
 	private HashMap<Country, LinkedList<Country>> adjListHashMap;
 
 	/**
-	 * @param adjListHashMap the adjListHashMap to set
+	 * Sets the adj list hash map.
+	 *
+	 * @param adjListHashMap
+	 *            the adjListHashMap to set
 	 */
 	public void setAdjListHashMap(HashMap<Country, LinkedList<Country>> adjListHashMap) {
 		this.adjListHashMap = adjListHashMap;
 	}
 
 	/**
-	 * Countries Graph constructor
-	 * 
+	 * Countries Graph constructor.
+	 *
 	 * @param fileParser
 	 *            parser for storing data
 	 */
@@ -53,12 +50,15 @@ public class CountriesGraph {
 		continentHashMap = new HashMap<String, Continent>();
 	}
 
+	/**
+	 * Instantiates a new countries graph.
+	 */
 	public CountriesGraph() {
 
 	}
 
 	/**
-	 * Get the count of countries in the graph
+	 * Get the count of countries in the graph.
 	 *
 	 * @return countriesCount
 	 */
@@ -67,7 +67,7 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Set the count of countries in the graph
+	 * Set the count of countries in the graph.
 	 *
 	 * @param countriesCount
 	 *            number of countries present in the Map
@@ -77,8 +77,8 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Get the Adjacent List Map
-	 * 
+	 * Get the Adjacent List Map.
+	 *
 	 * @return the adjListHashMap
 	 */
 	public HashMap<Country, LinkedList<Country>> getAdjListHashMap() {
@@ -86,7 +86,7 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Add a connectivity as adjacent countries between two countries
+	 * Add a connectivity as adjacent countries between two countries.
 	 *
 	 * @param startCountry
 	 *            start country of edge
@@ -104,8 +104,8 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Get Continent HashMap
-	 * 
+	 * Get Continent HashMap.
+	 *
 	 * @return Hashmap of Continents
 	 */
 	public HashMap<String, Continent> getContinentHashMap() {
@@ -113,8 +113,8 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Set the Continent HashMap
-	 * 
+	 * Set the Continent HashMap.
+	 *
 	 * @param continentHashMap
 	 *            HashMap to store or retrieve the continents via their name as key
 	 */
@@ -123,7 +123,7 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Remove a connectivity as adjacent countries between two countries
+	 * Remove a connectivity as adjacent countries between two countries.
 	 *
 	 * @param startCountry
 	 *            start country of edge
@@ -136,7 +136,7 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Remove a country from the graph and model classes
+	 * Remove a country from the graph and model classes.
 	 *
 	 * @param country
 	 *            country to be removed
@@ -159,7 +159,7 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Add a country to the graph
+	 * Add a country to the graph.
 	 *
 	 * @param country
 	 *            country to be added
@@ -170,7 +170,7 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Add a continent to the graph
+	 * Add a continent to the graph.
 	 *
 	 * @param continent
 	 *            continent to added
@@ -225,8 +225,8 @@ public class CountriesGraph {
 	}
 
 	/**
-	 * Update Adjacent Countries HashMap in Countries graph
-	 * 
+	 * Update Adjacent Countries HashMap in Countries graph.
+	 *
 	 * @param graph
 	 *            CountriesGraph Message Protobuf object
 	 */

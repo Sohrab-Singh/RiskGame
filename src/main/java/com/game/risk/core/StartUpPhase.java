@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to implement Startup Phase
+ * Class to implement Startup Phase.
  *
  * @author Vida Abdollahi
  * @author sohrab_singh
@@ -20,16 +20,16 @@ import java.util.List;
  */
 public class StartUpPhase {
 
-	/** Map file parser */
+	/** Map file parser. */
 	private MapFileReader mapFileReader;
 
-	/** Player List */
+	/** Player List. */
 	private ArrayList<Player> playersList;
 
-	/** Number of players */
+	/** Number of players. */
 	private int numberOfPlayers;
 
-	/** Minimum number of players */
+	/** Minimum number of players. */
 	private static final int MINIMUM_NUMBER_PLAYERS = 2;
 
 	/** Maximum number of players. */
@@ -45,6 +45,7 @@ public class StartUpPhase {
 	 * @param reader
 	 *            buffer reader
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public StartUpPhase(MapFileReader mapFileReader, int numberOfPlayers, BufferedReader reader) throws IOException {
 		this.mapFileReader = mapFileReader;
@@ -68,8 +69,12 @@ public class StartUpPhase {
 	}
 
 	/**
+	 * Instantiates a new start up phase.
+	 *
 	 * @param mapFileReader
+	 *            the map file reader
 	 * @param computerPlayers
+	 *            the computer players
 	 */
 	public StartUpPhase(MapFileReader mapFileReader, List<String> computerPlayers) {
 		this.mapFileReader = mapFileReader;
@@ -204,10 +209,12 @@ public class StartUpPhase {
 	}
 
 	/**
-	 * Allocate Remaining armies to countries
-	 * 
-	 * @throws IOException
+	 * Allocate Remaining armies to countries.
+	 *
 	 * @throws NumberFormatException
+	 *             the number format exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void allocateRemainingArmiesToCountries() throws NumberFormatException, IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

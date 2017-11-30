@@ -123,35 +123,44 @@ public class CardExchangeView extends JFrame implements Observer {
 			} else {
 				btnExchange.setVisible(false);
 			}
-			updateCardListView();
+			updateCardListView((Player) arg0);
 		}
 	}
 
 	/**
 	 * Update card list view.
+	 *
+	 * @param player
+	 *            the player
 	 */
-	private void updateCardListView() {
-		labelNoCards.setVisible(false);
-		JPanel[] jpanels = new JPanel[currentPlayer.getCardList().size()];
-		cardsViewPanel.removeAll();
-		Border border = BorderFactory.createLineBorder(Color.WHITE, 4, true);
-		for (int i = 0; i < currentPlayer.getCardList().size(); i++) {
-			JLabel jlabel = new JLabel();
-			if (currentPlayer.getCardList().get(i).equals(CardType.Infantry))
-				jlabel.setText("I");
-			else if (currentPlayer.getCardList().get(i).equals(CardType.Cavalry))
-				jlabel.setText("C");
-			else
-				jlabel.setText("A");
+	private void updateCardListView(Player player) {
+		currentPlayer = player;
+		if (currentPlayer.getCardList().size() > 0) {
+			labelNoCards.setVisible(false);
+			System.out.println(currentPlayer.getPlayerName());
+			JPanel[] jpanels = new JPanel[currentPlayer.getCardList().size()];
+			cardsViewPanel.removeAll();
+			Border border = BorderFactory.createLineBorder(Color.WHITE, 4, true);
+			for (int i = 0; i < currentPlayer.getCardList().size(); i++) {
+				JLabel jlabel = new JLabel();
+				if (currentPlayer.getCardList().get(i).equals(CardType.Infantry))
+					jlabel.setText("[I] " + currentPlayer.getPlayerName());
+				else if (currentPlayer.getCardList().get(i).equals(CardType.Cavalry))
+					jlabel.setText("[C] " + currentPlayer.getPlayerName());
+				else
+					jlabel.setText("[A]" + currentPlayer.getPlayerName());
 
-			jlabel.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(20, 40, 20, 40)));
-			jpanels[i] = new JPanel();
-			jpanels[i].setBackground(Color.BLACK);
-			jpanels[i].add(jlabel);
-			cardsViewPanel.add(jpanels[i]);
+				jlabel.setBorder(BorderFactory.createCompoundBorder(border, new EmptyBorder(20, 40, 20, 40)));
+				jpanels[i] = new JPanel();
+				jpanels[i].setBackground(Color.BLACK);
+				jpanels[i].add(jlabel);
+				cardsViewPanel.add(jpanels[i]);
+			}
+			cardsViewPanel.validate();
+			cardsViewPanel.repaint();
+		} else {
+			labelNoCards.setVisible(true);
 		}
-		cardsViewPanel.validate();
-		cardsViewPanel.repaint();
 	}
 
 }

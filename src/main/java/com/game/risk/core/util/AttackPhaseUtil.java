@@ -87,8 +87,10 @@ public class AttackPhaseUtil {
 	}
 
 	/**
-	 * @param player
-	 * @return
+	 * Checks if is attack ends.
+	 *
+	 * @param player the player
+	 * @return true, if is attack ends
 	 */
 	public static boolean isattackEnds(Player player) {
 		for (Country country : player.getCountriesOwned()) {

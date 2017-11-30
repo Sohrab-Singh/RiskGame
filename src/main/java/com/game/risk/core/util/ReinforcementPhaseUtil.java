@@ -40,6 +40,7 @@ public class ReinforcementPhaseUtil {
 	 *            current player
 	 * @return true if player owns all the countries of continent.
 	 */
+	@SuppressWarnings("unused")
 	private static boolean checkPlayerOwnsWholeContinent(Player player) {
 		Country country1 = player.getCountriesOwned().get(0);
 		for (Country country : player.getCountriesOwned()) {

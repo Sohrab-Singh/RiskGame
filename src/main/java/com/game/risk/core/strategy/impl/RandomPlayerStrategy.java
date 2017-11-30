@@ -10,7 +10,6 @@ import com.game.risk.core.CountriesGraph;
 import com.game.risk.core.strategy.PlayerStrategy;
 import com.game.risk.core.util.AttackPhaseUtil;
 import com.game.risk.core.util.LoggingUtil;
-import com.game.risk.core.util.ReinforcementPhaseUtil;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
@@ -52,22 +51,19 @@ public class RandomPlayerStrategy implements PlayerStrategy {
 		System.out.println("\n::::: Random Player :::::");
 		System.out.println("\n:: Reinforcement Phase ::\n");
 		LoggingUtil.logMessage("Reinforcement Phase begins for Random Player.");
-		int reinforcementArmies = ReinforcementPhaseUtil.calculateReinforcementArmies(player);
-		String message = "Total Reinforcement Armies available for Random Player: " + reinforcementArmies + "\n";
+
+		Random random = new Random();
+		int randomArmies = random.nextInt(1000);
+		String message = "Random Player reinforced with Random Armies count (" + randomArmies + ")\n";
 		System.out.println(message);
+		Random countryRandom = new Random();
+		int randomCountryIndex = countryRandom.nextInt(player.getCountriesOwned().size());
+		Country country = player.getCountriesOwned().get(randomCountryIndex);
 		LoggingUtil.logMessage(message);
-		player.setNumberOfArmies(player.getNumberOfArmies() + reinforcementArmies);
-		while (player.getNumberOfArmies() > 0) {
-			Random random = new Random();
-			int randomArmies = random.nextInt(player.getNumberOfArmies()) + 1;
-			Random countryRandom = new Random();
-			int randomCountryIndex = countryRandom.nextInt(player.getCountriesOwned().size());
-			Country country = player.getCountriesOwned().get(randomCountryIndex);
-			country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + randomArmies);
-			System.out.println(country.getCountryName() + " now has " + country.getCurrentNumberOfArmies());
-			LoggingUtil.logMessage(country.getCountryName() + " now has " + country.getCurrentNumberOfArmies());
-			player.setNumberOfArmies(player.getNumberOfArmies() - randomArmies);
-		}
+		country.setCurrentNumberOfArmies(country.getCurrentNumberOfArmies() + randomArmies);
+		System.out.println(country.getCountryName() + " now has " + country.getCurrentNumberOfArmies());
+		LoggingUtil.logMessage(country.getCountryName() + " now has " + country.getCurrentNumberOfArmies());
+
 	}
 
 	@Override
@@ -88,7 +84,11 @@ public class RandomPlayerStrategy implements PlayerStrategy {
 				Random random1 = new Random();
 				Country defender = defenderList.get(random1.nextInt(defenderList.size()));
 				Random randomAttacks = new Random();
-				int attacksMaxCount = randomAttacks.nextInt(defender.getCurrentNumberOfArmies()) + 1;
+				System.err.println(defender.getCurrentNumberOfArmies());
+				int attacksMaxCount = randomAttacks
+						.nextInt(defender.getCurrentNumberOfArmies() > 0 ? defender.getCurrentNumberOfArmies()
+								: attacker.getCurrentNumberOfArmies())
+						+ 1;
 				// Battle b/w Attacker and Defender Starts
 				while (attacker.getCurrentNumberOfArmies() > 1 && defender.getCurrentNumberOfArmies() > 0
 						&& (attacksMaxCount--) > 0) {
@@ -147,20 +147,27 @@ public class RandomPlayerStrategy implements PlayerStrategy {
 		int randomCountry1Index = random.nextInt(player.getCountriesOwned().size());
 		Country country1 = player.getCountriesOwned().get(randomCountry1Index);
 		List<Country> adjPlayerCountries = findPlayerAdjacentCountries(country1);
-		int randomCountry2Index = random.nextInt(adjPlayerCountries.size());
+		if (adjPlayerCountries.size() > 0) {
+			int randomCountry2Index = random.nextInt(adjPlayerCountries.size());
 
-		Country country2 = adjPlayerCountries.get(randomCountry2Index);
-		Random random1 = new Random();
-		int randomArmies = random1.nextInt(country1.getCurrentNumberOfArmies()) + 1;
+			Country country2 = adjPlayerCountries.get(randomCountry2Index);
+			if (country1.getCurrentNumberOfArmies() > 0) {
+				int randomArmies = random.nextInt(country1.getCurrentNumberOfArmies());
 
-		if (randomArmies == country1.getCurrentNumberOfArmies())
-			randomArmies--;
-		String fortifyMessage = randomArmies + " Armies moved from " + country1.getCountryName() + " to "
-				+ country2.getCountryName() + ".";
-		System.out.println(fortifyMessage);
-		LoggingUtil.logMessage(fortifyMessage);
-		country1.setCurrentNumberOfArmies(country1.getCurrentNumberOfArmies() - randomArmies + 1);
-		country2.setCurrentNumberOfArmies(country2.getCurrentNumberOfArmies() + randomArmies - 1);
+				if (randomArmies == country1.getCurrentNumberOfArmies())
+					randomArmies--;
+				String fortifyMessage = randomArmies + " Armies moved from " + country1.getCountryName() + " to "
+						+ country2.getCountryName() + ".";
+				System.out.println(fortifyMessage);
+				LoggingUtil.logMessage(fortifyMessage);
+				country1.setCurrentNumberOfArmies(country1.getCurrentNumberOfArmies() - randomArmies + 1);
+				country2.setCurrentNumberOfArmies(country2.getCurrentNumberOfArmies() + randomArmies - 1);
+			}
+		} else {
+			String fortifyMessage = "No Armies moved during Fortification Phase";
+			System.out.println(fortifyMessage);
+			LoggingUtil.logMessage(fortifyMessage);
+		}
 	}
 
 	/**
@@ -187,12 +194,10 @@ public class RandomPlayerStrategy implements PlayerStrategy {
 	}
 
 	/**
-	 * Update country to player after defender has lost battle
+	 * Update country to player after defender has lost battle.
 	 *
-	 * @param defender
-	 *            the defender Country
-	 * @param attacker
-	 *            the attacker Country
+	 * @param defender            the defender Country
+	 * @param attacker            the attacker Country
 	 */
 	private void updateCountryToPlayer(Country defender, Country attacker) {
 		List<Player> playerList = gamePhases.getPlayerList();
