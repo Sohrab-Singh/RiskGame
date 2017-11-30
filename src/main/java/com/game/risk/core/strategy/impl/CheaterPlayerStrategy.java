@@ -87,7 +87,6 @@ public class CheaterPlayerStrategy implements PlayerStrategy {
 			List<Country> defenderList = findingNeighboursOfOtherPlayers(country);
 			if (!defenderList.isEmpty()) {
 				country.setCurrentNumberOfArmies(2 * country.getCurrentNumberOfArmies());
-
 			}
 		}
 

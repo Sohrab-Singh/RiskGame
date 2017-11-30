@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.game.risk.RiskGamePhases;
 import com.game.risk.core.CountriesGraph;
@@ -45,12 +44,15 @@ public class CheaterPlayerStrategyTest {
 	Player player2;
 
 	private CountriesGraph countriesGraph;
+	
+	private LoggingUtil loggingutil;
 
 	/**
 	 * 
 	 */
 	@Before
 	public void setUp() {
+		loggingutil = mock(LoggingUtil.class);
 		List<Player> players = new ArrayList<>();
 		player = new Player();
 		player2 = new Player();
@@ -108,6 +110,7 @@ public class CheaterPlayerStrategyTest {
 		riskGamePhases = new RiskGamePhases(null);
 		riskGamePhases = mock(RiskGamePhases.class);
 		when(riskGamePhases.getPlayerList()).thenReturn(players);
+
 		cheaterPlayerStrategy = new CheaterPlayerStrategy(player, countriesGraph, riskGamePhases);
 	}
 
@@ -144,7 +147,6 @@ public class CheaterPlayerStrategyTest {
 	public void testFortify() {
 		cheaterPlayerStrategy.fortify();
 		assertEquals(18, country3.getCurrentNumberOfArmies());
-		//Country 5 belongs to Human Player [Sarthak], so no change
 		assertEquals(11, country5.getCurrentNumberOfArmies());
 		assertEquals(6, country1.getCurrentNumberOfArmies());
 	}

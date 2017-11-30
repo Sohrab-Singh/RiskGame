@@ -44,7 +44,7 @@ public class LoggingUtil {
 	 * @param message
 	 *            message to be appended.
 	 */
-	public static void logMessage(String message) {
+	public static  void logMessage(String message) {
 		textArea.append(message);
 		textArea.append("\n");
 	}

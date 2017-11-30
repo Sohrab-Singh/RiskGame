@@ -171,7 +171,11 @@ public class StartUpPhase {
 		}
 		for (Player player : playersList) {
 			int number = player.getNumberOfArmies();
-			player.setNumberOfArmies(number - player.getCountriesOwned().size());
+			if (number - player.getCountriesOwned().size() < 0) {
+				player.setNumberOfArmies(0);
+			} else {
+				player.setNumberOfArmies(number - player.getCountriesOwned().size());
+			}
 		}
 		LoggingUtil.logMessage("Initial Armies has been assigned to countries by player");
 	}

@@ -6,6 +6,7 @@ import com.game.risk.model.Country;
 import java.io.*;
 import java.util.*;
 
+
 /**
  * Map Validation class is implemented for data validation before loading it
  * with map file parser.
@@ -27,14 +28,21 @@ public class MapValidation {
 	private HashMap<String, ArrayList<String>> Countries;
 
 	/** This parameter will be true if the given graph is a connected graph. */
+	private CountriesGraph countriesGraph;
+
+	/**
+	 * This parameter will be true if the given graph is a connected graph
+	 */
 	private boolean isConnectedGraph;
 
 	/**
 	 * Map validation constructor.
+	 * @param countriesGraph 
 	 */
-	public MapValidation() {
+	public MapValidation(CountriesGraph countriesGraph) {
 		continentInContinent = new ArrayList<>();
 		continentInTerritory = new ArrayList<>();
+		this.countriesGraph = countriesGraph;
 		Countries = new HashMap<String, ArrayList<String>>();
 	}
 
@@ -70,6 +78,10 @@ public class MapValidation {
 		// check to make sure that if country X has country Y as it adjacent then,
 		// country Y may or may not have country X as its adjacent
 		isValid = isValid && checkCountryAdjacentOneWay();
+
+		isValid = isValid && checkConnectedGraph(countriesGraph);
+
+		isValid = isValid && checkConnectedContinent(countriesGraph);
 
 		bufferedReader.close();
 
@@ -289,21 +301,17 @@ public class MapValidation {
 		HashMap<Country, LinkedList<Country>> countries = countriesGraph.getAdjListHashMap();
 		Country parent = countries.keySet().iterator().next();
 
-		Stack<Country> stack = new Stack<>();
-		stack.push(parent);
+		Queue<Country> queue = new LinkedList<Country>();
+		queue.add(parent);
 		parent.setVisited(true);
 
-		while (!stack.isEmpty()) {
-
-			Country rootCountry = stack.peek();
-
-			for (Country country : countries.get(rootCountry)) {
-
-				if (country.isVisited() == false) {
-					stack.push(country);
-					country.setVisited(true);
-				} else {
-					stack.pop();
+		while (!queue.isEmpty()) {
+			Country rootCountry = queue.remove();
+			System.out.println(rootCountry.getCountryName() + " da pnaga");
+			for (Country adjacent : countries.get(rootCountry)) {
+				if (!adjacent.isVisited()) {
+					queue.add(adjacent);
+					adjacent.setVisited(true);
 				}
 			}
 
@@ -317,8 +325,46 @@ public class MapValidation {
 				break;
 			}
 		}
-
 		return isConnectedGraph;
+
+	}
+
+	/**
+	 * @param countriesGraph
+	 * @return
+	 */
+	public boolean checkConnectedContinent(CountriesGraph countriesGraph) {
+		HashMap<Country, LinkedList<Country>> countries = countriesGraph.getAdjListHashMap();
+		Country parent = countries.keySet().iterator().next();
+
+		Queue<Country> queue = new LinkedList<Country>();
+		queue.add(parent);
+		parent.setVisited(true);
+
+		while (!queue.isEmpty()) {
+			Country rootCountry = queue.remove();
+			for (Country adjacent : countries.get(rootCountry)) {
+				if(rootCountry.getContinentName().equals(adjacent.getContinentName())) {
+					if (!adjacent.isVisited()) {
+						queue.add(adjacent);
+						adjacent.setVisited(true);
+					}
+				}
+			}
+
+		}
+
+		for (Country country : countries.keySet()) {
+			if (country.isVisited()) {
+				isConnectedGraph = true;
+			} else {
+				isConnectedGraph = false;
+				break;
+			}
+		}
+		return isConnectedGraph;
+		
+		
 	}
 
 }

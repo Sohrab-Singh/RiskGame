@@ -11,9 +11,14 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.game.risk.RiskGamePhases;
 import com.game.risk.core.CountriesGraph;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
@@ -22,6 +27,8 @@ import com.game.risk.model.Player;
  * @author shubhangi_sheel
  *
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ LoggingUtil.class , BenevolentPlayerStrategy.class })
 public class BenevolentPlayerStrategyTest {
 
 	/**
@@ -88,6 +95,8 @@ public class BenevolentPlayerStrategyTest {
 		riskGamePhases = mock(RiskGamePhases.class);
 		when(riskGamePhases.getPlayerList()).thenReturn(players);
 		benevolentPlayerStrategy = new BenevolentPlayerStrategy(player, countriesGraph);
+		PowerMockito.mockStatic(LoggingUtil.class);
+        PowerMockito.doNothing().when(LoggingUtil.class);
 	}
 	
 	/**

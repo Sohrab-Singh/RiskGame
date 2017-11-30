@@ -11,17 +11,25 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.game.risk.RiskGamePhases;
 import com.game.risk.core.CountriesGraph;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 /**
  * 
  * @author shubhangi_sheel
+ * @author sohrab_singh
  *
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ LoggingUtil.class , AgressivePlayerStrategy.class })
 public class AgressivePlayerStrategyTest {
 	/**
 	 * Member variables for test class
@@ -90,6 +98,8 @@ public class AgressivePlayerStrategyTest {
 		when(riskGamePhases.getPlayerList()).thenReturn(players);
 		agressivePlayerStrategy = new AgressivePlayerStrategy(player, countriesGraph, riskGamePhases);
 		secondStrongest = countriesGraph.getAdjListHashMap().get(country1).get(0);
+		PowerMockito.mockStatic(LoggingUtil.class);
+        PowerMockito.doNothing().when(LoggingUtil.class);
 	}
 	
 	/**

@@ -142,12 +142,12 @@ public class WelcomeScreenView extends JFrame implements MouseListener {
 				System.out.println("Path: " + filename);
 				try {
 					parser = new MapFileReader(new File(filename));
+					parser.readFile();
 					if (!parser.checkFileValidation()) {
 						System.out.println("Invalid File Selected!");
 						LoggingUtil.logMessage("Invalid File Selected!");
 						return;
 					}
-					parser.readFile();
 					view = new MapEditor(parser);
 					isSaved = view.readMapEditor(false);
 				} catch (IOException e) {

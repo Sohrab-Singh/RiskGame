@@ -1,20 +1,31 @@
 package com.game.risk.core;
 
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 import java.io.File;
 import java.util.ArrayList;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
 import static org.junit.Assert.*;
 
 /**
  * Test Class for StartUp Phase
  *
+ * @author sohrab_singh
  * @author Vida Abdollahi
  * @author Sarthak
  */
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ LoggingUtil.class , StartUpPhase.class })
 public class StartUpPhaseTest {
 
 	/** MapFileReader object */
@@ -41,6 +52,8 @@ public class StartUpPhaseTest {
 	private Country c2;
 
 	private ArrayList<Country> list2;
+	
+	
 
 	/**
 	 * Setup the initial objects
@@ -48,7 +61,7 @@ public class StartUpPhaseTest {
 	 * @throws Exception
 	 */
 
-	//@Before
+	@Before
 	public void setUp() throws Exception {
 		mapFileReader = new MapFileReader(new File(
 				"//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Canada.map"));
@@ -62,18 +75,21 @@ public class StartUpPhaseTest {
 		list1.add(p1);
 		list1.add(p2);
 		startUpPhase.setPlayersList(list1);
+		list2 = new ArrayList<>();
 		list2.add(c1);
 		list2.add(c2);
 		p1.setCountriesOwned(list2);
+		PowerMockito.mockStatic(LoggingUtil.class);
+        PowerMockito.doNothing().when(LoggingUtil.class);
+    }
 
-	}
 
 	/**
 	 * Test method for getting player list
 	 *
 	 * @throws Exception
 	 */
-	//@Test
+	@Test
 	public void getPlayerList() throws Exception {
 
 		assertEquals(list1.size(), startUpPhase.getPlayerList().size());
@@ -85,12 +101,10 @@ public class StartUpPhaseTest {
 	 *
 	 * @throws Exception
 	 */
-	// @Test
+	@Test
 	public void assignInitialArmiesToCountries() throws Exception {
 		startUpPhase.assignInitialArmiesToCountries();
-
-		// Current number of armies - countries owned (2)
-		assertEquals(38, p1.getNumberOfArmies());
+		assertEquals(0, p1.getNumberOfArmies());
 
 	}
 
@@ -99,19 +113,20 @@ public class StartUpPhaseTest {
 	 *
 	 * @throws Exception
 	 */
-	// @Test
+	@Test
 	public void allocateArmiesToPlayers() throws Exception {
 		startUpPhase.allocateArmiesToPlayers();
 		assertNotEquals(45, p1.getNumberOfArmies());
 	}
 
-	// @Test
+	
 
 	/**
 	 * Test method for Domination Percentage
 	 *
 	 * @throws Exception
 	 */
+	@Test
 	public void DominationPercentage() throws Exception {
 		startUpPhase.populateDominationPercentage();
 		assertNotEquals(10, p1.getCurrentDominationPercentage());
@@ -122,7 +137,7 @@ public class StartUpPhaseTest {
 	 *
 	 * @throws Exception
 	 */
-	// @Test
+	@Test
 	public void getCountOfPlayers() throws Exception {
 
 		startUpPhase.setNumberOfPlayers(2);

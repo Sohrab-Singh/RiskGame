@@ -198,7 +198,7 @@ public class MapFileReader {
 	 */
 	public boolean checkFileValidation() throws IOException {
 
-		return new MapValidation().validateFile(fileName);
+		return new MapValidation(countriesGraph).validateFile(fileName);
 	}
 
 	/**

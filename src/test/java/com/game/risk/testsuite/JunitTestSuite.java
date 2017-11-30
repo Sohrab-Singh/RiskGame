@@ -1,9 +1,9 @@
+package com.game.risk.testsuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.game.risk.core.CountriesGraphTest;
-import com.game.risk.core.StartUpPhaseTest;
 import com.game.risk.core.parser.MapFileParserTest;
 import com.game.risk.core.util.FortificationPhaseUtilTest;
 import com.game.risk.core.util.MapValidationTest;

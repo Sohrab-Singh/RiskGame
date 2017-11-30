@@ -31,7 +31,7 @@ public class MapValidationTest {
      */
     @Before
     public void setUp() throws Exception {
-        mapValidation = new MapValidation();
+        mapValidation = new MapValidation(null);
         str1 = " [Continents] [Territories]";
         str2 = "[Map] [Continents] [Territories]";
         fileName = "src//test//resources//Canada.map";

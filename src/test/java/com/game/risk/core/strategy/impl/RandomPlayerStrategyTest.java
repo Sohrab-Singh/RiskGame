@@ -1,6 +1,6 @@
 package com.game.risk.core.strategy.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,17 +11,25 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.game.risk.RiskGamePhases;
 import com.game.risk.core.CountriesGraph;
+import com.game.risk.core.util.LoggingUtil;
 import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 /**
  * 
  * @author shubhangi_sheel
+ * @author sohrab_singh
  *
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ LoggingUtil.class , RandomPlayerStrategy.class })
 public class RandomPlayerStrategyTest {
 
 	private RandomPlayerStrategy randomPlayerStrategy;
@@ -81,13 +89,25 @@ public class RandomPlayerStrategyTest {
 		countries.add(country4);
 		countries.add(country2);
 		countries.add(country5);
+		LinkedList<Country> countries2 = new LinkedList<>();
+		countries2.add(country1);
+		countries2.add(country4);
+		countries2.add(country5);
+		LinkedList<Country> countries3 = new LinkedList<>();
+		countries3.add(country1);
+		countries3.add(country4);
+		countries3.add(country5);
 		HashMap<Country, LinkedList<Country>> adjacencyListHashMap = new HashMap<>();
 		adjacencyListHashMap.put(country1, countries);
+		adjacencyListHashMap.put(country2,countries2);
+		adjacencyListHashMap.put(country3, countries3);
 		countriesGraph.setAdjListHashMap(adjacencyListHashMap);
 		riskGamePhases = new RiskGamePhases(null);
 		riskGamePhases = mock(RiskGamePhases.class);
 		when(riskGamePhases.getPlayerList()).thenReturn(players);
 		randomPlayerStrategy = new RandomPlayerStrategy(player, countriesGraph, riskGamePhases);
+		PowerMockito.mockStatic(LoggingUtil.class);
+        PowerMockito.doNothing().when(LoggingUtil.class);
 	}
 	
 	/**
@@ -99,24 +119,25 @@ public class RandomPlayerStrategyTest {
 		assertEquals(0, player.getNumberOfArmies());
 	}
 	
-//	/**
-//	 * Method to test attack
-//	 */
-//	@Test
-//	public void testAttack(){
-//		randomPlayerStrategy.attack();
-//		
-//	}
+	/**
+	 * Method to test attack
+	 */
+	@Test
+	public void testAttack(){
+		randomPlayerStrategy.attack();
+		assertTrue(player.getCountriesOwned().size() == 5 || player.getCountriesOwned().size() == 0 );
+		
+	}
 	
 	/**
 	 * Method to test fortification
 	 */
-//	@Test
-//	public void testFortify(){
-//		randomPlayerStrategy.fortify();
-//		//assertEquals(4,secondStrongest.getCurrentNumberOfArmies());
-//		
-//	}
+	@Test
+	public void testFortify(){
+		randomPlayerStrategy.fortify();
+		//assertEquals(4,secondStrongest.getCurrentNumberOfArmies());
+		
+	}
 	
 	
 	

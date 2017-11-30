@@ -12,9 +12,10 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 /**
+ * Test class for Countries Graph
  * 
  * @author shubhangi sheel
- * Test class for Countries Graph
+ * @author sohrab_singh
  */
 public class CountriesGraphTest {
 
@@ -65,18 +66,20 @@ public class CountriesGraphTest {
 
 	/**
 	 * Setup method for the test class
+	 * 
 	 * @throws FileNotFoundException
 	 */
 	@Before
-	public void setUp() throws FileNotFoundException{
-		mapFileReader = new MapFileReader(new File("./src/main/resources/Canada.map"));
+	public void setUp() throws FileNotFoundException {
+		mapFileReader = new MapFileReader(new File(
+				"//Users//sohrab_singh//Documents//workspace-sts-3.9.0.RELEASE//RiskGame//src//test//resources//Canada.map"));
 		countriesGraph = new CountriesGraph(mapFileReader);
 
 		continent1 = new Continent("Asia", 7);
 		continent2 = new Continent("Africa", 6);
 		countriesGraph.getContinentHashMap().put("Asia", continent1);
 
-		//Initializing country objects
+		// Initializing country objects
 		c1 = new Country("India");
 		c2 = new Country("China");
 		c3 = new Country("Pakistan");
@@ -90,14 +93,13 @@ public class CountriesGraphTest {
 		countriesGraph.addCountry(c2);
 		countriesGraph.addCountry(c3);
 
-
 	}
 
 	/**
 	 * Method to test addEdge method of the countries graph class
 	 */
 	@Test
-	public void testAddEdge(){
+	public void testAddEdge() {
 		countriesGraph.addEdge(c1, c2);
 		countriesGraph.addEdge(c1, c3);
 		assertEquals(2, countriesGraph.getAdjListHashMap().get(c1).size());
@@ -107,7 +109,7 @@ public class CountriesGraphTest {
 	 * Method to test removeEdge of the countries graph class
 	 */
 	@Test
-	public void testRemoveEdge(){
+	public void testRemoveEdge() {
 		countriesGraph.addEdge(c1, c2);
 		countriesGraph.addEdge(c1, c3);
 		countriesGraph.addEdge(c2, c3);
@@ -116,10 +118,10 @@ public class CountriesGraphTest {
 	}
 
 	/**
-	 * Method to test add countries to continent 
+	 * Method to test add countries to continent
 	 */
 	@Test
-	public void testAddCountry(){
+	public void testAddCountry() {
 		c4.setContinentName(continent1.getContinentName());
 		countriesGraph.addCountry(c4);
 		assertTrue(countriesGraph.getContinentHashMap().get(continent1.getContinentName()).getCountries().contains(c4));
@@ -130,7 +132,7 @@ public class CountriesGraphTest {
 	 * Method to test add countries to countries hashmap
 	 */
 	@Test
-	public void testAddCountryCountriesMap(){
+	public void testAddCountryCountriesMap() {
 		c4.setContinentName(continent1.getContinentName());
 		countriesGraph.addCountry(c4);
 		assertTrue(countriesGraph.getAdjListHashMap().containsKey(c4));
@@ -141,7 +143,7 @@ public class CountriesGraphTest {
 	 * Method to test addition of continents to the continent hash map
 	 */
 	@Test
-	public void testAddContinent(){
+	public void testAddContinent() {
 		countriesGraph.addContinent(continent2);
 		assertTrue(countriesGraph.getContinentHashMap().containsKey(continent2.getContinentName()));
 	}
@@ -150,7 +152,7 @@ public class CountriesGraphTest {
 	 * Method to test adjacency of continent
 	 */
 	@Test
-	public void addIsAdjacent(){
+	public void addIsAdjacent() {
 		countriesGraph.addEdge(c1, c2);
 		assertTrue(countriesGraph.isAdjacent(c1, c2));
 	}
@@ -159,7 +161,7 @@ public class CountriesGraphTest {
 	 * Method to test adjacency of continent
 	 */
 	@Test
-	public void addIsAdjacentNegativeTest(){
+	public void addIsAdjacentNegativeTest() {
 		assertFalse(countriesGraph.isAdjacent(c1, c4));
 	}
 }
