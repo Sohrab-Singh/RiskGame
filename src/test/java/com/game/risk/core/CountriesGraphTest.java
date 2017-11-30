@@ -12,62 +12,45 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 /**
- * Test class for Countries Graph
- * 
+ * Test class for Countries Graph.
+ *
  * @author shubhangi sheel
  * @author sohrab_singh
  */
 public class CountriesGraphTest {
 
-	/**
-	 * Country object
-	 */
+	/** Country object. */
 	private Country c1;
 
-	/**
-	 * Country object
-	 */
+	/** Country object. */
 	private Country c2;
 
-	/**
-	 * Country object
-	 */
+	/** Country object. */
 	private Country c3;
 
-	/**
-	 * Country object
-	 */
+	/** Country object. */
 	private Country c4;
 
-	/**
-	 * Continent object
-	 */
+	/** Continent object. */
 	private Continent continent1;
 
-	/**
-	 * Continent object
-	 */
+	/** Continent object. */
 	private Continent continent2;
 
-	/**
-	 * countries graph object
-	 */
+	/** countries graph object. */
 	private CountriesGraph countriesGraph;
 
-	/**
-	 * MapFileReader object
-	 */
+	/** MapFileReader object. */
 	private MapFileReader mapFileReader;
 
-	/**
-	 * List to store continents
-	 */
+	/** List to store continents. */
 	private HashMap<String, Continent> continentHashMap;
 
 	/**
-	 * Setup method for the test class
-	 * 
+	 * Setup method for the test class.
+	 *
 	 * @throws FileNotFoundException
+	 *             the file not found exception
 	 */
 	@Before
 	public void setUp() throws FileNotFoundException {
@@ -96,7 +79,7 @@ public class CountriesGraphTest {
 	}
 
 	/**
-	 * Method to test addEdge method of the countries graph class
+	 * Method to test addEdge method of the countries graph class.
 	 */
 	@Test
 	public void testAddEdge() {
@@ -106,7 +89,7 @@ public class CountriesGraphTest {
 	}
 
 	/**
-	 * Method to test removeEdge of the countries graph class
+	 * Method to test removeEdge of the countries graph class.
 	 */
 	@Test
 	public void testRemoveEdge() {
@@ -118,7 +101,7 @@ public class CountriesGraphTest {
 	}
 
 	/**
-	 * Method to test add countries to continent
+	 * Method to test add countries to continent.
 	 */
 	@Test
 	public void testAddCountry() {
@@ -129,7 +112,7 @@ public class CountriesGraphTest {
 	}
 
 	/**
-	 * Method to test add countries to countries hashmap
+	 * Method to test add countries to countries hashmap.
 	 */
 	@Test
 	public void testAddCountryCountriesMap() {
@@ -140,7 +123,7 @@ public class CountriesGraphTest {
 	}
 
 	/**
-	 * Method to test addition of continents to the continent hash map
+	 * Method to test addition of continents to the continent hash map.
 	 */
 	@Test
 	public void testAddContinent() {
@@ -149,7 +132,7 @@ public class CountriesGraphTest {
 	}
 
 	/**
-	 * Method to test adjacency of continent
+	 * Method to test adjacency of continent.
 	 */
 	@Test
 	public void addIsAdjacent() {
@@ -158,7 +141,7 @@ public class CountriesGraphTest {
 	}
 
 	/**
-	 * Method to test adjacency of continent
+	 * Method to test adjacency of continent.
 	 */
 	@Test
 	public void addIsAdjacentNegativeTest() {

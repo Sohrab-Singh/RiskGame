@@ -11,18 +11,21 @@ import java.io.IOException;
 import static org.junit.Assert.*;
 
 /**
- * Test Class for MapFileReader class
+ * Test Class for MapFileReader class.
  *
  * @author Sarthak
  * @author shubhangi_sheel
  */
 public class MapFileParserTest {
+
+	/** The map file reader. */
 	private MapFileReader mapFileReader;
 
 	/**
 	 * Set up of Map File parser.
-	 * 
+	 *
 	 * @throws Exception
+	 *             the exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -30,9 +33,10 @@ public class MapFileParserTest {
 	}
 
 	/**
-	 * Read file test
-	 * 
+	 * Read file test.
+	 *
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Test
 	public void readFileTest() throws IOException {

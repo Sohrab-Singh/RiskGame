@@ -17,48 +17,48 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import static org.junit.Assert.*;
 
 /**
- * Test Class for StartUp Phase
+ * Test Class for StartUp Phase.
  *
  * @author sohrab_singh
  * @author Vida Abdollahi
  * @author Sarthak
  */
-
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ LoggingUtil.class , StartUpPhase.class })
+@PrepareForTest({ LoggingUtil.class, StartUpPhase.class })
 public class StartUpPhaseTest {
 
-	/** MapFileReader object */
+	/** MapFileReader object. */
 	private MapFileReader mapFileReader;
 
-	/** StartUpPhase object */
+	/** StartUpPhase object. */
 	private StartUpPhase startUpPhase;
 
-	/** Number of Players playing the game */
+	/** Number of Players playing the game. */
 	private int numberOfPlayers;
 
-	/** Player 1 to create mock object */
+	/** Player 1 to create mock object. */
 	private Player p1;
 
-	/** Player 2 to create mock object */
+	/** Player 2 to create mock object. */
 	private Player p2;
 
-	/** ArrayList to hold Player objects */
+	/** ArrayList to hold Player objects. */
 	private ArrayList<Player> list1;
 
-	/** Country object to create mock object */
+	/** Country object to create mock object. */
 	private Country c1;
 
+	/** The c 2. */
 	private Country c2;
 
+	/** The list 2. */
 	private ArrayList<Country> list2;
-	
-	
 
 	/**
-	 * Setup the initial objects
+	 * Setup the initial objects.
 	 *
 	 * @throws Exception
+	 *             the exception
 	 */
 
 	@Before
@@ -80,14 +80,15 @@ public class StartUpPhaseTest {
 		list2.add(c2);
 		p1.setCountriesOwned(list2);
 		PowerMockito.mockStatic(LoggingUtil.class);
-        PowerMockito.doNothing().when(LoggingUtil.class);
-    }
-
+		PowerMockito.doNothing().when(LoggingUtil.class);
+	}
 
 	/**
-	 * Test method for getting player list
+	 * Test method for getting player list.
 	 *
+	 * @return the player list
 	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void getPlayerList() throws Exception {
@@ -97,9 +98,10 @@ public class StartUpPhaseTest {
 	}
 
 	/**
-	 * Test method for assigning initial armies to each country
+	 * Test method for assigning initial armies to each country.
 	 *
 	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void assignInitialArmiesToCountries() throws Exception {
@@ -109,9 +111,10 @@ public class StartUpPhaseTest {
 	}
 
 	/**
-	 * Test method for allocating armies to players
+	 * Test method for allocating armies to players.
 	 *
 	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void allocateArmiesToPlayers() throws Exception {
@@ -119,12 +122,11 @@ public class StartUpPhaseTest {
 		assertNotEquals(45, p1.getNumberOfArmies());
 	}
 
-	
-
 	/**
-	 * Test method for Domination Percentage
+	 * Test method for Domination Percentage.
 	 *
 	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void DominationPercentage() throws Exception {
@@ -133,9 +135,11 @@ public class StartUpPhaseTest {
 	}
 
 	/**
-	 * Test method for getting number of players
+	 * Test method for getting number of players.
 	 *
+	 * @return the count of players
 	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
 	public void getCountOfPlayers() throws Exception {
@@ -145,16 +149,16 @@ public class StartUpPhaseTest {
 	}
 
 	/**
-	 * Get the Country object
+	 * Get the Country object.
 	 *
-	 * @return
+	 * @return the c1
 	 */
 	public Country getC1() {
 		return c1;
 	}
 
 	/**
-	 * Set the Country object
+	 * Set the Country object.
 	 *
 	 * @param c1
 	 *            Country object
@@ -164,7 +168,7 @@ public class StartUpPhaseTest {
 	}
 
 	/**
-	 * Set the number of players playing the game
+	 * Set the number of players playing the game.
 	 *
 	 * @param numberOfPlayers
 	 *            num of players
@@ -174,7 +178,7 @@ public class StartUpPhaseTest {
 	}
 
 	/**
-	 * Get the number of Players
+	 * Get the number of Players.
 	 *
 	 * @return an int variable indicating number of players
 	 */

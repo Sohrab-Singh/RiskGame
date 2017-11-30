@@ -20,35 +20,48 @@ import com.game.risk.model.Player;
 import static org.mockito.Mockito.*;
 
 /**
+ * The Class CheaterPlayerStrategyTest.
+ *
  * @author sohrab_singh
  * @author Sarthak
  */
 public class CheaterPlayerStrategyTest {
 
+	/** The cheater player strategy. */
 	private PlayerStrategy cheaterPlayerStrategy;
 
+	/** The country 1. */
 	private Country country1;
 
+	/** The country 2. */
 	private Country country2;
 
+	/** The country 3. */
 	private Country country3;
 
+	/** The country 4. */
 	private Country country4;
 
+	/** The country 5. */
 	private Country country5;
 
+	/** The risk game phases. */
 	private RiskGamePhases riskGamePhases;
 
+	/** The player. */
 	Player player;
 
+	/** The player 2. */
 	Player player2;
 
+	/** The countries graph. */
 	private CountriesGraph countriesGraph;
-	
+
+	/** The loggingutil. */
 	private LoggingUtil loggingutil;
 
 	/**
-	 * 
+	 * Sets the up.
 	 */
 	@Before
 	public void setUp() {
@@ -115,11 +128,11 @@ public class CheaterPlayerStrategyTest {
 	}
 
 	/**
-	 * 
+	 * Test reinforce.
 	 */
 	@Test
 	public void testReinforce() {
-		
+
 		cheaterPlayerStrategy.reinforce();
 		assertEquals(6, country1.getCurrentNumberOfArmies());
 		assertEquals(12, country2.getCurrentNumberOfArmies());
@@ -128,7 +141,7 @@ public class CheaterPlayerStrategyTest {
 	}
 
 	/**
-	 * 
+	 * Test attack.
 	 */
 	@Test
 	public void testAttack() {
@@ -139,9 +152,8 @@ public class CheaterPlayerStrategyTest {
 		assertEquals("Sohrab", country5.getPlayerName());
 	}
 
-
 	/**
-	 * 
+	 * Test fortify.
 	 */
 	@Test
 	public void testFortify() {

@@ -1,6 +1,5 @@
 package com.game.risk.core.util;
 
-import com.game.risk.core.StartUpPhase;
 import com.game.risk.model.Country;
 
 import static org.junit.Assert.*;
@@ -13,6 +12,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
+ * The Class AttackPhaseUtilTest.
+ *
  * @author sohrab_singh
  * @author Vida Abdollahi
  * @author shubhangi_sheel
@@ -21,22 +22,19 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest({ LoggingUtil.class, AttackPhaseUtil.class })
 public class AttackPhaseUtilTest {
 
-	/**
-	 * Attacker Country
-	 */
+	/** Attacker Country. */
 
 	private Country attacker;
 
-	/**
-	 * Defender Country
-	 */
+	/** Defender Country. */
 
 	private Country defender;
 
 	/**
-	 * Intial Setup
-	 * 
+	 * Intial Setup.
+	 *
 	 * @throws Exception
+	 *             the exception
 	 */
 
 	@Before
@@ -54,16 +52,21 @@ public class AttackPhaseUtilTest {
 	}
 
 	/**
-	 * Test Case for StartBattle in attack Phase
-	 * 
+	 * Test Case for StartBattle in attack Phase.
+	 *
 	 * @throws Exception
+	 *             the exception
 	 */
 
 	@Test
 	public void startBattle() throws Exception {
 
 		AttackPhaseUtil.startBattle(attacker, defender, 6, 1);
-		assertEquals(3, defender.getCurrentNumberOfArmies());
+		if(defender.getCurrentNumberOfArmies() ==3 || defender.getCurrentNumberOfArmies() == 4){
+			assertTrue(true);
+		}else {
+			assertTrue(false);
+		}
 
 	}
 

@@ -20,27 +20,61 @@ import com.game.risk.model.Player;
  */
 public class ReinforcementPhaseUtilTest {
 
+	/** The player. */
 	private Player player;
+
+	/** The continent. */
 	private Continent continent;
-	
+
+	/** The player 1. */
 	private Player player1;
+
+	/** The player 2. */
 	private Player player2;
-	
+
+	/** The countries owned. */
 	private ArrayList<Country> countriesOwned;
+
+	/** The countries owned 1. */
 	private ArrayList<Country> countriesOwned1;
-	
+
+	/** The country 1. */
 	private Country country1;
+
+	/** The country 2. */
 	private Country country2;
+
+	/** The country 3. */
 	private Country country3;
+
+	/** The country 4. */
 	private Country country4;
+
+	/** The country 5. */
 	private Country country5;
+
+	/** The country 6. */
 	private Country country6;
+
+	/** The country 7. */
 	private Country country7;
+
+	/** The country 8. */
 	private Country country8;
+
+	/** The country 9. */
 	private Country country9;
+
+	/** The country 10. */
 	private Country country10;
+
+	/** The country 11. */
 	private Country country11;
+
+	/** The country 12. */
 	private Country country12;
+
+	/** The country 13. */
 	private Country country13;
 
 	/**
@@ -51,11 +85,11 @@ public class ReinforcementPhaseUtilTest {
 		player = new Player();
 		continent = new Continent("Europe", 5);
 		countriesOwned = new ArrayList<>();
-		
+
 		player1 = new Player();
-		player2= new Player();
+		player2 = new Player();
 		countriesOwned1 = new ArrayList<>();
-		
+
 		country1 = new Country("1C");
 		country2 = new Country("2C");
 		country3 = new Country("3C");
@@ -96,13 +130,13 @@ public class ReinforcementPhaseUtilTest {
 		countriesOwned.add(country11);
 		countriesOwned.add(country12);
 		countriesOwned.add(country13);
-		
+
 		player.setCountriesOwned(countriesOwned);
-		
+
 		countriesOwned1.add(country1);
 		countriesOwned1.add(country2);
 		player1.setCountriesOwned(countriesOwned1);
-	
+
 	}
 
 	/**
@@ -115,7 +149,7 @@ public class ReinforcementPhaseUtilTest {
 		assertEquals(4, reinforcementArmy);
 
 	}
-	
+
 	/**
 	 * Test method for calculating reinforcement armies.
 	 */
@@ -137,7 +171,7 @@ public class ReinforcementPhaseUtilTest {
 		assertEquals(3, reinforcementArmy);
 
 	}
-	
+
 	/**
 	 * Test method for calculating reinforcement armies for whole continent.
 	 */

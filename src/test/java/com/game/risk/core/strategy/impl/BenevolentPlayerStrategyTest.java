@@ -23,39 +23,50 @@ import com.game.risk.model.Country;
 import com.game.risk.model.Player;
 
 /**
- * 
- * @author shubhangi_sheel
+ * The Class BenevolentPlayerStrategyTest.
  *
+ * @author shubhangi_sheel
+ * @author sohrab_singh
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ LoggingUtil.class , BenevolentPlayerStrategy.class })
+@PrepareForTest({ LoggingUtil.class, BenevolentPlayerStrategy.class })
 public class BenevolentPlayerStrategyTest {
 
-	/**
-	 * Member variables
-	 */
+	/** Member variables. */
 	private Player player;
-	
+
+	/** The player 2. */
 	private Player player2;
-	
+
+	/** The country 1. */
 	private Country country1;
 
+	/** The country 2. */
 	private Country country2;
 
+	/** The country 3. */
 	private Country country3;
 
+	/** The country 4. */
 	private Country country4;
 
+	/** The country 5. */
 	private Country country5;
 
+	/** The risk game phases. */
 	private RiskGamePhases riskGamePhases;
 
+	/** The countries graph. */
 	private CountriesGraph countriesGraph;
-	
+
+	/** The benevolent player strategy. */
 	private BenevolentPlayerStrategy benevolentPlayerStrategy;
-	
+
+	/**
+	 * Setup.
+	 */
 	@Before
-	public void setup(){
+	public void setup() {
 		List<Player> players = new ArrayList<>();
 		player = new Player();
 		player2 = new Player();
@@ -96,22 +107,22 @@ public class BenevolentPlayerStrategyTest {
 		when(riskGamePhases.getPlayerList()).thenReturn(players);
 		benevolentPlayerStrategy = new BenevolentPlayerStrategy(player, countriesGraph);
 		PowerMockito.mockStatic(LoggingUtil.class);
-        PowerMockito.doNothing().when(LoggingUtil.class);
+		PowerMockito.doNothing().when(LoggingUtil.class);
 	}
-	
+
 	/**
-	 * Method to test reinforcement
+	 * Method to test reinforcement.
 	 */
 	@Test
 	public void testReinforce() {
-		
+
 		benevolentPlayerStrategy.reinforce();
 		System.out.println(country1.getCurrentNumberOfArmies());
 		assertEquals(6, country1.getCurrentNumberOfArmies());
 	}
 
 	/**
-	 * Method to test fortify
+	 * Method to test fortify.
 	 */
 	@Test
 	public void testFortify() {
@@ -119,5 +130,5 @@ public class BenevolentPlayerStrategyTest {
 		assertEquals(7, country4.getCurrentNumberOfArmies());
 
 	}
-	
+
 }

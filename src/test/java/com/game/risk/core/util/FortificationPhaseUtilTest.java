@@ -22,16 +22,16 @@ import com.game.risk.model.Country;
  */
 public class FortificationPhaseUtilTest {
 
-	/** country1 */
+	/** country1. */
 	private Country country1;
 
-	/** country2 */
+	/** country2. */
 	private Country country2;
 
-	/** Number of armies */
+	/** Number of armies. */
 	private int numberOfArmies;
 
-	/** Hashmap for countries */
+	/** Hashmap for countries. */
 	private HashMap<Country, LinkedList<Country>> hashMap;
 
 	/**
@@ -60,7 +60,7 @@ public class FortificationPhaseUtilTest {
 		assertEquals(1, country1.getCurrentNumberOfArmies());
 
 	}
-	
+
 	/**
 	 * Test move armies between countries.
 	 */
